@@ -605,20 +605,30 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 
   <div id="page-forum" class="page">
     <div class="section-headline"><h3>💬 Forum entre élèves</h3></div>
-    <div class="subject-tabs">
-      <button class="subject-tab tab-maths active" id="forum-tab-maths" onclick="selectForumTab('maths')">🧮 Mathématiques</button>
-      <button class="subject-tab tab-physique" id="forum-tab-physique" onclick="selectForumTab('physique')">⚗️ Physique-Chimie</button>
+
+    <div id="forum-locked" class="admin-gate" style="display:none;">
+      <div class="emoji">🔒</div>
+      <h2>Connecte-toi pour accéder au forum</h2>
+      <p>Le forum est réservé aux élèves avec un compte, pour que les échanges restent fiables et modérables. Crée un compte gratuit en 30 secondes, ou connecte-toi si tu en as déjà un.</p>
+      <button class="btn-action" onclick="logoutUser()">🔑 Se connecter / Créer un compte</button>
     </div>
 
-    <div class="forum-composer">
-      <textarea id="forum-input" placeholder="Pose ta question à toute la communauté..." maxlength="500"></textarea>
-      <div class="forum-composer-row">
-        <select id="forum-theme-select"></select>
-        <button class="forum-post-btn" id="forum-post-btn" onclick="postForumMessage()">Publier</button>
+    <div id="forum-content-wrap">
+      <div class="subject-tabs">
+        <button class="subject-tab tab-maths active" id="forum-tab-maths" onclick="selectForumTab('maths')">🧮 Mathématiques</button>
+        <button class="subject-tab tab-physique" id="forum-tab-physique" onclick="selectForumTab('physique')">⚗️ Physique-Chimie</button>
       </div>
-    </div>
 
-    <div id="forum-feed" class="forum-feed"></div>
+      <div class="forum-composer">
+        <textarea id="forum-input" placeholder="Pose ta question à toute la communauté..." maxlength="500"></textarea>
+        <div class="forum-composer-row">
+          <select id="forum-theme-select"></select>
+          <button class="forum-post-btn" id="forum-post-btn" onclick="postForumMessage()">Publier</button>
+        </div>
+      </div>
+
+      <div id="forum-feed" class="forum-feed"></div>
+    </div>
   </div>
 
   <div id="page-profil" class="page">
@@ -740,6 +750,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
         <div class="admin-stat-card"><div class="num" id="admin-stat-exo">0</div><div class="lbl">Exercices</div></div>
       </div>
       <button class="admin-add-btn" onclick="openCourseForm()">➕ Ajouter un cours</button>
+      <button class="admin-add-btn" style="background:var(--green-gradient); box-shadow:0 6px 18px rgba(26,150,64,0.3);" onclick="resyncCourseVideos()">🎥 Resynchroniser les vidéos de cours</button>
       <div class="section-headline" style="padding-top:6px;"><h3>Tous les cours</h3></div>
       <div class="extended-list-wrapper" id="admin-course-list"></div>
 
@@ -1130,13 +1141,15 @@ function courseListItemHtml(c){
   const favs = loadFavs();
   const isFav = favs.includes(c.id);
   const hasFile = c.lien && c.lien !== '#';
+  const hasVideo = !!c.videoId;
   return `<div class="premium-list-item">
     <div class="item-left-meta">
       <div class="item-icon-indicator ${indicatorClass(c.matiere)}">${courseIcon(c.matiere)}</div>
       <div class="item-info-titles">
         <h4>${escapeHtml(c.titre)}</h4>
         <p class="meta-line">${c.matiere==='maths'?'Mathématiques':'Physique-Chimie'}${c.theme? ' • '+escapeHtml(c.theme):''} • ${c.type}
-          <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Disponible':'🕒 Bientôt disponible'}</span>
+          <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Fiche PDF disponible':'🕒 Fiche PDF à venir'}</span>
+          ${hasVideo? `<span class="status-badge ready">🎥 Vidéo disponible</span>` : ''}
         </p>
       </div>
     </div>
@@ -1216,13 +1229,14 @@ function closeOnOverlayVideo(e){ if(e.target===document.getElementById('video-ov
 function exoItemHtml(e){
   const isVideo = e.sous==='video';
   const hasFile = e.lien && e.lien !== '#';
+  const label = isVideo ? (hasFile?'✅ Vidéo disponible':'🕒 Vidéo à venir') : (hasFile?'✅ Fiche PDF disponible':'🕒 Fiche PDF à venir');
   return `<div class="premium-list-item">
     <div class="item-left-meta">
       <div class="item-icon-indicator ${indicatorClass(e.matiere)}" style="${isVideo?'background:#fecaca;color:#ef4444;':''}">${isVideo?'▶':'📝'}</div>
       <div class="item-info-titles">
         <h4>${escapeHtml(e.titre)}</h4>
         <p class="meta-line">${e.matiere==='maths'?'Mathématiques':'Physique-Chimie'} • ${e.desc}
-          <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Disponible':'🕒 Bientôt disponible'}</span>
+          <span class="status-badge ${hasFile?'ready':'pending'}">${label}</span>
         </p>
       </div>
     </div>
@@ -1998,19 +2012,42 @@ async function trySeedIfAdmin(){
 }
 async function seedFirestoreCoursesOnce(){
   try {
-    const seedRef = forumDb.collection('meta').doc('coursesSeed');
-    const seedDoc = await seedRef.get();
-    if(seedDoc.exists) return; // déjà initialisé par un autre visiteur
-    await seedRef.set({ seededAt: firebase.firestore.FieldValue.serverTimestamp() });
+    const coursesSnap = await forumDb.collection('courses').limit(1).get();
+    if(!coursesSnap.empty){
+      showToast('Des cours existent déjà dans la base — rien à importer.');
+      return;
+    }
     const seed = seedCourses();
     const batch = forumDb.batch();
     seed.forEach(c=>{
       const { id, ...rest } = c;
       batch.set(forumDb.collection('courses').doc(id), rest);
     });
+    batch.set(forumDb.collection('meta').doc('coursesSeed'), { seededAt: firebase.firestore.FieldValue.serverTimestamp() });
     await batch.commit();
-    showToast('🌱 Cours de démarrage importés');
-  } catch(e){ console.error('Erreur seed courses:', e); showToast("⚠️ Impossible d'importer les cours (vérifie les règles Firestore)"); }
+    showToast('🌱 ' + seed.length + ' cours importés avec succès !');
+  } catch(e){
+    console.error('Erreur seed courses:', e);
+    showToast("⚠️ Échec de l'import : " + (e && e.message ? e.message : 'vérifie les règles Firestore'));
+  }
+}
+async function resyncCourseVideos(){
+  try {
+    const seed = seedCourses();
+    const batch = forumDb.batch();
+    let count = 0;
+    seed.forEach(c=>{
+      if(!c.videoId) return;
+      batch.set(forumDb.collection('courses').doc(c.id), { videoId: c.videoId }, { merge: true });
+      count++;
+    });
+    await batch.commit();
+    showToast('🎥 Vidéos synchronisées sur ' + count + ' cours (autres champs inchangés)');
+    renderAdminDashboard();
+  } catch(e){
+    console.error('Erreur resync vidéos:', e);
+    showToast("⚠️ Échec de la synchronisation : " + (e && e.message ? e.message : 'vérifie les règles Firestore'));
+  }
 }
 function afterCoursesLoaded(){
   updateSubjectCounts();
@@ -2051,6 +2088,12 @@ function populateForumThemeSelect(){
 }
 
 function initForum(){
+  const user = getCurrentUser();
+  const isGuest = !user || user.guest;
+  document.getElementById('forum-locked').style.display = isGuest ? 'block' : 'none';
+  document.getElementById('forum-content-wrap').style.display = isGuest ? 'none' : 'block';
+  if(isGuest) return;
+
   initFirebaseIfNeeded();
   if(!isFirebaseConfigured()){
     document.getElementById('forum-feed').innerHTML = '';
