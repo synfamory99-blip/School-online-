@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script src="https://js.puter.com/v2/"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check-compat.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Schoolonline.ci</title>
+<meta name="description" content="Schoolonline.ci — Cours, TD et exercices corrigés de Mathématiques et Physique-Chimie pour lycéens de Côte d'Ivoire.">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #1a9640;
+  --green-dark: #0f6327;
+  --green-light: #e3f6e9;
+  --green-gradient: linear-gradient(135deg, #1a9640, #0f6327);
+  --orange: #F47B20;
+  --orange-dark: #d96a10;
+  --orange-light: #fef0e6;
+  --orange-gradient: linear-gradient(135deg, #F47B20, #b8540a);
+  --bg-main: #f8fafc;
+  --white: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 10px 25px rgba(26,150,64,0.1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition: none !important; }
+}
+button, a, input { font-family: inherit; }
+:focus-visible { outline: 3px solid #93c5fd; outline-offset: 2px; }
+
+/* NAV */
+nav { background: var(--green-gradient); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 70px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(15,99,39,0.2); }
+.nav-left { display: flex; align-items: center; gap: 14px; }
+.brand-title { color: white; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 19px; letter-spacing: -0.5px; }
+.logo-container { width: 42px; height: 42px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.logo-img { width: 26px; height: 26px; object-fit: contain; }
+.profile-trigger { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; cursor: pointer; border: 1.5px solid white; transition: var(--transition); }
+.profile-trigger:hover { transform: scale(1.08); background: rgba(255,255,255,0.32); }
+
+/* SPA */
+.page { display: none; animation: pageShow 0.4s cubic-bezier(0.16, 1, 0.3, 1); padding-bottom: 160px; }
+.page.active { display: block; }
+@keyframes pageShow { from { opacity: 0; transform: translateY(12px);} to { opacity: 1; transform: translateY(0);} }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+.stagger > * { animation: fadeUp 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+.stagger > *:nth-child(1){animation-delay:.03s} .stagger > *:nth-child(2){animation-delay:.08s}
+.stagger > *:nth-child(3){animation-delay:.13s} .stagger > *:nth-child(4){animation-delay:.18s}
+.stagger > *:nth-child(5){animation-delay:.23s} .stagger > *:nth-child(6){animation-delay:.28s}
+.stagger > *:nth-child(n+7){animation-delay:.32s}
+
+/* SEARCH */
+.search-wrapper { padding: 16px 20px 8px; background: white; }
+.search-bar { display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid transparent; transition: var(--transition); }
+.search-bar:focus-within { border-color: var(--green); background: white; box-shadow: 0 0 0 4px rgba(26,150,64,0.1); }
+.search-bar input { border: none; background: none; width: 100%; outline: none; font-size: 14px; font-weight: 600; color: var(--text-main); }
+.search-bar input::placeholder { color: var(--text-muted); }
+.search-bar .clear-btn { display:none; background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; }
+.search-results-banner { display:none; margin: 10px 20px 0; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+
+/* HERO */
+.hero-banner { margin: 16px 20px; padding: 24px; background: linear-gradient(135deg, #1e293b, #0f172a); color: white; border-radius: var(--radius-lg); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(15,23,42,0.15); }
+.hero-banner::before { content: ''; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: var(--green); opacity: 0.25; filter: blur(40px); border-radius: 50%; animation: floatBlob 6s ease-in-out infinite; }
+.hero-banner::after { content: ''; position: absolute; bottom: -60px; left: -30px; width: 140px; height: 140px; background: var(--orange); opacity: 0.18; filter: blur(40px); border-radius: 50%; animation: floatBlob 7s ease-in-out infinite reverse; }
+@keyframes floatBlob { 0%,100%{ transform: translate(0,0);} 50%{ transform: translate(-10px,10px);} }
+.hero-badge { display: inline-flex; background: rgba(26,150,64,0.2); color: #4ade80; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; border: 1px solid rgba(26,150,64,0.3); text-transform: uppercase; position: relative; z-index: 1; }
+.hero-banner h1 { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; position: relative; z-index: 1; }
+.hero-banner p { font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 16px; max-width: 80%; position: relative; z-index: 1; }
+.btn-action { display: inline-flex; align-items: center; gap: 8px; background: var(--orange-gradient); color: white; font-weight: 700; font-size: 13px; padding: 10px 20px; border-radius: 25px; border: none; text-decoration: none; cursor: pointer; box-shadow: 0 4px 15px rgba(244,123,32,0.4); transition: var(--transition); position: relative; z-index: 1; }
+.btn-action:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(244,123,32,0.5); }
+.btn-action:active { transform: translateY(0) scale(0.97); }
+
+/* PROGRESSION - rings */
+.progression-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; margin-top: 16px; }
+.progression-card { background: white; padding: 14px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display:flex; align-items:center; gap:10px; min-width:0; overflow:hidden; }
+.progression-card .ring { flex-shrink:0; }
+.progression-card .prog-text-col { min-width:0; flex:1; }
+.ring { width:54px; height:54px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
+.ring-maths { background: conic-gradient(var(--green) 0% var(--p,72%), #e2e8f0 var(--p,72%) 100%); }
+.ring-phys { background: conic-gradient(var(--orange) 0% var(--p,61%), #e2e8f0 var(--p,61%) 100%); }
+.ring::before { content: attr(data-label); background:white; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.prog-subject { font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; overflow-wrap: break-word; }
+.prog-value { font-size: 13.5px; font-weight: 900; overflow-wrap: break-word; line-height: 1.3; }
+.prog-value span { font-size: 10.5px; font-weight: 600; color: var(--text-muted); display:block; margin-top:2px; }
+
+/* SECTION HEADLINE */
+.section-headline { padding: 24px 20px 12px; display: flex; justify-content: space-between; align-items: center; }
+.section-headline h3 { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 800; color: var(--text-main); }
+.section-headline .link { font-size: 12px; color: var(--orange); font-weight: 700; cursor: pointer; background:none; border:none; }
+
+/* SUBJECT TABS (pills) */
+.subject-tabs { display:flex; gap:8px; padding: 0 20px 4px; }
+.subject-tab { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:11px 8px; border-radius: 30px; border:1.5px solid var(--border-color); background:white; font-weight:800; font-size:13px; color:var(--text-muted); cursor:pointer; transition:var(--transition); }
+.subject-tab.active.tab-maths { background: var(--green-gradient); color:white; border-color:transparent; box-shadow:0 6px 16px rgba(26,150,64,0.3); }
+.subject-tab.active.tab-physique { background: var(--orange-gradient); color:white; border-color:transparent; box-shadow:0 6px 16px rgba(244,123,32,0.3); }
+.subject-tab:active { transform: scale(0.97); }
+
+/* SUB TABS (video / fiches) */
+.sub-tabs { display:flex; gap:8px; padding: 14px 20px 4px; }
+.sub-tab { flex:1; text-align:center; padding:9px 6px; border-radius:10px; background:#f1f5f9; font-weight:700; font-size:12.5px; color:var(--text-muted); cursor:pointer; border:none; transition:var(--transition); }
+.sub-tab.active { background: var(--text-main); color:white; }
+
+.theme-subheader { padding: 16px 20px 4px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; color: var(--text-muted); display:flex; align-items:center; gap:8px; }
+.theme-subheader::after { content:''; flex:1; height:1px; background: var(--border-color); }
+
+/* DUAL SUBJECTS GRID */
+.dual-subjects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 20px; }
+.subject-box { border-radius: var(--radius-lg); padding: 20px 16px; text-decoration: none; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm); transition: var(--transition); border: 1px solid transparent; cursor:pointer; }
+.subject-box.maths-style { background: linear-gradient(135deg, #e8f5ed, #ccebda); color: var(--green-dark); }
+.subject-box.physique-style { background: linear-gradient(135deg, #fef0e6, #ffdcc3); color: var(--orange-dark); }
+.subject-box:hover { transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.06); }
+.subject-box .box-icon { font-size: 32px; background: white; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.subject-box h4 { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 800; color: var(--text-main); }
+.subject-box .indicator { font-size: 12px; font-weight: 700; opacity: 0.8; }
+.subject-box .count-badge { position:absolute; top:14px; right:14px; background:rgba(255,255,255,0.7); font-size:11px; font-weight:800; padding:3px 9px; border-radius:20px; }
+
+/* HORIZONTAL SCROLL */
+.horizontal-cards-scroller { display: flex; gap: 14px; overflow-x: auto; padding: 0 20px 12px; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
+.horizontal-cards-scroller::-webkit-scrollbar { display: none; }
+.premium-course-card { scroll-snap-align:start; min-width: 220px; max-width: 240px; background: white; border-radius: var(--radius-md); padding: 16px; flex-shrink: 0; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+.premium-course-card:hover { border-color: #cbd5e1; transform: scale(1.02) translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+.card-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content; padding: 3px 9px; border-radius: 20px; }
+.card-tag.maths-tag { background: var(--green-light); color: var(--green); }
+.card-tag.physique-tag { background: var(--orange-light); color: var(--orange); }
+.course-title-text { font-size: 14px; font-weight: 800; color: var(--text-main); line-height: 1.4; min-height: 40px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* LIST */
+.extended-list-wrapper { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
+.premium-list-item { background: white; border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: var(--transition); gap:10px; }
+.premium-list-item:hover { transform: translateX(4px); border-color: #cbd5e1; }
+.item-left-meta { display: flex; align-items: center; gap: 14px; min-width:0; }
+.item-icon-indicator { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink:0; }
+.item-icon-indicator.maths-indicator { background: var(--green-light); color: var(--green); }
+.item-icon-indicator.physique-indicator { background: var(--orange-light); color: var(--orange); }
+.item-info-titles { min-width:0; }
+.item-info-titles h4 { font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.item-info-titles p { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.item-actions { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.action-circle-btn { width: 34px; height: 34px; border-radius: 50%; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: var(--transition); color: var(--text-main); text-decoration:none; }
+.action-circle-btn:hover { background: var(--text-main); color: white; }
+.fav-btn { background:none; border:none; font-size:17px; cursor:pointer; color:#cbd5e1; transition:var(--transition); }
+.fav-btn.active { color: var(--orange); transform: scale(1.15); }
+
+.empty-state { text-align:center; padding: 40px 24px; color: var(--text-muted); }
+.empty-state .emoji { font-size: 38px; margin-bottom: 10px; }
+.empty-state strong { display:block; color: var(--text-main); font-size:14px; margin-bottom:4px; }
+
+/* PROFIL */
+.dashboard-profile-box { background: var(--green-gradient); color: white; padding: 40px 20px 30px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: var(--shadow-md); }
+.big-avatar { width: 90px; height: 90px; background: white; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 42px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+.big-avatar-label { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; }
+.big-avatar-sub { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+.settings-group { background: white; margin: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow-sm); }
+.settings-row { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: var(--transition); background:none; border-left:none; border-right:none; border-top:none; width:100%; text-align:left; }
+.settings-row:last-child { border-bottom: none; }
+.settings-row:hover { background: #f8fafc; }
+.settings-label-side { display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: var(--text-main); }
+.settings-row .chev { color:var(--text-muted); }
+.mini-sub-list { padding: 0 20px 18px; display:flex; flex-direction:column; gap:8px; }
+.mini-sub-item { font-size:12.5px; font-weight:700; background:#f8fafc; padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; }
+
+/* MODAL téléchargement */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(5px); transition: var(--transition); }
+.modal-overlay.open { display: flex; }
+.modal-sheet { background: white; border-radius: 30px 30px 0 0; padding: 24px 20px 34px; width: 100%; max-width: 480px; box-shadow: 0 -10px 35px rgba(0,0,0,0.1); animation: slideSheet 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); max-height:88vh; overflow-y:auto; }
+@keyframes slideSheet { from { transform: translateY(100%);} to { transform: translateY(0);} }
+.modal-drag-handle { width: 46px; height: 5px; background: #cbd5e1; border-radius: 3px; margin: 0 auto 20px; }
+.modal-main-icon { font-size: 44px; text-align: center; margin-bottom: 12px; }
+.modal-sheet h3 { font-family: 'Poppins', sans-serif; font-size: 19px; font-weight: 800; text-align: center; color: var(--text-main); margin-bottom: 6px; }
+.modal-sheet p.modal-desc-text { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px; line-height: 1.5; padding: 0 10px; }
+.meta-table-box { background: #f8fafc; border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 24px; border: 1px solid var(--border-color); }
+.meta-table-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; }
+.meta-table-row:last-child { border-bottom: none; }
+.meta-table-row span:first-child { color: var(--text-muted); font-weight: 600; }
+.meta-table-row span:last-child { font-weight: 700; color: var(--green-dark); }
+.btn-download-trigger { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: var(--green-gradient); color: white; font-weight: 800; font-size: 15px; padding: 15px; border-radius: var(--radius-md); border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(26,150,64,0.3); transition: var(--transition); text-decoration: none; }
+.btn-download-trigger:hover { box-shadow: 0 8px 25px rgba(26,150,64,0.4); transform: translateY(-1px); }
+.btn-dismiss { display: block; text-align: center; margin-top: 16px; color: var(--text-muted); font-size: 13px; font-weight: 700; background: none; border: none; width: 100%; cursor: pointer; }
+
+/* FOOTER NAV */
+.bottom-nav-dock { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border-color); display: flex; box-shadow: 0 -8px 30px rgba(0,0,0,0.06); z-index: 90; height: 70px; }
+.dock-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-muted); border: none; background: none; cursor: pointer; transition: var(--transition); }
+.dock-item.active { color: var(--green); }
+.dock-item svg, .dock-item img { width: 22px; height: 22px; transition: var(--transition); opacity: 0.8; }
+.dock-item.active svg { transform: translateY(-3px) scale(1.05); opacity: 1; }
+.dock-item span { font-size: 11px; font-weight: 700; }
+.dock-item a { text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; }
+
+/* TOAST */
+.toast-stack { position: fixed; bottom: 86px; left: 50%; transform: translateX(-50%); z-index: 1200; display:flex; flex-direction:column; gap:8px; align-items:center; width:100%; padding:0 20px; pointer-events:none; }
+.toast { background: var(--text-main); color:white; font-size:13px; font-weight:700; padding:12px 18px; border-radius:30px; box-shadow:0 8px 20px rgba(0,0,0,0.25); animation: toastIn 0.3s ease, toastOut 0.3s ease 2.4s forwards; max-width:340px; text-align:center; }
+@keyframes toastIn { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+@keyframes toastOut { to{opacity:0; transform:translateY(-8px);} }
+
+/* ADMIN */
+/* CHAT IA */
+.ai-fab { position: fixed; right: 18px; bottom: 86px; width: 56px; height: 56px; border-radius: 50%; background: var(--green-gradient); color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 24px rgba(26,150,64,0.4); cursor: pointer; z-index: 95; transition: var(--transition); }
+.ai-fab:hover { transform: scale(1.06); }
+.ai-fab:active { transform: scale(0.94); }
+.ai-fab .pulse-dot { position:absolute; top:2px; right:2px; width:12px; height:12px; background:var(--orange); border-radius:50%; border:2px solid white; }
+.ai-chat-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:1300; align-items:flex-end; justify-content:center; backdrop-filter: blur(4px); }
+.ai-chat-overlay.open { display:flex; }
+.ai-chat-panel { background:white; width:100%; max-width:480px; height:82vh; border-radius:26px 26px 0 0; display:flex; flex-direction:column; overflow:hidden; animation: slideSheet 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
+.ai-chat-header { background: var(--green-gradient); color:white; padding:16px 18px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.ai-chat-avatar { width:38px; height:38px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:19px; border:1.5px solid rgba(255,255,255,0.4); }
+.ai-chat-header .grow { flex:1; }
+.ai-chat-header h4 { font-family:'Poppins',sans-serif; font-size:14.5px; font-weight:800; }
+.ai-chat-header p { font-size:11px; opacity:0.85; display:flex; align-items:center; gap:5px; }
+.ai-chat-header p::before { content:''; width:7px; height:7px; background:#4ade80; border-radius:50%; display:inline-block; }
+.ai-chat-close { background:rgba(255,255,255,0.2); border:none; color:white; width:30px; height:30px; border-radius:50%; font-size:15px; cursor:pointer; }
+.ai-chat-body { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; background:#f8fafc; }
+.ai-msg { max-width:82%; padding:11px 14px; border-radius:16px; font-size:13.5px; line-height:1.5; animation: fadeUp 0.3s ease both; white-space:pre-wrap; }
+.ai-msg.from-ai { background:white; border:1px solid var(--border-color); align-self:flex-start; border-bottom-left-radius:4px; }
+.ai-msg.from-user { background: var(--green-gradient); color:white; align-self:flex-end; border-bottom-right-radius:4px; }
+.ai-chips { display:flex; gap:8px; overflow-x:auto; padding: 2px 2px 4px; }
+.ai-chip { flex-shrink:0; background:white; border:1.5px solid var(--border-color); color:var(--green-dark); font-size:11.5px; font-weight:700; padding:8px 13px; border-radius:20px; cursor:pointer; white-space:nowrap; }
+.ai-chip:hover { border-color:var(--green); }
+.ai-typing { display:flex; gap:4px; align-self:flex-start; background:white; border:1px solid var(--border-color); padding:12px 16px; border-radius:16px; border-bottom-left-radius:4px; }
+.ai-typing span { width:6px; height:6px; background:#94a3b8; border-radius:50%; animation: typingBounce 1.1s infinite; }
+.ai-typing span:nth-child(2){animation-delay:.15s} .ai-typing span:nth-child(3){animation-delay:.3s}
+@keyframes typingBounce { 0%,60%,100%{transform:translateY(0);opacity:.5;} 30%{transform:translateY(-5px);opacity:1;} }
+.ai-chat-footer { padding:12px 14px; border-top:1px solid var(--border-color); background:white; flex-shrink:0; }
+.ai-input-row { display:flex; gap:8px; align-items:center; background:#f1f5f9; border-radius:26px; padding:6px 6px 6px 16px; }
+.ai-input-row input { flex:1; border:none; background:none; outline:none; font-size:13.5px; font-weight:600; font-family:inherit; }
+.ai-send-btn { width:38px; height:38px; border-radius:50%; background:var(--green-gradient); color:white; border:none; font-size:16px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.ai-send-btn:disabled { opacity:0.5; }
+.ai-disclaimer { font-size:10px; color:var(--text-muted); text-align:center; margin-top:8px; }
+
+/* FORUM */
+.forum-composer { margin: 16px 20px; background: white; border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+.forum-composer textarea { width:100%; border:1.5px solid var(--border-color); border-radius:12px; padding:12px 14px; font-family:inherit; font-size:13.5px; font-weight:600; resize:vertical; min-height:70px; margin-bottom:10px; }
+.forum-composer textarea:focus { outline:none; border-color:var(--green); }
+.forum-composer-row { display:flex; gap:8px; align-items:center; }
+.forum-composer-row select { flex:1; padding:10px 12px; border-radius:10px; border:1.5px solid var(--border-color); font-size:12.5px; font-weight:700; font-family:inherit; color:var(--text-muted); }
+.forum-post-btn { background: var(--green-gradient); color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer; flex-shrink:0; }
+.forum-post-btn:disabled { opacity:0.5; }
+.forum-feed { padding: 0 20px; display:flex; flex-direction:column; gap:12px; }
+.forum-post-card { background:white; border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.forum-post-head { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.forum-avatar { width:34px; height:34px; border-radius:50%; background: var(--green-light); color:var(--green-dark); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0; }
+.forum-post-meta { min-width:0; }
+.forum-post-meta .author { font-size:13px; font-weight:800; color:var(--text-main); }
+.forum-post-meta .time { font-size:11px; color:var(--text-muted); font-weight:600; }
+.forum-post-tag { margin-left:auto; font-size:10px; font-weight:800; background:var(--orange-light); color:var(--orange-dark); padding:3px 9px; border-radius:20px; white-space:nowrap; }
+.forum-post-text { font-size:13.5px; line-height:1.55; color:var(--text-main); margin-bottom:10px; white-space:pre-wrap; }
+.forum-post-actions { display:flex; gap:16px; }
+.forum-action-btn { background:none; border:none; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:700; color:var(--text-muted); cursor:pointer; }
+.forum-action-btn.liked { color:var(--orange); }
+.forum-replies { margin-top:12px; padding-top:12px; border-top:1px dashed var(--border-color); display:flex; flex-direction:column; gap:10px; }
+.forum-reply { display:flex; gap:8px; }
+.forum-reply .forum-avatar { width:26px; height:26px; font-size:11px; }
+.forum-reply-bubble { background:#f8fafc; border-radius:12px; padding:8px 12px; flex:1; }
+.forum-reply-bubble .author { font-size:12px; font-weight:800; }
+.forum-reply-bubble .text { font-size:12.5px; margin-top:2px; }
+.forum-reply-form { display:flex; gap:8px; margin-top:10px; }
+.forum-reply-form input { flex:1; border:1.5px solid var(--border-color); border-radius:20px; padding:8px 14px; font-size:12.5px; font-family:inherit; }
+.forum-reply-form button { background:var(--text-main); color:white; border:none; width:32px; height:32px; border-radius:50%; font-size:13px; cursor:pointer; flex-shrink:0; }
+.forum-empty-config { margin: 40px 24px; text-align:center; color:var(--text-muted); background:white; border-radius:var(--radius-lg); padding:30px 20px; border:1px dashed var(--border-color); }
+.forum-empty-config .emoji { font-size:32px; margin-bottom:10px; }
+
+/* QUIZ */
+.quiz-btn { background: var(--orange-light); color: var(--orange-dark); }
+.quiz-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:1250; align-items:flex-end; justify-content:center; backdrop-filter: blur(4px); }
+.quiz-overlay.open { display:flex; }
+.quiz-panel { background:#f8fafc; width:100%; max-width:480px; height:88vh; border-radius:26px 26px 0 0; display:flex; flex-direction:column; overflow:hidden; animation: slideSheet 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+.quiz-header { background: var(--orange-gradient); color:white; padding:16px 18px; flex-shrink:0; }
+.quiz-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.quiz-header h4 { font-family:'Poppins',sans-serif; font-size:14.5px; font-weight:800; }
+.quiz-close { background:rgba(255,255,255,0.2); border:none; color:white; width:30px; height:30px; border-radius:50%; font-size:15px; cursor:pointer; }
+.quiz-progress-bar { height:6px; background:rgba(255,255,255,0.3); border-radius:10px; overflow:hidden; }
+.quiz-progress-fill { height:100%; background:white; border-radius:10px; transition: width 0.35s ease; }
+.quiz-body { flex:1; overflow-y:auto; padding:20px 18px; }
+.quiz-loading { text-align:center; padding: 60px 20px; color:var(--text-muted); }
+.quiz-loading .spinner { width:36px; height:36px; border:3px solid #e2e8f0; border-top-color:var(--orange); border-radius:50%; margin:0 auto 16px; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.quiz-question-card { background:white; border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.quiz-q-label { font-size:11px; font-weight:800; color:var(--orange-dark); text-transform:uppercase; margin-bottom:8px; }
+.quiz-q-text { font-size:15.5px; font-weight:800; line-height:1.45; margin-bottom:18px; }
+.quiz-option { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#f8fafc; border:1.5px solid var(--border-color); border-radius:14px; padding:13px 16px; margin-bottom:10px; cursor:pointer; font-size:13.5px; font-weight:700; font-family:inherit; color:var(--text-main); transition:var(--transition); }
+.quiz-option .opt-letter { width:26px; height:26px; border-radius:50%; background:white; border:1.5px solid var(--border-color); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+.quiz-option:not(:disabled):hover { border-color:var(--orange); }
+.quiz-option.selected { border-color: var(--green); background: var(--green-light); }
+.quiz-option.correct { border-color:#16a34a; background:#dcfce7; }
+.quiz-option.incorrect { border-color:#ef4444; background:#fee2e2; }
+.quiz-option.correct .opt-letter { background:#16a34a; color:white; border-color:#16a34a; }
+.quiz-option.incorrect .opt-letter { background:#ef4444; color:white; border-color:#ef4444; }
+.quiz-explain { background:var(--orange-light); border-radius:12px; padding:12px 14px; font-size:12.5px; line-height:1.5; color:var(--orange-dark); margin-top:6px; }
+.quiz-footer { padding:14px 18px; background:white; border-top:1px solid var(--border-color); flex-shrink:0; }
+.quiz-next-btn { width:100%; background: var(--green-gradient); color:white; font-weight:800; font-size:15px; padding:15px; border-radius:14px; border:none; cursor:pointer; }
+.quiz-next-btn:disabled { opacity:0.4; }
+.quiz-result { text-align:center; padding:20px 10px; }
+.quiz-result .score-ring { width:120px; height:120px; border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; }
+.quiz-result .score-ring .inner { width:96px; height:96px; background:white; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.quiz-result .inner .big { font-size:26px; font-weight:900; font-family:'Poppins',sans-serif; }
+.quiz-result .inner .small { font-size:11px; color:var(--text-muted); font-weight:700; }
+.quiz-result h3 { font-family:'Poppins',sans-serif; font-size:18px; font-weight:800; margin-bottom:6px; }
+.quiz-result p { font-size:13px; color:var(--text-muted); margin-bottom:20px; }
+
+/* LÉGAL */
+.legal-content { padding: 4px 20px 30px; }
+.legal-content h4 { font-family:'Poppins',sans-serif; font-size:15px; font-weight:800; margin:20px 0 8px; color:var(--text-main); }
+.legal-content h4:first-child { margin-top:6px; }
+.legal-content p, .legal-content li { font-size:13px; line-height:1.65; color:var(--text-muted); margin-bottom:8px; }
+.legal-content ul { padding-left:18px; margin-bottom:10px; }
+.legal-content strong { color:var(--text-main); }
+.legal-updated { font-size:11px; color:var(--text-muted); font-style:italic; padding:0 20px 10px; }
+.auth-legal-note { font-size:11px; color:var(--text-muted); text-align:center; margin-top:12px; line-height:1.5; }
+.auth-legal-note a { color: var(--green-dark); font-weight:700; text-decoration:underline; cursor:pointer; }
+
+/* LÉGAL (confidentialité / CGU) : voir .legal-content plus haut pour les styles du contenu */
+
+/* COURS VIDÉO */
+.video-course-card { background:white; border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); cursor:pointer; transition:var(--transition); }
+.video-course-card:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.08); }
+.video-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#0f172a; overflow:hidden; }
+.video-thumb-wrap img { width:100%; height:100%; object-fit:cover; }
+.video-play-badge { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.25); }
+.video-play-badge .circle { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.95); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--green-dark); box-shadow:0 4px 14px rgba(0,0,0,0.3); }
+.video-course-info { padding:12px 14px; }
+.video-course-info h4 { font-size:13.5px; font-weight:800; line-height:1.35; margin-bottom:4px; }
+.video-course-info p { font-size:11px; color:var(--text-muted); font-weight:600; }
+.video-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1300; align-items:center; justify-content:center; padding:0; }
+.video-overlay.open { display:flex; flex-direction:column; }
+.video-overlay-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; color:white; }
+.video-overlay-header h4 { font-size:13px; font-weight:700; max-width:80%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.video-overlay-close { background:rgba(255,255,255,0.15); border:none; color:white; width:34px; height:34px; border-radius:50%; font-size:16px; cursor:pointer; flex-shrink:0; }
+.video-overlay-frame-wrap { width:100%; aspect-ratio:16/9; background:black; }
+.video-overlay-frame-wrap iframe { width:100%; height:100%; border:none; }
+
+.admin-gate { padding: 60px 24px; text-align:center; }
+.admin-gate .emoji { font-size:44px; margin-bottom:12px; }
+.admin-gate h2 { font-family:'Poppins',sans-serif; font-size:19px; font-weight:800; margin-bottom:6px; }
+.admin-gate p { font-size:13px; color:var(--text-muted); margin-bottom:20px; }
+.admin-gate input { width:100%; max-width:280px; padding:13px 16px; border-radius:12px; border:1.5px solid var(--border-color); font-size:14px; font-weight:700; text-align:center; margin-bottom:12px; }
+.admin-gate .hint { font-size:11px; color:var(--text-muted); margin-top:10px; }
+.admin-header { background: linear-gradient(135deg,#1e293b,#0f172a); color:white; padding:26px 20px; border-radius:0 0 24px 24px; }
+.admin-header h2 { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; }
+.admin-header p { font-size:12.5px; color:#94a3b8; margin-top:4px; }
+.admin-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding: 16px 20px; }
+.admin-stat-card { background:white; border-radius:var(--radius-md); padding:14px 10px; text-align:center; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.admin-stat-card .num { font-family:'Poppins',sans-serif; font-size:20px; font-weight:900; color:var(--green-dark); }
+.admin-stat-card .lbl { font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-top:2px; }
+.admin-add-btn { margin: 4px 20px 8px; display:flex; align-items:center; justify-content:center; gap:8px; background: var(--orange-gradient); color:white; font-weight:800; font-size:14px; padding:14px; border-radius:var(--radius-md); border:none; cursor:pointer; box-shadow:0 6px 18px rgba(244,123,32,0.35); width:calc(100% - 40px); }
+.admin-list-item { background:white; border-radius:var(--radius-md); padding:13px 16px; display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.admin-list-item .grow { flex:1; min-width:0; }
+.admin-list-item h5 { font-size:13.5px; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.admin-list-item .tags { display:flex; gap:6px; margin-top:4px; flex-wrap:wrap; }
+.admin-list-item .tags span { font-size:10px; font-weight:800; padding:2px 8px; border-radius:20px; background:#f1f5f9; color:var(--text-muted); }
+.admin-icon-btn { width:32px; height:32px; border-radius:10px; border:none; background:#f1f5f9; cursor:pointer; font-size:14px; }
+.admin-icon-btn.danger:hover { background:#fee2e2; }
+.admin-icon-btn.edit:hover { background:var(--green-light); }
+
+/* STATUS BADGE */
+.status-badge { font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: 20px; white-space: nowrap; text-transform: uppercase; letter-spacing: .2px; }
+.status-badge.pending { background: #fef3c7; color: #b45309; }
+.status-badge.ready { background: var(--green-light); color: var(--green-dark); }
+.item-info-titles p.meta-line { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+
+/* AUTH SCREENS */
+.auth-screen { min-height: 100vh; display:flex; align-items:center; justify-content:center; padding: 28px 20px; background: linear-gradient(160deg,#0f172a,#134e2b 55%,#1a9640); position:relative; overflow:hidden; }
+.auth-screen::before { content:''; position:absolute; top:-80px; left:-60px; width:220px; height:220px; background:var(--orange); opacity:.25; filter:blur(60px); border-radius:50%; animation: floatBlob 8s ease-in-out infinite; }
+.auth-screen::after { content:''; position:absolute; bottom:-100px; right:-60px; width:260px; height:260px; background:#4ade80; opacity:.2; filter:blur(70px); border-radius:50%; animation: floatBlob 9s ease-in-out infinite reverse; }
+.auth-card { position:relative; z-index:1; width:100%; max-width:380px; background:white; border-radius: 26px; padding: 30px 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.35); animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+.auth-logo { width:64px; height:64px; border-radius:50%; background: var(--green-gradient); display:flex; align-items:center; justify-content:center; font-size:28px; margin: 0 auto 14px; box-shadow: 0 10px 24px rgba(26,150,64,0.35); }
+.auth-card h2 { font-family:'Poppins',sans-serif; text-align:center; font-size:20px; font-weight:800; margin-bottom:4px; }
+.auth-card .auth-sub { text-align:center; font-size:12.5px; color:var(--text-muted); margin-bottom:22px; }
+.auth-tabs { display:flex; background:#f1f5f9; border-radius:14px; padding:4px; margin-bottom:20px; }
+.auth-tab { flex:1; text-align:center; padding:9px; border-radius:11px; font-size:13px; font-weight:800; color:var(--text-muted); background:none; border:none; cursor:pointer; transition:var(--transition); }
+.auth-tab.active { background:white; color:var(--green-dark); box-shadow:0 3px 10px rgba(0,0,0,0.08); }
+.auth-field { margin-bottom: 14px; position:relative; }
+.auth-field label { display:block; font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px; letter-spacing:.3px; }
+.auth-field input { width:100%; padding:13px 14px; border-radius:12px; border:1.5px solid var(--border-color); font-size:14px; font-weight:600; font-family:inherit; transition:var(--transition); }
+.auth-field input:focus { border-color:var(--green); box-shadow:0 0 0 4px rgba(26,150,64,0.1); }
+.auth-toggle-pw { position:absolute; right:12px; top:37px; background:none; border:none; cursor:pointer; font-size:14px; color:var(--text-muted); }
+.auth-error { background:#fee2e2; color:#b91c1c; font-size:12.5px; font-weight:700; padding:10px 12px; border-radius:10px; margin-bottom:14px; display:none; }
+.auth-submit { width:100%; background: var(--green-gradient); color:white; font-weight:800; font-size:15px; padding:15px; border-radius:14px; border:none; cursor:pointer; box-shadow:0 8px 22px rgba(26,150,64,0.35); transition:var(--transition); margin-top:4px; }
+.auth-submit:active { transform: scale(0.98); }
+.auth-guest { width:100%; background:none; border:none; text-align:center; color:var(--text-muted); font-size:12.5px; font-weight:700; padding:14px 0 2px; cursor:pointer; }
+.auth-forgot { display:block; text-align:center; font-size:12px; font-weight:700; color:var(--orange); background:none; border:none; cursor:pointer; margin-top:12px; }
+
+.form-sheet-field { margin-bottom: 14px; }
+.form-sheet-field label { display:block; font-size:12px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px; }
+.form-sheet-field input, .form-sheet-field select { width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--border-color); font-size:14px; font-weight:600; font-family:inherit; }
+.form-sheet-field input:focus, .form-sheet-field select:focus { border-color:var(--green); }
+.form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.btn-save-form { width:100%; background: var(--green-gradient); color:white; font-weight:800; font-size:15px; padding:15px; border-radius:var(--radius-md); border:none; cursor:pointer; box-shadow:0 6px 20px rgba(26,150,64,0.3); margin-top:6px; }
+.btn-cancel-form { width:100%; background:none; border:none; color:var(--text-muted); font-weight:700; font-size:13px; padding:12px; cursor:pointer; }
+/* ============ RESPONSIVE : mobile étroit ============ */
+@media (max-width: 380px) {
+  .search-wrapper { padding: 12px 16px 6px; }
+  .hero-banner { margin: 14px 16px; padding: 20px; }
+  .hero-banner h1 { font-size: 21px; }
+  .progression-container { padding: 0 16px; gap: 10px; }
+  .dual-subjects-grid { padding: 0 16px; gap: 10px; }
+  .subject-box { padding: 16px 12px; }
+  .section-headline { padding: 20px 16px 10px; }
+  .subject-tabs { padding: 0 16px 4px; gap: 6px; }
+  .subject-tab { font-size: 12px; padding: 10px 4px; }
+  .extended-list-wrapper, .horizontal-cards-scroller { padding-left: 16px; padding-right: 16px; }
+  .item-info-titles h4 { font-size: 13px; }
+  .forum-composer { margin: 14px 16px; padding: 14px; }
+  .forum-composer-row { flex-wrap: wrap; }
+  .forum-composer-row select { min-width: 100%; order: 2; }
+  .forum-post-btn { width: 100%; order: 1; }
+  .admin-stats { padding: 14px 16px; gap: 8px; }
+  .admin-stat-card { padding: 12px 6px; }
+  .admin-stat-card .num { font-size: 17px; }
+}
+@media (max-width: 340px) {
+  .dual-subjects-grid { grid-template-columns: 1fr; }
+  .progression-container { grid-template-columns: 1fr; }
+}
+
+/* ============ RESPONSIVE : tablette / PC ============ */
+@media (min-width: 640px) {
+  body { background: #dde3ea; }
+  #app-shell {
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--bg-main);
+    min-height: 100vh;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 30px 80px rgba(15,23,42,0.18);
+    position: relative;
+  }
+  nav { max-width: 480px; margin: 0 auto; left: 0; right: 0; }
+  .bottom-nav-dock { max-width: 480px; left: 50%; transform: translateX(-50%); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); }
+  .ai-fab { right: calc(50% - 240px + 18px); }
+  .modal-overlay, .ai-chat-overlay { max-width: none; }
+  .modal-sheet, .ai-chat-panel { max-width: 480px; margin: 0 auto; }
+  .auth-screen { background: linear-gradient(160deg,#0f172a,#134e2b 55%,#1a9640); }
+}
+@media (min-width: 1024px) {
+  body { display:flex; justify-content:center; align-items:flex-start; padding: 32px 0; min-height:100vh; }
+  #app-shell { border-radius: 28px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 40px 100px rgba(15,23,42,0.25); }
+  nav { border-radius: 28px 28px 0 0; }
+  .bottom-nav-dock { border-radius: 0 0 28px 28px; }
+  .auth-screen { border-radius: 28px; min-height: auto; max-width: 480px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">🎓</div>
+    <h2 id="auth-title">Content de te revoir</h2>
+    <p class="auth-sub" id="auth-sub">Connecte-toi pour accéder à tes cours</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="auth-tab-login" onclick="switchAuthTab('login')">Connexion</button>
+      <button class="auth-tab" id="auth-tab-signup" onclick="switchAuthTab('signup')">Inscription</button>
+    </div>
+    <div class="auth-error" id="auth-error"></div>
+
+    <form id="login-form" onsubmit="return handleLogin(event)">
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="toi@exemple.com" required>
+      </div>
+      <div class="auth-field">
+        <label>Mot de passe</label>
+        <input type="password" id="login-password" placeholder="••••••••" required>
+        <button type="button" class="auth-toggle-pw" onclick="togglePw('login-password')">👁️</button>
+      </div>
+      <button type="submit" class="auth-submit">Se connecter</button>
+      <button type="button" class="auth-forgot" onclick="showToast('Fonctionnalité à venir — contacte l\'administrateur pour réinitialiser ton mot de passe')">Mot de passe oublié ?</button>
+    </form>
+
+    <form id="signup-form" onsubmit="return handleSignup(event)" style="display:none;">
+      <div class="auth-field">
+        <label>Nom complet</label>
+        <input type="text" id="signup-name" placeholder="Ton nom" required>
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="toi@exemple.com" required>
+      </div>
+      <div class="auth-field">
+        <label>Mot de passe</label>
+        <input type="password" id="signup-password" placeholder="6 caractères minimum" required>
+        <button type="button" class="auth-toggle-pw" onclick="togglePw('signup-password')">👁️</button>
+      </div>
+      <div class="auth-field">
+        <label>Confirmer le mot de passe</label>
+        <input type="password" id="signup-password2" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="auth-submit">Créer mon compte</button>
+      <p class="auth-legal-note">En créant un compte, tu acceptes nos <a onclick="openLegalFromAuth('terms')">CGU</a> et notre <a onclick="openLegalFromAuth('privacy')">politique de confidentialité</a>.</p>
+    </form>
+
+    <button class="auth-guest" onclick="continueAsGuest()">Continuer sans compte ›</button>
+  </div>
+</div>
+
+<div id="app-shell" style="display:none;">
+
+<nav>
+  <div class="nav-left">
+    <div class="logo-container">
+      <img src="school online logo.png" alt="Logo Schoolonline.ci" class="logo-img" onerror="this.style.display='none'">
+    </div>
+    <span class="brand-title">Schoolonline.ci</span>
+  </div>
+  <div class="profile-trigger" onclick="switchPage('profil')" role="button" tabindex="0" aria-label="Ouvrir mon profil">🎓</div>
+</nav>
+
+<div class="search-wrapper">
+  <div class="search-bar">
+    <span aria-hidden="true">🔍</span>
+    <input id="global-search" type="text" placeholder="Rechercher un cours, un TD, un chapitre..." oninput="handleSearch(this.value)">
+    <button class="clear-btn" id="search-clear" onclick="clearSearch()" aria-label="Effacer la recherche">✕</button>
+  </div>
+</div>
+<div class="search-results-banner" id="search-banner"></div>
+
+<main>
+
+  <div id="page-accueil" class="page active">
+    <div class="hero-banner">
+      <div class="hero-badge">Filière Scientifique • Série D</div>
+      <h1>Optimise tes révisions<br>en ligne</h1>
+      <p>Accède instantanément aux fiches de cours, TD et exercices corrigés de Maths et Physique-Chimie.</p>
+      <button class="btn-action" onclick="switchPage('cours')">🚀 Découvrir les chapitres</button>
+    </div>
+
+    <div class="section-headline" style="padding-top:10px;"><h3>Mon parcours de progression</h3></div>
+    <div class="progression-container">
+      <div class="progression-card">
+        <div class="ring ring-maths" id="ring-maths" style="--p:0%" data-label="0%"></div>
+        <div class="prog-text-col"><p class="prog-subject">Mathématiques</p><p class="prog-value" id="prog-maths-text">Chargement...</p></div>
+      </div>
+      <div class="progression-card">
+        <div class="ring ring-phys" id="ring-physique" style="--p:0%" data-label="0%"></div>
+        <div class="prog-text-col"><p class="prog-subject">Physique-Chimie</p><p class="prog-value" id="prog-physique-text">Chargement...</p></div>
+      </div>
+    </div>
+
+    <div class="section-headline"><h3>Explorer mes matières</h3></div>
+    <div class="dual-subjects-grid">
+      <div class="subject-box maths-style" onclick="switchPage('cours'); selectSubjectTab('cours','maths')">
+        <span class="count-badge" id="badge-maths-count">12 cours</span>
+        <div class="box-icon">🧮</div>
+        <h4>Mathématiques</h4>
+        <span class="indicator">Accéder aux TD ›</span>
+      </div>
+      <div class="subject-box physique-style" onclick="switchPage('cours'); selectSubjectTab('cours','physique')">
+        <span class="count-badge" id="badge-physique-count">27 cours</span>
+        <div class="box-icon">⚗️</div>
+        <h4>Physique-Chimie</h4>
+        <span class="indicator">Accéder aux TD ›</span>
+      </div>
+    </div>
+
+    <div class="section-headline">
+      <h3>Recommandé pour toi</h3>
+      <button class="link" onclick="switchPage('cours')">Voir tout</button>
+    </div>
+    <div class="horizontal-cards-scroller" id="reco-scroller"></div>
+  </div>
+
+  <div id="page-cours" class="page">
+    <div class="section-headline"><h3>Tous les Cours & Fiches</h3></div>
+    <div class="subject-tabs">
+      <button class="subject-tab tab-maths active" id="cours-tab-maths" onclick="selectSubjectTab('cours','maths')">🧮 Mathématiques</button>
+      <button class="subject-tab tab-physique" id="cours-tab-physique" onclick="selectSubjectTab('cours','physique')">⚗️ Physique-Chimie</button>
+    </div>
+    <div class="sub-tabs">
+      <button class="sub-tab active" id="cours-subtab-fiche" onclick="selectCoursSubTab('fiche')">📄 Fiches & TD</button>
+      <button class="sub-tab" id="cours-subtab-video" onclick="selectCoursSubTab('video')">🎥 Cours vidéo</button>
+    </div>
+    <div id="cours-list-container"></div>
+  </div>
+
+  <div id="page-exercices" class="page">
+    <div class="section-headline"><h3>Exercices & Corrections</h3></div>
+    <div class="subject-tabs">
+      <button class="subject-tab tab-maths active" id="exo-tab-maths" onclick="selectSubjectTab('exo','maths')">🧮 Mathématiques</button>
+      <button class="subject-tab tab-physique" id="exo-tab-physique" onclick="selectSubjectTab('exo','physique')">⚗️ Physique-Chimie</button>
+    </div>
+    <div class="sub-tabs">
+      <button class="sub-tab active" id="exo-subtab-video" onclick="selectExoSubTab('video')">🎥 Corrections vidéo</button>
+      <button class="sub-tab" id="exo-subtab-fiche" onclick="selectExoSubTab('fiche')">📝 Fiches d'exercices</button>
+    </div>
+    <div id="exo-list-container"></div>
+  </div>
+
+  <div id="page-forum" class="page">
+    <div class="section-headline"><h3>💬 Forum entre élèves</h3></div>
+    <div class="subject-tabs">
+      <button class="subject-tab tab-maths active" id="forum-tab-maths" onclick="selectForumTab('maths')">🧮 Mathématiques</button>
+      <button class="subject-tab tab-physique" id="forum-tab-physique" onclick="selectForumTab('physique')">⚗️ Physique-Chimie</button>
+    </div>
+
+    <div class="forum-composer">
+      <textarea id="forum-input" placeholder="Pose ta question à toute la communauté..." maxlength="500"></textarea>
+      <div class="forum-composer-row">
+        <select id="forum-theme-select"></select>
+        <button class="forum-post-btn" id="forum-post-btn" onclick="postForumMessage()">Publier</button>
+      </div>
+    </div>
+
+    <div id="forum-feed" class="forum-feed"></div>
+  </div>
+
+  <div id="page-profil" class="page">
+    <div class="dashboard-profile-box">
+      <div class="big-avatar">🎓</div>
+      <div class="big-avatar-label" id="profil-name">Espace Élève Scientifique</div>
+      <div class="big-avatar-sub" id="profil-sub">Lycée Connecté • Côte d'Ivoire</div>
+    </div>
+    <div class="settings-group">
+      <button class="settings-row" onclick="toggleMiniList('dl-list')">
+        <div class="settings-label-side">💾 <span>Mes téléchargements récents</span></div>
+        <span class="chev">›</span>
+      </button>
+      <div class="mini-sub-list" id="dl-list" style="display:none;"></div>
+      <button class="settings-row" onclick="toggleMiniList('fav-list')">
+        <div class="settings-label-side">⭐ <span>Chapitres mis en favoris</span></div>
+        <span class="chev">›</span>
+      </button>
+      <div class="mini-sub-list" id="fav-list" style="display:none;"></div>
+      <button class="settings-row" onclick="showToast('🔔 Notifications activées pour les nouveaux TD')">
+        <div class="settings-label-side">🔔 <span>Notifications de nouveaux TD</span></div>
+        <span class="chev">›</span>
+      </button>
+    </div>
+    <div class="settings-group">
+      <button class="settings-row" onclick="switchPage('legal')">
+        <div class="settings-label-side">📜 <span>Confidentialité & CGU</span></div>
+        <span class="chev">›</span>
+      </button>
+      <button class="settings-row" id="admin-menu-entry" onclick="switchPage('admin')" style="display:none;">
+        <div class="settings-label-side">🛠️ <span>Espace administrateur</span></div>
+        <span class="chev">›</span>
+      </button>
+      <button class="settings-row" onclick="switchPage('legal'); selectLegalTab('privacy');">
+        <div class="settings-label-side">🔒 <span>Politique de confidentialité</span></div>
+        <span class="chev">›</span>
+      </button>
+      <button class="settings-row" onclick="switchPage('legal'); selectLegalTab('terms');">
+        <div class="settings-label-side">📜 <span>Conditions d'utilisation</span></div>
+        <span class="chev">›</span>
+      </button>
+      <button class="settings-row" onclick="logoutUser()">
+        <div class="settings-label-side">🚪 <span>Se déconnecter</span></div>
+        <span class="chev">›</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="page-legal" class="page">
+    <div class="section-headline">
+      <h3>Confidentialité & CGU</h3>
+      <button class="link" id="legal-back-btn" onclick="exitLegalPage()" style="display:none;">← Retour</button>
+    </div>
+    <div class="subject-tabs">
+      <button class="subject-tab tab-maths active" id="legal-tab-privacy" onclick="selectLegalTab('privacy')">🔒 Confidentialité</button>
+      <button class="subject-tab tab-physique" id="legal-tab-terms" onclick="selectLegalTab('terms')">📜 CGU</button>
+    </div>
+    <p class="legal-updated">Dernière mise à jour : juillet 2026</p>
+
+    <div id="legal-privacy" class="legal-content">
+      <h4>Quelles données sont collectées ?</h4>
+      <p>Quand tu crées un compte : ton <strong>nom</strong> et ton <strong>email</strong>. En utilisant le site : tes <strong>favoris</strong>, ton <strong>historique de téléchargements</strong>, tes <strong>résultats de quiz</strong>, et les <strong>messages</strong> que tu publies sur le forum (visibles par les autres élèves).</p>
+      <h4>Pourquoi ces données ?</h4>
+      <p>Uniquement pour faire fonctionner le site : te reconnecter sur n'importe quel appareil, suivre ta progression, et faire vivre le forum entre élèves. Schoolonline.ci ne vend aucune donnée et n'affiche aucune publicité.</p>
+      <h4>Qui d'autre a accès à ces données ?</h4>
+      <ul>
+        <li><strong>Google Firebase</strong> héberge la base de données (comptes, forum, cours). <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Politique de Google</a>.</li>
+        <li><strong>Puter.js</strong> fait fonctionner l'assistant IA et les quiz : les questions posées à l'IA transitent par leur service.</li>
+        <li><strong>Google reCAPTCHA</strong> protège le site contre les robots (App Check).</li>
+      </ul>
+      <p>Aucune de ces données n'est partagée à des fins commerciales ou publicitaires.</p>
+      <h4>Élèves mineurs</h4>
+      <p>Ce site s'adresse à des lycéens, dont certains sont mineurs. Nous invitons les parents/tuteurs à rester informés de l'usage du site. Aucune donnée sensible (au-delà du nom/email) n'est demandée.</p>
+      <h4>Stockage local (appareil)</h4>
+      <p>En mode invité, certaines données (favoris, historique) restent uniquement sur ton appareil, dans la mémoire du navigateur, et ne sont pas envoyées ailleurs.</p>
+      <h4>Tes droits</h4>
+      <p>Tu peux demander la suppression de ton compte et de tes données à tout moment en écrivant à l'administrateur du site.</p>
+    </div>
+
+    <div id="legal-terms" class="legal-content" style="display:none;">
+      <h4>Objet</h4>
+      <p>Schoolonline.ci est une plateforme gratuite de révision (Mathématiques, Physique-Chimie) destinée aux lycéens de Côte d'Ivoire, proposée à titre pédagogique.</p>
+      <h4>Règles du forum</h4>
+      <ul>
+        <li>Reste respectueux : pas d'insultes, de harcèlement ni de propos discriminatoires.</li>
+        <li>Pas de spam, publicité, ou contenu hors-sujet.</li>
+        <li>Les messages sont modérés ; un message inapproprié peut être supprimé sans préavis.</li>
+      </ul>
+      <h4>Assistant IA et quiz</h4>
+      <p>Les réponses et quiz générés par l'IA sont des aides à la révision, pas une source officielle. L'IA peut se tromper : vérifie toujours les points importants avec ton professeur ou ton manuel.</p>
+      <h4>Disponibilité du service</h4>
+      <p>Le site est fourni "en l'état", gratuitement, sans garantie de disponibilité continue. Le contenu (cours, exercices) peut évoluer.</p>
+      <h4>Compte</h4>
+      <p>Tu es responsable de la confidentialité de ton mot de passe. Un compte peut être suspendu en cas de non-respect de ces règles.</p>
+      <h4>Contact</h4>
+      <p>Pour toute question sur ces conditions ou tes données, contacte l'administrateur via l'espace admin du site.</p>
+    </div>
+  </div>
+
+  <div id="page-admin" class="page">
+    <div id="admin-gate" class="admin-gate">
+      <div class="emoji">🔐</div>
+      <h2>Accès administrateur</h2>
+      <p>Connecte-toi avec ton compte administrateur pour gérer les cours du site.</p>
+      <input type="email" id="admin-email" placeholder="Email administrateur" autocomplete="username">
+      <input type="password" id="admin-password" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter') tryAdminLogin()">
+      <br>
+      <button class="btn-action" id="admin-login-btn" onclick="tryAdminLogin()">Se connecter</button>
+      <p class="hint" id="admin-hint">Ce compte est créé et géré depuis la console Firebase (Authentication), pas dans le code du site.</p>
+    </div>
+    <div id="admin-dashboard" style="display:none;">
+      <div class="admin-header">
+        <h2>👋 Bonjour, Administrateur</h2>
+        <p>Gère les cours de Maths et Physique-Chimie affichés sur le site.</p>
+      </div>
+      <div class="admin-stats">
+        <div class="admin-stat-card"><div class="num" id="admin-stat-maths">0</div><div class="lbl">Cours Maths</div></div>
+        <div class="admin-stat-card"><div class="num" id="admin-stat-physique">0</div><div class="lbl">Cours Phys-Chim</div></div>
+        <div class="admin-stat-card"><div class="num" id="admin-stat-exo">0</div><div class="lbl">Exercices</div></div>
+      </div>
+      <button class="admin-add-btn" onclick="openCourseForm()">➕ Ajouter un cours</button>
+      <div class="section-headline" style="padding-top:6px;"><h3>Tous les cours</h3></div>
+      <div class="extended-list-wrapper" id="admin-course-list"></div>
+
+      <div class="section-headline">
+        <h3>🐞 Journal d'erreurs <span id="admin-error-count" class="status-badge pending" style="margin-left:6px;">0</span></h3>
+        <button class="link" onclick="loadAdminErrorLogs()">Actualiser</button>
+      </div>
+      <p style="padding:0 20px 10px;font-size:12px;color:var(--text-muted);">Erreurs rencontrées automatiquement par les élèves sur le site (silencieuses pour eux, visibles ici pour toi).</p>
+      <div class="extended-list-wrapper" id="admin-error-list"></div>
+
+      <button class="settings-row" style="margin:20px; width:calc(100% - 40px); background:white; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);" onclick="adminLogout()">
+        <div class="settings-label-side">🚪 <span>Se déconnecter</span></div>
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<div class="bottom-nav-dock">
+  <button class="dock-item active" data-page="accueil" onclick="switchPage('accueil')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span>Accueil</span>
+  </button>
+  <button class="dock-item" data-page="cours" onclick="switchPage('cours')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <span>Cours</span>
+  </button>
+  <button class="dock-item" data-page="exercices" onclick="switchPage('exercices')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span>Exercices</span>
+  </button>
+  <button class="dock-item" data-page="forum" onclick="switchPage('forum')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span>Forum</span>
+  </button>
+  <button class="dock-item" data-page="profil" onclick="switchPage('profil')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profil</span>
+  </button>
+</div>
+
+<!-- MODAL téléchargement -->
+<div class="modal-overlay" id="modal" onclick="closeOnOverlay(event)">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <div class="modal-main-icon">📄</div>
+    <h3 id="modal-title">Titre du document</h3>
+    <p class="modal-desc-text" id="modal-desc">Télécharge ce support de révision officiel préparé pour l'évaluation continue.</p>
+    <div class="meta-table-box">
+      <div class="meta-table-row"><span>Discipline</span><span id="meta-matiere">-</span></div>
+      <div class="meta-table-row"><span>Type</span><span id="meta-type">-</span></div>
+      <div class="meta-table-row"><span>Niveau d'étude</span><span id="meta-niveau">-</span></div>
+      <div class="meta-table-row"><span>Extension</span><span id="meta-format">-</span></div>
+      <div class="meta-table-row"><span>Mise en ligne</span><span id="meta-date">-</span></div>
+    </div>
+    <a class="btn-download-trigger" id="modal-download-btn" href="#" target="_blank" rel="noopener">⬇️ Lancer le téléchargement</a>
+    <button class="btn-dismiss" onclick="closeModal()">Fermer la fenêtre</button>
+  </div>
+</div>
+
+<!-- MODAL formulaire admin -->
+<div class="modal-overlay" id="form-modal" onclick="closeOnOverlayForm(event)">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <h3 id="form-modal-title">Ajouter un cours</h3>
+    <div style="margin-top:18px;">
+      <div class="form-sheet-field">
+        <label>Matière</label>
+        <select id="f-matiere">
+          <option value="maths">Mathématiques</option>
+          <option value="physique">Physique-Chimie</option>
+        </select>
+      </div>
+      <div class="form-sheet-field">
+        <label>Titre du chapitre</label>
+        <input id="f-titre" placeholder="Ex : Nombres complexes">
+      </div>
+      <div class="form-sheet-field">
+        <label>Thème (optionnel)</label>
+        <input id="f-theme" placeholder="Ex : Mécanique, Chimie organique...">
+      </div>
+      <div class="form-row-2">
+        <div class="form-sheet-field">
+          <label>Type</label>
+          <select id="f-type">
+            <option>Fiche de cours</option>
+            <option>Travaux Dirigés</option>
+            <option>Résumé de Cours</option>
+          </select>
+        </div>
+        <div class="form-sheet-field">
+          <label>Format</label>
+          <select id="f-format">
+            <option>PDF</option>
+            <option>Word (.docx)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-sheet-field">
+        <label>Niveau</label>
+        <input id="f-niveau" placeholder="Ex : Première / Terminale D">
+      </div>
+      <div class="form-sheet-field">
+        <label>Lien du fichier (Drive, PDF hébergé...)</label>
+        <input id="f-lien" placeholder="https://...">
+      </div>
+      <button class="btn-save-form" onclick="saveCourseForm()">💾 Enregistrer</button>
+      <button class="btn-cancel-form" onclick="closeFormModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<button class="ai-fab" onclick="openAIChat()" aria-label="Ouvrir l'assistant IA">
+  🤖<span class="pulse-dot"></span>
+</button>
+
+<div class="ai-chat-overlay" id="ai-chat-overlay" onclick="closeOnOverlayChat(event)">
+  <div class="ai-chat-panel">
+    <div class="ai-chat-header">
+      <div class="ai-chat-avatar">🤖</div>
+      <div class="grow">
+        <h4>Assistant Maths & Physique-Chimie</h4>
+        <p>En ligne</p>
+      </div>
+      <button class="ai-chat-close" onclick="closeAIChat()" aria-label="Fermer">✕</button>
+    </div>
+    <div class="ai-chat-body" id="ai-chat-body"></div>
+    <div class="ai-chat-footer">
+      <div class="ai-chips" id="ai-chips">
+        <button class="ai-chip" onclick="sendAISuggestion('Explique-moi les limites et la continuité')">Limites et continuité</button>
+        <button class="ai-chip" onclick="sendAISuggestion('Comment calculer une primitive ?')">Primitives</button>
+        <button class="ai-chip" onclick="sendAISuggestion('Explique le circuit RLC')">Circuit RLC</button>
+        <button class="ai-chip" onclick="sendAISuggestion('Qu\'est-ce qu\'un acide fort ?')">Acide fort</button>
+      </div>
+      <div class="ai-input-row">
+        <input id="ai-input" type="text" placeholder="Pose ta question de cours..." onkeydown="if(event.key==='Enter') sendAIMessage()">
+        <button class="ai-send-btn" id="ai-send-btn" onclick="sendAIMessage()" aria-label="Envoyer">➤</button>
+      </div>
+      <p class="ai-disclaimer">L'IA peut se tromper. Vérifie les points importants avec ton professeur.</p>
+    </div>
+  </div>
+</div>
+
+<div class="video-overlay" id="video-overlay" onclick="closeOnOverlayVideo(event)">
+  <div class="video-overlay-header">
+    <h4 id="video-overlay-title">Cours vidéo</h4>
+    <button class="video-overlay-close" onclick="closeVideoPlayer()" aria-label="Fermer">✕</button>
+  </div>
+  <div class="video-overlay-frame-wrap" onclick="event.stopPropagation()">
+    <iframe id="video-overlay-iframe" src="" title="Lecteur vidéo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div>
+
+<div class="quiz-overlay" id="quiz-overlay" onclick="closeOnOverlayQuiz(event)">
+  <div class="quiz-panel">
+    <div class="quiz-header">
+      <div class="quiz-header-top">
+        <h4 id="quiz-title">Quiz</h4>
+        <button class="quiz-close" onclick="closeQuiz()" aria-label="Fermer">✕</button>
+      </div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="quiz-body" id="quiz-body"></div>
+    <div class="quiz-footer" id="quiz-footer" style="display:none;">
+      <button class="quiz-next-btn" id="quiz-next-btn" onclick="quizNext()" disabled>Valider</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toast-stack"></div>
+
+</div>
+
+<script>
+/* ============ DONNÉES ============ */
+const STORAGE_KEY = 'solci_courses_v1';
+const FAV_KEY = 'solci_favs_v1';
+const DL_KEY = 'solci_downloads_v1';
+const AUTH_KEY = 'solci_admin_auth';
+const USERS_KEY = 'solci_users_v1';
+const CURRENT_USER_KEY = 'solci_current_user';
+
+function seedCourses(){
+  const mathsData = [
+    ["Limites et Continuité","ACuKml7PXDg"],
+    ["Dérivabilité – Étude de fonctions","XAgdHblbajE"],
+    ["Primitives","bQ-eS1zZCdw"],
+    ["Fonctions logarithmes","VJns0RfVWGg"],
+    ["Fonctions exponentielles et puissances","sCcy4IQKits"],
+    ["Suites numériques","MJv7_pkFcdA"],
+    ["Calcul intégral","pFKzXZrMVxs"],
+    ["Équations différentielles","qHF5kiDFkW8"],
+    ["Nombres complexes","ABo2m52oEYw"],
+    ["Probabilités conditionnelles – Variable aléatoire","5oBnmZVrOXE"],
+    ["Nombres complexes et transformations du plan","SuklbSdfTfs"],
+    ["Statistique à deux variables","vdEL0MOKAIg"]
+  ];
+  const maths = mathsData.map((d,i)=>({
+    id: 'm'+(i+1), matiere:'maths', theme:'', titre:d[0],
+    type: i%2===0 ? 'Travaux Dirigés' : 'Fiche de cours',
+    niveau:'Première / Terminale D', format:'PDF',
+    date: '2026-05-'+String(1+(i%28)).padStart(2,'0'),
+    lien:'#', videoId: d[1]
+  }));
+
+  const physiqueData = [
+    ['Mécanique',[
+      ["Cinématique du point","zhMPfzHeYe8"],
+      ["Mouvement du centre d'inertie d'un solide","U_tltbm9dQE"],
+      ["Mouvements dans les champs g et E uniformes","scBN3nqsf7E"],
+      ["Oscillations mécaniques libres","rryFF2zLsME"]
+    ]],
+    ['Électromagnétisme',[
+      ["Champ magnétique","dxf16vIWcCU"],
+      ["Mouvement d'une particule chargée dans un champ magnétique uniforme","oHZn7twTSOI"],
+      ["Loi de Laplace","JJS2iE_nUEc"],
+      ["Auto-induction","afV8ZwfLwqs"]
+    ]],
+    ['Électricité',[
+      ["Montages dérivateur et intégrateur","gFhnHPkwogU"],
+      ["Oscillations électriques libres dans un circuit LC","ncYDRy3msxo"],
+      ["Circuit RLC en régime sinusoïdal forcé","CUg62e7YJPU"],
+      ["Résonance d'intensité d'un circuit RLC série","ZikPxL2CQz4"],
+      ["Puissance en courant alternatif","PxwJTneofFA"]
+    ]],
+    ['Réactions nucléaires',[
+      ["Réactions nucléaires spontanées","7qw-pWW9bM8"],
+      ["Réactions nucléaires provoquées","_9w2neeWryY"]
+    ]],
+    ['Chimie organique',[
+      ["Les alcools","lwQME4Ex7fw"],
+      ["Composés carbonylés : aldéhydes et cétones","SIg_mh7Eja4"],
+      ["Les amines","j9WS3vC7Fhc"],
+      ["Acides carboxyliques et dérivés","J4I063J3kzc"],
+      ["Fabrication d'un savon","nJZT4bilkAU"],
+      ["Les acides α-aminés","OzsbeybwtsM"]
+    ]],
+    ['Chimie générale',[
+      ["Solutions aqueuses – Notion de pH","zD8xe1QuYPI"],
+      ["Acide fort – Base forte","qiMUvf4f8JY"],
+      ["Acide faible – Base faible","swKCSgcp6_s"],
+      ["Couples acide/base – Classification","MZLwfi0ZY_I"],
+      ["Réactions acido-basiques – Solutions tampons","4ApzgUwEIuE"],
+      ["Dosage acido-basique","z1l8--2KGpQ"]
+    ]]
+  ];
+  let physique = []; let pc = 0;
+  physiqueData.forEach(([theme, items])=>{
+    items.forEach(([t, vid])=>{
+      pc++;
+      physique.push({
+        id:'p'+pc, matiere:'physique', theme, titre:t,
+        type: pc%3===0 ? 'Travaux Dirigés' : 'Fiche de cours',
+        niveau:'Terminale D', format:'PDF',
+        date:'2026-05-'+String(1+(pc%28)).padStart(2,'0'),
+        lien:'#', videoId: vid
+      });
+    });
+  });
+  return [...maths, ...physique];
+}
+
+function seedExercices(){
+  return [
+    {id:'ev1', matiere:'maths', sous:'video', titre:"Limites et continuité — Exercices corrigés", desc:'Calcul de limites, étude de continuité', lien:'https://www.youtube.com/watch?v=1xQYTRyNFL8'},
+    {id:'ev2', matiere:'maths', sous:'video', titre:"Dérivation — Exercice corrigé", desc:'Fonction dérivée, extremum local', lien:'https://www.youtube.com/watch?v=4yth4YC9nbw'},
+    {id:'ev5', matiere:'maths', sous:'video', titre:"Primitives — Cours et exercices d'application", desc:'Tableau des primitives, applications', lien:'https://www.youtube.com/watch?v=05ikcAFcPZ0'},
+    {id:'ev6', matiere:'maths', sous:'video', titre:"Logarithme népérien — Résoudre une équation", desc:'Équations avec logarithme', lien:'https://www.youtube.com/watch?v=o6pK-YADcbI'},
+    {id:'ev7', matiere:'maths', sous:'video', titre:"Fonction exponentielle — Tableau de variations", desc:'Étude de fonction, dérivée', lien:'https://www.youtube.com/watch?v=KTYDwRVS3BE'},
+    {id:'ev8', matiere:'maths', sous:'video', titre:"Raisonnement par récurrence — Exercice type", desc:'Suites numériques, démonstration', lien:'https://www.youtube.com/watch?v=tMpr1V8nSJI'},
+    {id:'ev9', matiere:'maths', sous:'video', titre:"Calcul intégral — Déterminer une intégrale par calculs d'aire", desc:'Aires et intégrales', lien:'https://www.youtube.com/watch?v=jkxNKkmEXZA'},
+    {id:'ev10', matiere:'maths', sous:'video', titre:"Équation différentielle y'=ay+b — Exercice corrigé", desc:'Résolution guidée', lien:'https://www.youtube.com/watch?v=F_LQLZ8rUhg'},
+    {id:'ev11', matiere:'maths', sous:'video', titre:"Nombres complexes — Exercice type Bac", desc:'Module, argument, forme exponentielle', lien:'https://www.youtube.com/watch?v=SeyMF4uikOI'},
+    {id:'ev12', matiere:'maths', sous:'video', titre:"Probabilités conditionnelles — Arbre pondéré", desc:'Compléter un arbre pondéré', lien:'https://www.youtube.com/watch?v=o1HQ6xJ7o4U'},
+    {id:'ev13', matiere:'maths', sous:'video', titre:"Similitudes du plan — Exercices", desc:'Transformations et nombres complexes', lien:'https://www.youtube.com/watch?v=W6XgmQMJFmY'},
+    {id:'ev14', matiere:'maths', sous:'video', titre:"Statistique à deux variables — Interpoler et extrapoler", desc:'Ajustement affine, exercice corrigé', lien:'https://www.youtube.com/watch?v=TcPljlURkho'},
+    {id:'ef1', matiere:'maths', sous:'fiche', titre:"Suites numériques — Série d'exercices", desc:'Fichier PDF, sans correction vidéo', lien:'#'},
+    {id:'ef2', matiere:'maths', sous:'fiche', titre:"Nombres complexes — Série d'exercices", desc:'Fichier PDF, sans correction vidéo', lien:'#'},
+    {id:'ev3', matiere:'physique', sous:'video', titre:"Cinématique du point — Exercices corrigés", desc:'Vecteur position, vitesse, accélération', lien:'https://www.youtube.com/watch?v=p8aJsSp4mFw'},
+    {id:'ev4', matiere:'physique', sous:'video', titre:"Circuit RLC en régime sinusoïdal forcé — Exercice", desc:'Calcul des grandeurs électriques', lien:'https://www.youtube.com/watch?v=K_Q86Syplzs'},
+    {id:'ev15', matiere:'physique', sous:'video', titre:"Réactions nucléaires — Radioactivité, exercice BAC", desc:'Désintégration, activité', lien:'https://www.youtube.com/watch?v=MN-uSwTbgXc'},
+    {id:'ev16', matiere:'physique', sous:'video', titre:"Dosage acido-basique — Titrage pH-métrique, exercice BAC", desc:'Équivalence, quantité de matière', lien:'https://www.youtube.com/watch?v=n6hG2rWUu8Q'},
+    {id:'ev17', matiere:'physique', sous:'video', titre:"Mouvement du centre d'inertie — Théorème de l'énergie cinétique", desc:'Exercice corrigé', lien:'https://www.youtube.com/watch?v=L7BXrVhRO4I'},
+    {id:'ev18', matiere:'physique', sous:'video', titre:"Mouvement dans un champ électrique uniforme — Exercice", desc:'Déviation, équations horaires', lien:'https://www.youtube.com/watch?v=qDxJDNqzdxs'},
+    {id:'ev19', matiere:'physique', sous:'video', titre:"Oscillateur mécanique (pendule élastique) — Exercice Terminale D", desc:'Étude dynamique et énergétique', lien:'https://www.youtube.com/watch?v=xuANy7ALnWk'},
+    {id:'ev20', matiere:'physique', sous:'video', titre:"Loi de Laplace — Forces électromagnétiques, exercice corrigé", desc:'Force de Laplace', lien:'https://www.youtube.com/watch?v=oK0Y3wkfA5E'},
+    {id:'ev21', matiere:'physique', sous:'video', titre:"Auto-induction — Méthode de résolution d'exercice", desc:'Dipôle RL, tension aux bornes', lien:'https://www.youtube.com/watch?v=xiTrGcAgYVc'},
+    {id:'ev22', matiere:'physique', sous:'video', titre:"Montages dérivateur et intégrateur — Exercices", desc:'Amplificateur opérationnel', lien:'https://www.youtube.com/watch?v=Ek_w3hqruNk'},
+    {id:'ev23', matiere:'physique', sous:'video', titre:"Oscillations libres dans un circuit RLC série — Exercice complet", desc:'Étude du circuit RLC, circuit LC', lien:'https://www.youtube.com/watch?v=G-9eJgHzCAU'},
+    {id:'ev24', matiere:'physique', sous:'video', titre:"Puissance en courant alternatif — Facteur de puissance, exercice", desc:'Puissances active, réactive, apparente', lien:'https://www.youtube.com/watch?v=2dRTyNSSFR4'},
+    {id:'ev25', matiere:'physique', sous:'video', titre:"Aldéhydes et cétones — Cours et exercices", desc:'Nomenclature, tests caractéristiques', lien:'https://www.youtube.com/watch?v=vhiC9RQIWMY'},
+    {id:'ev26', matiere:'physique', sous:'video', titre:"Les alcools — Exercices", desc:'Oxydation ménagée, classes d\'alcools', lien:'https://www.youtube.com/watch?v=3AAb8A0jw5o'},
+    {id:'ev27', matiere:'physique', sous:'video', titre:"Les amines — Exercice corrigé", desc:'Basicité, nomenclature', lien:'https://www.youtube.com/watch?v=-RvlnivKZsk'},
+    {id:'ev28', matiere:'physique', sous:'video', titre:"Acides carboxyliques et dérivés — Exercices", desc:'Estérification, dérivés', lien:'https://www.youtube.com/watch?v=5LfvD3cjiv4'},
+    {id:'ev29', matiere:'physique', sous:'video', titre:"Fabrication d'un savon — Correction d'exercice", desc:'Saponification', lien:'https://www.youtube.com/watch?v=OQnYyMaG58k'},
+    {id:'ev30', matiere:'physique', sous:'video', titre:"Synthèse peptidique — Acides α-aminés, exercice", desc:'Liaison peptidique', lien:'https://www.youtube.com/watch?v=RV7HlZnCRfU'},
+    {id:'ev31', matiere:'physique', sous:'video', titre:"pH des solutions aqueuses — Exercice corrigé", desc:'Calcul de pH', lien:'https://www.youtube.com/watch?v=wZ7anButQoc'},
+    {id:'ev32', matiere:'physique', sous:'video', titre:"Calculer le pH d'un acide fort / base forte", desc:'Exercice type', lien:'https://www.youtube.com/watch?v=hiyaXlT-YBY'},
+    {id:'ev33', matiere:'physique', sous:'video', titre:"Acides et bases faibles — Exercice corrigé", desc:'Ka, pKa, taux de dissociation', lien:'https://www.youtube.com/watch?v=PNyaUC4QhpY'},
+    {id:'ev34', matiere:'physique', sous:'video', titre:"Diagramme de prédominance acide/base — Exercice", desc:'Classification des couples', lien:'https://www.youtube.com/watch?v=Ub5H0VZi5I8'},
+    {id:'ev35', matiere:'physique', sous:'video', titre:"Solutions tampons — Exercice corrigé", desc:'Calcul de pH d\'un mélange tampon', lien:'https://www.youtube.com/watch?v=fcQ33hGubH0'},
+    {id:'ef3', matiere:'physique', sous:'fiche', titre:"Les alcools — Série d'exercices", desc:'Fichier PDF, sans correction vidéo', lien:'#'},
+    {id:'ef4', matiere:'physique', sous:'fiche', titre:"Cinématique du point — Série d'exercices", desc:'Fichier PDF, sans correction vidéo', lien:'#'}
+  ];
+}
+
+function loadCourses(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){ try { return JSON.parse(raw); } catch(e){} }
+  const seeded = seedCourses();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
+  return seeded;
+}
+function saveCourses(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+function loadFavs(){
+  if(isRealAccount() && userProfile) return userProfile.favorites || [];
+  return loadLocalFavs();
+}
+function saveFavs(a){
+  if(isRealAccount() && userProfile){ userProfile.favorites = a; saveUserProfileField('favorites', a); }
+  else { localStorage.setItem(FAV_KEY, JSON.stringify(a)); }
+}
+function loadDownloads(){
+  if(isRealAccount() && userProfile) return userProfile.downloads || [];
+  return loadLocalDownloads();
+}
+function saveDownloads(a){
+  if(isRealAccount() && userProfile){ userProfile.downloads = a; saveUserProfileField('downloads', a); }
+  else { localStorage.setItem(DL_KEY, JSON.stringify(a)); }
+}
+
+let COURSES = [];
+let coursesLoaded = false;
+const EXERCICES = seedExercices();
+let currentSearch = '';
+let coursSubject = 'maths';
+let coursSubTab = 'fiche';
+let exoSubject = 'maths';
+let exoSubTab = 'video';
+
+/* ============ NAVIGATION SPA ============ */
+function switchPage(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById('page-'+pageId);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.bottom-nav-dock .dock-item').forEach(b=>b.classList.remove('active'));
+  const navBtn = document.querySelector('.bottom-nav-dock .dock-item[data-page="'+pageId+'"]');
+  if(navBtn) navBtn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(pageId==='cours') renderCoursList();
+  if(pageId==='exercices') renderExoList();
+  if(pageId==='profil') renderProfil();
+  if(pageId==='admin') renderAdminIfLogged();
+  if(pageId==='forum') initForum();
+}
+
+function selectSubjectTab(scope, subject){
+  if(scope==='cours'){
+    coursSubject = subject;
+    document.getElementById('cours-tab-maths').classList.toggle('active', subject==='maths');
+    document.getElementById('cours-tab-physique').classList.toggle('active', subject==='physique');
+    renderCoursList();
+  } else {
+    exoSubject = subject;
+    document.getElementById('exo-tab-maths').classList.toggle('active', subject==='maths');
+    document.getElementById('exo-tab-physique').classList.toggle('active', subject==='physique');
+    renderExoList();
+  }
+}
+function selectExoSubTab(sub){
+  exoSubTab = sub;
+  document.getElementById('exo-subtab-video').classList.toggle('active', sub==='video');
+  document.getElementById('exo-subtab-fiche').classList.toggle('active', sub==='fiche');
+  renderExoList();
+}
+function selectCoursSubTab(sub){
+  coursSubTab = sub;
+  document.getElementById('cours-subtab-fiche').classList.toggle('active', sub==='fiche');
+  document.getElementById('cours-subtab-video').classList.toggle('active', sub==='video');
+  renderCoursList();
+}
+
+/* ============ RENDU COURS ============ */
+function courseIcon(matiere){ return matiere==='maths' ? '🧮' : '⚗️'; }
+function indicatorClass(matiere){ return matiere==='maths' ? 'maths-indicator' : 'physique-indicator'; }
+
+function courseListItemHtml(c){
+  const favs = loadFavs();
+  const isFav = favs.includes(c.id);
+  const hasFile = c.lien && c.lien !== '#';
+  return `<div class="premium-list-item">
+    <div class="item-left-meta">
+      <div class="item-icon-indicator ${indicatorClass(c.matiere)}">${courseIcon(c.matiere)}</div>
+      <div class="item-info-titles">
+        <h4>${escapeHtml(c.titre)}</h4>
+        <p class="meta-line">${c.matiere==='maths'?'Mathématiques':'Physique-Chimie'}${c.theme? ' • '+escapeHtml(c.theme):''} • ${c.type}
+          <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Disponible':'🕒 Bientôt disponible'}</span>
+        </p>
+      </div>
+    </div>
+    <div class="item-actions">
+      <button class="fav-btn ${isFav?'active':''}" aria-label="Mettre en favori" onclick="toggleFav('${c.id}', event)">${isFav?'★':'☆'}</button>
+      <button class="action-circle-btn quiz-btn" aria-label="Faire le quiz" onclick="openQuiz('${c.id}')">🧠</button>
+      <button class="action-circle-btn" onclick="openModalById('course','${c.id}')">↓</button>
+    </div>
+  </div>`;
+}
+
+function renderCoursList(){
+  const container = document.getElementById('cours-list-container');
+  if(!coursesLoaded){
+    container.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement des cours...</strong></div>`;
+    return;
+  }
+  let list = COURSES.filter(c=>c.matiere===coursSubject);
+  if(currentSearch){ list = list.filter(c=>c.titre.toLowerCase().includes(currentSearch)); }
+
+  if(coursSubTab==='video'){
+    renderCoursVideoGrid(container, list.filter(c=>c.videoId));
+    return;
+  }
+
+  if(list.length===0){
+    container.innerHTML = `<div class="empty-state"><div class="emoji">📭</div><strong>Aucun cours trouvé</strong>Essaie un autre mot-clé ou change de matière.</div>`;
+    return;
+  }
+  if(coursSubject==='physique'){
+    const themes = [...new Set(list.map(c=>c.theme||'Autres'))];
+    let html = '';
+    themes.forEach(theme=>{
+      html += `<div class="theme-subheader">${escapeHtml(theme)}</div><div class="extended-list-wrapper stagger">`;
+      list.filter(c=>(c.theme||'Autres')===theme).forEach(c=>{ html += courseListItemHtml(c); });
+      html += `</div>`;
+    });
+    container.innerHTML = html;
+  } else {
+    container.innerHTML = `<div class="extended-list-wrapper stagger" style="padding-top:14px;">${list.map(courseListItemHtml).join('')}</div>`;
+  }
+}
+
+function renderCoursVideoGrid(container, list){
+  if(list.length===0){
+    container.innerHTML = `<div class="empty-state"><div class="emoji">🎬</div><strong>Cours vidéo bientôt disponibles</strong>Pour cette matière, les vidéos de cours arrivent bientôt.</div>`;
+    return;
+  }
+  container.innerHTML = `<div class="dual-subjects-grid" style="grid-template-columns:1fr 1fr; padding:14px 20px;">
+    ${list.map(c=>`
+      <div class="video-course-card" onclick="openVideoPlayer('${c.id}')">
+        <div class="video-thumb-wrap">
+          <img src="https://img.youtube.com/vi/${c.videoId}/mqdefault.jpg" alt="" loading="lazy">
+          <div class="video-play-badge"><div class="circle">▶</div></div>
+        </div>
+        <div class="video-course-info">
+          <h4>${escapeHtml(c.titre)}</h4>
+          <p>${c.matiere==='maths'?'Mathématiques':'Physique-Chimie'}</p>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+function openVideoPlayer(courseId){
+  const c = COURSES.find(x=>x.id===courseId);
+  if(!c || !c.videoId) return;
+  document.getElementById('video-overlay-title').textContent = c.titre;
+  document.getElementById('video-overlay-iframe').src = `https://www.youtube.com/embed/${c.videoId}?autoplay=1&rel=0`;
+  document.getElementById('video-overlay').classList.add('open');
+}
+function closeVideoPlayer(){
+  document.getElementById('video-overlay').classList.remove('open');
+  document.getElementById('video-overlay-iframe').src = ''; // stoppe la lecture
+}
+function closeOnOverlayVideo(e){ if(e.target===document.getElementById('video-overlay')) closeVideoPlayer(); }
+
+/* ============ RENDU EXERCICES ============ */
+function exoItemHtml(e){
+  const isVideo = e.sous==='video';
+  const hasFile = e.lien && e.lien !== '#';
+  return `<div class="premium-list-item">
+    <div class="item-left-meta">
+      <div class="item-icon-indicator ${indicatorClass(e.matiere)}" style="${isVideo?'background:#fecaca;color:#ef4444;':''}">${isVideo?'▶':'📝'}</div>
+      <div class="item-info-titles">
+        <h4>${escapeHtml(e.titre)}</h4>
+        <p class="meta-line">${e.matiere==='maths'?'Mathématiques':'Physique-Chimie'} • ${e.desc}
+          <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Disponible':'🕒 Bientôt disponible'}</span>
+        </p>
+      </div>
+    </div>
+    ${isVideo
+      ? (hasFile
+          ? `<a class="action-circle-btn" href="${e.lien}" target="_blank" rel="noopener" onclick="trackDownload('${escapeHtml(e.titre)}')">🡪</a>`
+          : `<button class="action-circle-btn" onclick="showToast('🕒 Cette vidéo arrive bientôt')">🡪</button>`)
+      : `<button class="action-circle-btn" onclick="openModalById('exo','${e.id}')">↓</button>`
+    }
+  </div>`;
+}
+function renderExoList(){
+  const container = document.getElementById('exo-list-container');
+  let list = EXERCICES.filter(e=>e.matiere===exoSubject && e.sous===exoSubTab);
+  if(currentSearch){ list = list.filter(e=>e.titre.toLowerCase().includes(currentSearch)); }
+  if(list.length===0){
+    container.innerHTML = `<div class="empty-state"><div class="emoji">🎬</div><strong>Rien ici pour l'instant</strong>De nouveaux exercices arrivent bientôt.</div>`;
+    return;
+  }
+  container.innerHTML = `<div class="extended-list-wrapper stagger" style="padding-top:14px;">${list.map(exoItemHtml).join('')}</div>`;
+}
+
+/* ============ RECHERCHE ============ */
+function handleSearch(v){
+  currentSearch = v.trim().toLowerCase();
+  document.getElementById('search-clear').style.display = currentSearch ? 'block' : 'none';
+  const activePage = document.querySelector('.page.active').id;
+  const banner = document.getElementById('search-banner');
+  if(currentSearch && (activePage==='page-cours' || activePage==='page-exercices')){
+    banner.style.display = 'block';
+    banner.textContent = `Résultats pour « ${v.trim()} »`;
+  } else {
+    banner.style.display = 'none';
+  }
+  if(activePage==='page-cours') renderCoursList();
+  if(activePage==='page-exercices') renderExoList();
+  if(currentSearch && activePage==='page-accueil') switchPage('cours');
+}
+function clearSearch(){
+  document.getElementById('global-search').value='';
+  handleSearch('');
+}
+
+/* ============ ACCUEIL: recommandations ============ */
+function renderReco(){
+  const scroller = document.getElementById('reco-scroller');
+  const picks = [COURSES.find(c=>c.id==='m9'), COURSES.find(c=>c.id==='p16'), COURSES.find(c=>c.id==='p1')].filter(Boolean);
+  scroller.innerHTML = picks.map(c=>`
+    <div class="premium-course-card">
+      <span class="card-tag ${c.matiere==='maths'?'maths-tag':'physique-tag'}">${c.matiere==='maths'?'Maths':'Physique-Chimie'}</span>
+      <h4 class="course-title-text">${escapeHtml(c.titre)}</h4>
+      <button class="btn-action" style="padding: 8px 14px; font-size: 11px; margin-top: auto;" onclick="openModalById('course','${c.id}')">Ouvrir le doc</button>
+    </div>`).join('');
+}
+
+/* ============ FAVORIS / TÉLÉCHARGEMENTS ============ */
+function toggleFav(id, evt){
+  if(evt) evt.stopPropagation();
+  let favs = loadFavs();
+  if(favs.includes(id)){ favs = favs.filter(f=>f!==id); showToast('Retiré des favoris'); }
+  else { favs.push(id); showToast('⭐ Ajouté aux favoris'); }
+  saveFavs(favs);
+  renderCoursList();
+}
+function trackDownload(titre){
+  let dls = loadDownloads();
+  dls.unshift({titre, date: new Date().toLocaleDateString('fr-FR')});
+  dls = dls.slice(0,8);
+  saveDownloads(dls);
+}
+function toggleMiniList(id){
+  const el = document.getElementById(id);
+  const show = el.style.display==='none';
+  el.style.display = show ? 'flex' : 'none';
+  if(show) renderProfil();
+}
+function renderProfil(){
+  const user = getCurrentUser();
+  if(user){
+    document.getElementById('profil-name').textContent = user.guest ? 'Invité' : user.name;
+    document.getElementById('profil-sub').textContent = user.guest ? 'Mode invité • Lycée Connecté' : (user.email || 'Lycée Connecté • Côte d\'Ivoire');
+  }
+  const adminEntry = document.getElementById('admin-menu-entry');
+  if(adminEntry){
+    const isAdminEmail = user && !user.guest && user.email === ADMIN_EMAIL;
+    adminEntry.style.display = isAdminEmail ? 'flex' : 'none';
+  }
+  const dls = loadDownloads();
+  document.getElementById('dl-list').innerHTML = dls.length
+    ? dls.map(d=>`<div class="mini-sub-item"><span>${escapeHtml(d.titre)}</span><span>${d.date}</span></div>`).join('')
+    : `<div class="mini-sub-item">Aucun téléchargement pour le moment</div>`;
+  const favs = loadFavs();
+  const favCourses = COURSES.filter(c=>favs.includes(c.id));
+  document.getElementById('fav-list').innerHTML = favCourses.length
+    ? favCourses.map(c=>`<div class="mini-sub-item"><span>${escapeHtml(c.titre)}</span><span>${c.matiere==='maths'?'🧮':'⚗️'}</span></div>`).join('')
+    : `<div class="mini-sub-item">Aucun favori pour le moment</div>`;
+}
+
+/* ============ MODAL téléchargement ============ */
+function openModalById(kind, id){
+  if(kind==='course'){
+    const c = COURSES.find(x=>x.id===id);
+    if(!c) return;
+    openModal(c.titre, c.matiere==='maths'?'Mathématiques':'Physique-Chimie', c.type, c.niveau, c.format, c.date, c.lien, c.id);
+  } else if(kind==='exo'){
+    const e = EXERCICES.find(x=>x.id===id);
+    if(!e) return;
+    openModal(e.titre, e.matiere==='maths'?'Mathématiques':'Physique-Chimie', "Série d'exercices", 'Première / Terminale', 'PDF (.pdf)', '2026', e.lien, e.id);
+  }
+}
+function openModal(title, matiere, type, niveau, format, date, fileLink, courseId){
+  document.getElementById('modal-title').innerText = title;
+  document.getElementById('meta-matiere').innerText = matiere;
+  document.getElementById('meta-type').innerText = type;
+  document.getElementById('meta-niveau').innerText = niveau;
+  document.getElementById('meta-format').innerText = format;
+  document.getElementById('meta-date').innerText = date;
+  const downloadBtn = document.getElementById('modal-download-btn');
+  const hasLink = fileLink && fileLink !== '#';
+  downloadBtn.href = hasLink ? fileLink : '#';
+  downloadBtn.innerText = hasLink ? '⬇️ Lancer le téléchargement' : '⏳ Fichier bientôt disponible';
+  downloadBtn.onclick = function(e){
+    if(!hasLink){ e.preventDefault(); showToast("Ce fichier n'est pas encore disponible"); return; }
+    trackDownload(title);
+    showToast('📥 Téléchargement lancé');
+  };
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); document.body.style.overflow=''; }
+function closeOnOverlay(e){ if(e.target===document.getElementById('modal')) closeModal(); }
+
+/* ============ TOAST ============ */
+function showToast(msg){
+  const stack = document.getElementById('toast-stack');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  stack.appendChild(t);
+  setTimeout(()=>t.remove(), 2800);
+}
+
+/* ============ ADMIN (authentification Firebase réelle) ============ */
+async function tryAdminLogin(){
+  const email = document.getElementById('admin-email').value.trim();
+  const password = document.getElementById('admin-password').value;
+  if(!email || !password){ showToast('⚠️ Renseigne email et mot de passe'); return; }
+
+  if(!isFirebaseConfigured()){
+    // Mode démo hors-ligne uniquement (aucun Firebase configuré) : accès local de secours.
+    if(email==='demo@local' && password==='admin123'){
+      sessionStorage.setItem(AUTH_KEY, '1');
+      renderAdminIfLogged();
+      showToast('✅ Connecté (mode démo local)');
+    } else {
+      showToast('❌ Identifiants incorrects');
+    }
+    return;
+  }
+
+  initFirebaseIfNeeded();
+  const btn = document.getElementById('admin-login-btn');
+  btn.disabled = true;
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, password);
+    sessionStorage.setItem(AUTH_KEY, '1');
+    renderAdminIfLogged();
+    showToast('✅ Connecté en tant qu\'administrateur');
+  } catch(err){
+    console.error(err);
+    let msg = "❌ Connexion impossible";
+    if(err.code==='auth/invalid-credential' || err.code==='auth/wrong-password' || err.code==='auth/user-not-found'){
+      msg = '❌ Email ou mot de passe incorrect';
+    } else if(err.code==='auth/too-many-requests'){
+      msg = '❌ Trop de tentatives, réessaie dans un instant';
+    }
+    showToast(msg);
+  } finally {
+    btn.disabled = false;
+  }
+}
+function adminLogout(){
+  sessionStorage.removeItem(AUTH_KEY);
+  if(isFirebaseConfigured() && forumDb){
+    firebase.auth().signOut().then(()=> firebase.auth().signInAnonymously()).catch(()=>{});
+  }
+  document.getElementById('admin-gate').style.display='block';
+  document.getElementById('admin-dashboard').style.display='none';
+  document.getElementById('admin-password').value='';
+  document.getElementById('admin-email').value='';
+}
+function isAdminAuthed(){
+  if(isFirebaseConfigured() && forumDb){
+    const u = firebase.auth().currentUser;
+    return !!(u && !u.isAnonymous && u.email) && sessionStorage.getItem(AUTH_KEY)==='1';
+  }
+  return sessionStorage.getItem(AUTH_KEY)==='1';
+}
+function renderAdminIfLogged(){
+  const logged = isAdminAuthed();
+  document.getElementById('admin-gate').style.display = logged ? 'none' : 'block';
+  document.getElementById('admin-dashboard').style.display = logged ? 'block' : 'none';
+  if(logged) renderAdminDashboard();
+}
+function renderAdminDashboard(){
+  const nbMaths = COURSES.filter(c=>c.matiere==='maths').length;
+  const nbPhysique = COURSES.filter(c=>c.matiere==='physique').length;
+  document.getElementById('admin-stat-maths').textContent = nbMaths;
+  document.getElementById('admin-stat-physique').textContent = nbPhysique;
+  document.getElementById('admin-stat-exo').textContent = EXERCICES.length;
+  loadAdminErrorLogs();
+  const list = document.getElementById('admin-course-list');
+  if(COURSES.length===0 && isFirebaseConfigured()){
+    list.innerHTML = `<div class="empty-state"><div class="emoji">🌱</div><strong>Base de cours vide</strong>Importe les cours de démarrage (Maths + Physique-Chimie) pour que les élèves voient du contenu.</div>
+      <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreCoursesOnce()">🌱 Importer les cours de démarrage</button>`;
+    return;
+  }
+  list.innerHTML = COURSES.map(c=>`
+    <div class="admin-list-item">
+      <div class="grow">
+        <h5>${escapeHtml(c.titre)}</h5>
+        <div class="tags">
+          <span>${c.matiere==='maths'?'🧮 Maths':'⚗️ Phys-Chimie'}</span>
+          ${c.theme? `<span>${escapeHtml(c.theme)}</span>`:''}
+          <span>${c.type}</span>
+        </div>
+      </div>
+      <button class="admin-icon-btn edit" aria-label="Modifier" onclick="openCourseForm('${c.id}')">✏️</button>
+      <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteCourse('${c.id}')">🗑️</button>
+    </div>`).join('');
+  loadAdminErrorLogs();
+}
+async function loadAdminErrorLogs(){
+  const listEl = document.getElementById('admin-error-list');
+  const countEl = document.getElementById('admin-error-count');
+  if(!isFirebaseConfigured() || !forumDb){
+    listEl.innerHTML = `<div class="empty-state"><div class="emoji">🐞</div><strong>Suivi d'erreurs indisponible</strong>Connecte Firebase pour l'activer.</div>`;
+    return;
+  }
+  listEl.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement...</strong></div>`;
+  try {
+    const snap = await forumDb.collection('errorLogs').orderBy('createdAt','desc').limit(20).get();
+    countEl.textContent = snap.size;
+    if(snap.empty){
+      listEl.innerHTML = `<div class="empty-state"><div class="emoji">✅</div><strong>Aucune erreur récente</strong>Tout va bien !</div>`;
+      return;
+    }
+    listEl.innerHTML = snap.docs.map(doc=>{
+      const e = doc.data();
+      const date = e.createdAt && e.createdAt.toDate ? e.createdAt.toDate().toLocaleString('fr-FR') : '';
+      return `<div class="admin-list-item" style="align-items:flex-start;">
+        <div class="grow">
+          <h5 style="white-space:normal;">${escapeHtml(e.message||'Erreur inconnue')}</h5>
+          <div class="tags">
+            <span>📄 ${escapeHtml(e.page||'?')}</span>
+            <span>👤 ${escapeHtml(e.userEmail||'anonyme')}</span>
+            <span>🕒 ${date}</span>
+          </div>
+        </div>
+        <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteErrorLog('${doc.id}')">🗑️</button>
+      </div>`;
+    }).join('');
+  } catch(e){
+    listEl.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de charger le journal</strong>Vérifie les règles Firestore pour "errorLogs".</div>`;
+    console.error(e);
+  }
+}
+async function deleteErrorLog(id){
+  if(!forumDb) return;
+  try { await forumDb.collection('errorLogs').doc(id).delete(); loadAdminErrorLogs(); }
+  catch(e){ showToast('⚠️ Suppression refusée'); }
+}
+let editingCourseId = null;
+function openCourseForm(id){
+  editingCourseId = id || null;
+  const c = id ? COURSES.find(x=>x.id===id) : null;
+  document.getElementById('form-modal-title').innerText = id ? 'Modifier le cours' : 'Ajouter un cours';
+  document.getElementById('f-matiere').value = c ? c.matiere : 'maths';
+  document.getElementById('f-titre').value = c ? c.titre : '';
+  document.getElementById('f-theme').value = c ? (c.theme||'') : '';
+  document.getElementById('f-type').value = c ? c.type : 'Fiche de cours';
+  document.getElementById('f-format').value = c ? c.format : 'PDF';
+  document.getElementById('f-niveau').value = c ? c.niveau : 'Première / Terminale D';
+  document.getElementById('f-lien').value = c ? c.lien : '';
+  document.getElementById('form-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFormModal(){ document.getElementById('form-modal').classList.remove('open'); document.body.style.overflow=''; }
+function closeOnOverlayForm(e){ if(e.target===document.getElementById('form-modal')) closeFormModal(); }
+async function saveCourseForm(){
+  const titre = document.getElementById('f-titre').value.trim();
+  if(!titre){ showToast('⚠️ Le titre est obligatoire'); return; }
+  const data = {
+    matiere: document.getElementById('f-matiere').value,
+    titre,
+    theme: document.getElementById('f-theme').value.trim(),
+    type: document.getElementById('f-type').value,
+    format: document.getElementById('f-format').value,
+    niveau: document.getElementById('f-niveau').value.trim() || 'Première / Terminale D',
+    lien: document.getElementById('f-lien').value.trim() || '#',
+    date: new Date().toISOString().slice(0,10)
+  };
+  const useCloud = isFirebaseConfigured() && forumDb;
+  try {
+    if(useCloud){
+      if(editingCourseId){
+        await forumDb.collection('courses').doc(editingCourseId).update(data);
+      } else {
+        await forumDb.collection('courses').doc('c'+Date.now()).set(data);
+      }
+      // Le onSnapshot du forum rafraîchit automatiquement COURSES et l'affichage partout.
+    } else {
+      if(editingCourseId){
+        const idx = COURSES.findIndex(c=>c.id===editingCourseId);
+        COURSES[idx] = {...COURSES[idx], ...data};
+      } else {
+        data.id = 'c' + Date.now();
+        COURSES.push(data);
+      }
+      saveCourses(COURSES);
+      renderAdminDashboard();
+      updateSubjectCounts();
+    }
+    showToast(editingCourseId ? '✅ Cours modifié' : '✅ Cours ajouté');
+    closeFormModal();
+  } catch(e){
+    console.error(e);
+    showToast("⚠️ Erreur lors de l'enregistrement");
+  }
+}
+async function deleteCourse(id){
+  if(!confirm('Supprimer définitivement ce cours ?')) return;
+  const useCloud = isFirebaseConfigured() && forumDb;
+  try {
+    if(useCloud){
+      await forumDb.collection('courses').doc(id).delete();
+    } else {
+      COURSES = COURSES.filter(c=>c.id!==id);
+      saveCourses(COURSES);
+      renderAdminDashboard();
+      updateSubjectCounts();
+    }
+    showToast('🗑️ Cours supprimé');
+  } catch(e){
+    console.error(e);
+    showToast('⚠️ Erreur lors de la suppression');
+  }
+}
+
+/* ============ UTILITAIRES ============ */
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+function updateSubjectCounts(){
+  document.getElementById('badge-maths-count').textContent = COURSES.filter(c=>c.matiere==='maths').length + ' cours';
+  document.getElementById('badge-physique-count').textContent = COURSES.filter(c=>c.matiere==='physique').length + ' cours';
+  renderProgression();
+}
+function renderProgression(){
+  ['maths','physique'].forEach(subj=>{
+    const list = COURSES.filter(c=>c.matiere===subj);
+    const total = list.length;
+    const ready = list.filter(c=>c.lien && c.lien !== '#').length;
+    const pct = total > 0 ? Math.round((ready/total)*100) : 0;
+    const ring = document.getElementById(subj==='maths' ? 'ring-maths' : 'ring-physique');
+    const text = document.getElementById(subj==='maths' ? 'prog-maths-text' : 'prog-physique-text');
+    if(ring){ ring.style.setProperty('--p', pct+'%'); ring.setAttribute('data-label', pct+'%'); }
+    if(text){ text.innerHTML = `${ready}/${total} chapitres disponibles <span>(${total-ready} à venir)</span>`; }
+  });
+}
+
+/* ============ AUTHENTIFICATION ÉLÈVE (Firebase — comptes partagés entre appareils) ============ */
+// Repli local (uniquement si Firebase n'est pas configuré) : anciens comptes stockés sur cet appareil.
+function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY))||[]; }catch(e){ return []; } }
+function saveUsers(u){ localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+function getCurrentUserLocal(){ try{ return JSON.parse(localStorage.getItem(CURRENT_USER_KEY)); }catch(e){ return null; } }
+
+let firebaseUser = null;    // objet Firebase Auth (null si invité/déconnecté)
+let userProfile = null;     // { name, email, favorites:[], downloads:[], quizResults:{} } — depuis Firestore
+
+function getCurrentUser(){
+  if(isFirebaseConfigured()){
+    if(firebaseUser && !firebaseUser.isAnonymous && userProfile){
+      return { name: userProfile.name, email: firebaseUser.email, guest:false };
+    }
+    if(localStorage.getItem('solci_guest_mode')==='1'){
+      return { name:'Invité', email:'', guest:true };
+    }
+    return null;
+  }
+  return getCurrentUserLocal();
+}
+function isRealAccount(){
+  return isFirebaseConfigured() ? !!(firebaseUser && !firebaseUser.isAnonymous) : (getCurrentUserLocal() && !getCurrentUserLocal().guest);
+}
+
+function switchAuthTab(tab){
+  document.getElementById('auth-tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('auth-tab-signup').classList.toggle('active', tab==='signup');
+  document.getElementById('login-form').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('signup-form').style.display = tab==='signup' ? 'block' : 'none';
+  document.getElementById('auth-title').innerText = tab==='login' ? 'Content de te revoir' : 'Crée ton compte';
+  document.getElementById('auth-sub').innerText = tab==='login' ? 'Connecte-toi pour accéder à tes cours, sur n\'importe quel appareil' : 'Ton compte te suivra sur tous tes appareils';
+  hideAuthError();
+}
+function togglePw(id){
+  const el = document.getElementById(id);
+  el.type = el.type==='password' ? 'text' : 'password';
+}
+function showAuthError(msg){
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function hideAuthError(){ document.getElementById('auth-error').style.display='none'; }
+function friendlyAuthError(code){
+  const map = {
+    'auth/invalid-credential': 'Email ou mot de passe incorrect.',
+    'auth/wrong-password': 'Email ou mot de passe incorrect.',
+    'auth/user-not-found': 'Aucun compte avec cet email.',
+    'auth/email-already-in-use': 'Un compte existe déjà avec cet email.',
+    'auth/weak-password': 'Le mot de passe doit contenir au moins 6 caractères.',
+    'auth/invalid-email': 'Adresse email invalide.',
+    'auth/too-many-requests': 'Trop de tentatives, réessaie dans un instant.',
+    'auth/network-request-failed': 'Connexion impossible, vérifie ta connexion internet.'
+  };
+  return map[code] || "Une erreur est survenue, réessaie.";
+}
+
+async function handleLogin(evt){
+  evt.preventDefault();
+  hideAuthError();
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pw = document.getElementById('login-password').value;
+
+  if(!isFirebaseConfigured()){
+    const users = loadUsers();
+    const found = users.find(u=>u.email===email && u.password===pw);
+    if(!found){ showAuthError('Email ou mot de passe incorrect.'); return false; }
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({name:found.name, email:found.email, guest:false}));
+    enterApp();
+    showToast('👋 Content de te revoir, '+found.name.split(' ')[0]+' !');
+    return false;
+  }
+
+  initFirebaseIfNeeded();
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, pw);
+    // onAuthStateChanged prend le relais : charge le profil et ouvre l'app.
+  } catch(err){
+    console.error(err);
+    showAuthError(friendlyAuthError(err.code));
+  }
+  return false;
+}
+
+async function handleSignup(evt){
+  evt.preventDefault();
+  hideAuthError();
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim().toLowerCase();
+  const pw = document.getElementById('signup-password').value;
+  const pw2 = document.getElementById('signup-password2').value;
+  if(!name){ showAuthError('Indique ton nom.'); return false; }
+  if(pw.length < 6){ showAuthError('Le mot de passe doit contenir au moins 6 caractères.'); return false; }
+  if(pw !== pw2){ showAuthError('Les mots de passe ne correspondent pas.'); return false; }
+
+  if(!isFirebaseConfigured()){
+    const users = loadUsers();
+    if(users.some(u=>u.email===email)){ showAuthError('Un compte existe déjà avec cet email.'); return false; }
+    users.push({name, email, password: pw});
+    saveUsers(users);
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({name, email, guest:false}));
+    enterApp();
+    showToast('🎉 Bienvenue '+name.split(' ')[0]+' ! Ton compte est créé.');
+    return false;
+  }
+
+  initFirebaseIfNeeded();
+  try {
+    const cred = await firebase.auth().createUserWithEmailAndPassword(email, pw);
+    await cred.user.updateProfile({ displayName: name });
+    // Crée le profil Firestore partagé entre appareils, en migrant les favoris/téléchargements locaux existants.
+    await forumDb.collection('users').doc(cred.user.uid).set({
+      name, email,
+      favorites: loadLocalFavs(),
+      downloads: loadLocalDownloads(),
+      quizResults: {},
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    // onAuthStateChanged prend le relais.
+  } catch(err){
+    console.error(err);
+    showAuthError(friendlyAuthError(err.code));
+  }
+  return false;
+}
+
+function continueAsGuest(){
+  if(isFirebaseConfigured()){
+    localStorage.setItem('solci_guest_mode', '1');
+    initFirebaseIfNeeded();
+    try {
+      if(typeof firebase !== 'undefined'){
+        firebase.auth().signInAnonymously().catch(e=>console.error(e));
+      }
+    } catch(e){ console.error('Connexion invité Firebase impossible, on continue quand même localement.', e); }
+  } else {
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({name:'Invité', email:'', guest:true}));
+  }
+  enterApp();
+  showToast('Tu navigues en mode invité (non synchronisé entre appareils)');
+}
+function enterApp(){
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'block';
+  renderProfil();
+}
+function showAuthScreen(){
+  document.getElementById('app-shell').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+  switchAuthTab('login');
+}
+async function logoutUser(){
+  if(isFirebaseConfigured() && typeof firebase !== 'undefined' && firebase.auth){
+    localStorage.removeItem('solci_guest_mode');
+    userProfile = null;
+    try { await firebase.auth().signOut(); } catch(e){}
+    showAuthScreen(); // filet de sécurité si onAuthStateChanged ne se déclenche pas (SDK indisponible)
+  } else {
+    localStorage.removeItem(CURRENT_USER_KEY);
+    showAuthScreen();
+  }
+  document.getElementById('login-form').reset();
+  showToast('👋 À bientôt !');
+}
+
+/* ============ PROFIL Firestore : favoris / téléchargements / quiz synchronisés ============ */
+function loadLocalFavs(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY))||[]; }catch(e){ return []; } }
+function loadLocalDownloads(){ try{ return JSON.parse(localStorage.getItem(DL_KEY))||[]; }catch(e){ return []; } }
+
+async function loadUserProfile(user){
+  try {
+    const ref = forumDb.collection('users').doc(user.uid);
+    const doc = await ref.get();
+    if(doc.exists){
+      userProfile = doc.data();
+    } else {
+      // Compte créé avant cette mise à jour, ou profil manquant : on le recrée proprement.
+      userProfile = { name: user.displayName || 'Élève', email: user.email, favorites: [], downloads: [], quizResults: {} };
+      await ref.set(userProfile, { merge: true });
+    }
+  } catch(e){
+    console.error('Erreur chargement profil', e);
+    userProfile = { name: user.displayName || 'Élève', email: user.email, favorites: [], downloads: [], quizResults: {} };
+  }
+}
+async function saveUserProfileField(field, value){
+  if(!(firebaseUser && !firebaseUser.isAnonymous)) return;
+  try { await forumDb.collection('users').doc(firebaseUser.uid).update({ [field]: value }); }
+  catch(e){ console.error('Erreur sauvegarde profil', field, e); }
+}
+
+/* ============ ASSISTANT IA (Puter.js — gratuit, sans backend) ============ */
+const AI_MODEL = 'anthropic/claude-sonnet-5';
+let aiHistory = [];
+let aiWelcomed = false;
+
+function openAIChat(){
+  document.getElementById('ai-chat-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if(!aiWelcomed){
+    aiWelcomed = true;
+    addAIMessage('ai', "Salut ! 👋 Je suis l'assistant Maths & Physique-Chimie de Schoolonline.ci. Pose-moi une question sur un chapitre du programme (Terminale D) et je t'explique ça simplement.\n\nÀ ta première question, une fenêtre peut te demander de te connecter gratuitement avec un compte Puter — c'est normal, ça sert uniquement à faire fonctionner l'IA.");
+  }
+}
+function closeAIChat(){
+  document.getElementById('ai-chat-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeOnOverlayChat(e){ if(e.target===document.getElementById('ai-chat-overlay')) closeAIChat(); }
+
+function addAIMessage(role, text){
+  const body = document.getElementById('ai-chat-body');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + (role==='ai' ? 'from-ai' : 'from-user');
+  div.textContent = text;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+function showAITyping(){
+  const body = document.getElementById('ai-chat-body');
+  const div = document.createElement('div');
+  div.className = 'ai-typing';
+  div.id = 'ai-typing-indicator';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+function hideAITyping(){
+  const el = document.getElementById('ai-typing-indicator');
+  if(el) el.remove();
+}
+function sendAISuggestion(text){
+  document.getElementById('ai-input').value = text;
+  sendAIMessage();
+}
+function buildAISystemPrompt(){
+  const courseList = COURSES.map(c => (c.matiere==='maths'?'Maths':'Physique-Chimie') + (c.theme?' ('+c.theme+')':'') + ' — ' + c.titre).join('\n');
+  return `Tu es l'assistant pédagogique du site Schoolonline.ci, pour des élèves de Première et Terminale D en Côte d'Ivoire.
+
+RÈGLES :
+- Réponds UNIQUEMENT à des questions de Mathématiques ou de Physique-Chimie liées au programme (liste des chapitres ci-dessous).
+- Si la question sort de ce cadre, dis poliment que tu es spécialisé en Maths/Physique-Chimie et invite l'élève à consulter les cours du site pour le reste.
+- Explique simplement, de façon pédagogique et progressive, avec un exemple si utile.
+- Écris les maths en texte clair (ex: "x²", "racine carrée de x"), pas de LaTeX complexe.
+- Reste bref : 4 à 8 phrases maximum, sauf si l'élève demande plus de détails.
+- N'invente jamais de formule ou de résultat : dis-le si tu n'es pas sûr.
+
+Chapitres disponibles sur le site :
+${courseList}`;
+}
+async function sendAIMessage(){
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if(!text) return;
+  if(typeof puter === 'undefined'){
+    addAIMessage('ai', "⚠️ Le moteur IA (Puter.js) n'a pas pu se charger. Vérifie ta connexion internet et réessaie.");
+    return;
+  }
+  input.value = '';
+  document.getElementById('ai-send-btn').disabled = true;
+  addAIMessage('user', text);
+  aiHistory.push({role:'user', content: text});
+  showAITyping();
+
+  const messages = [
+    {role:'system', content: buildAISystemPrompt()},
+    ...aiHistory
+  ];
+
+  try {
+    const result = await puter.ai.chat(messages, { model: AI_MODEL });
+    let reply = "Désolé, je n'ai pas pu générer de réponse.";
+    if (typeof result === 'string') {
+      reply = result;
+    } else if (result?.message?.content) {
+      const c = result.message.content;
+      reply = Array.isArray(c) ? (c.find(b=>b.type==='text')?.text || reply) : c;
+    } else if (result?.text) {
+      reply = result.text;
+    }
+    hideAITyping();
+    addAIMessage('ai', reply);
+    aiHistory.push({role:'assistant', content: reply});
+  } catch(err){
+    hideAITyping();
+    addAIMessage('ai', "⚠️ L'assistant IA n'est pas disponible pour le moment (connexion au compte Puter annulée ou erreur réseau). Réessaie dans un instant !");
+  } finally {
+    document.getElementById('ai-send-btn').disabled = false;
+  }
+}
+
+/* ============ FORUM (Firebase Firestore — gratuit) ============ */
+// ⚠️ À REMPLIR : colle ici la config de TON projet Firebase (gratuit, sans carte bancaire).
+// Va sur console.firebase.google.com > Créer un projet > Paramètres du projet > tes applications > Web (</>) > copie l'objet firebaseConfig ci-dessous.
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyB7ri8515Mbp6bmvcZ9vO5MHAtYDg64rdk",
+  authDomain: "schoolonline-42025.firebaseapp.com",
+  projectId: "schoolonline-42025",
+  storageBucket: "schoolonline-42025.firebasestorage.app",
+  messagingSenderId: "56095642715",
+  appId: "1:56095642715:web:b535fe51bfd6f3e2c35b7e"
+};
+// ⚠️ À REMPLIR : clé de site reCAPTCHA v3 pour Firebase App Check (protège contre les bots/scripts).
+// Console Firebase > Project Settings > App Check > enregistrer l'app Web > reCAPTCHA v3 > colle le "Site Key" ici.
+const RECAPTCHA_SITE_KEY = "6LelAU0tAAAAAOek4yBxmg9Dbuq7JfTiTw2C_QBB";
+// Sert uniquement à cacher le menu admin pour les autres élèves. La vraie sécurité est dans les règles Firestore.
+const ADMIN_EMAIL = "synfamory99@gmail.com";
+
+let forumDb = null;
+let forumReady = false;
+let forumSubject = 'maths';
+let forumUnsub = null;
+
+function isFirebaseConfigured(){
+  return FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "COLLE_TA_CLE_ICI";
+}
+
+function initFirebaseIfNeeded(){
+  if(forumDb || !isFirebaseConfigured()) return;
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    if(RECAPTCHA_SITE_KEY && RECAPTCHA_SITE_KEY !== "COLLE_TA_CLE_RECAPTCHA_ICI" && firebase.appCheck){
+      try {
+        firebase.appCheck().activate(
+          new firebase.appCheck.ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
+          true // rafraîchissement automatique du jeton
+        );
+      } catch(e){ console.error('App Check init error (le site continue de fonctionner sans)', e); }
+    }
+    forumDb = firebase.firestore();
+    forumReady = true;
+    firebase.auth().onAuthStateChanged(handleAuthStateChange);
+  } catch(e){ console.error('Firebase init error', e); }
+}
+
+async function handleAuthStateChange(user){
+  firebaseUser = user;
+  if(user && !user.isAnonymous){
+    // Vrai compte élève (ou admin) : profil chargé depuis Firestore, accessible sur tout appareil.
+    await loadUserProfile(user);
+    enterApp();
+  } else if(user && user.isAnonymous){
+    if(localStorage.getItem('solci_guest_mode')==='1'){
+      userProfile = null;
+      enterApp();
+    }
+    // sinon : session anonyme d'arrière-plan (lecture publique), on laisse l'écran de connexion affiché
+  } else if(localStorage.getItem('solci_guest_mode')==='1'){
+    // Session perdue mais mode invité choisi précédemment : on en recrée une.
+    try { await firebase.auth().signInAnonymously(); } catch(e){ console.error(e); }
+  }
+}
+
+/* ============ COURS : synchronisation Firestore (partagée entre tous les visiteurs) ============ */
+let coursesUnsub = null;
+
+function initCoursesData(){
+  if(isFirebaseConfigured()){
+    initFirebaseIfNeeded();
+    subscribeCoursesFirestore();
+  } else {
+    COURSES = loadCourses();
+    coursesLoaded = true;
+    afterCoursesLoaded();
+  }
+}
+function subscribeCoursesFirestore(retries){
+  retries = retries || 0;
+  if(!forumDb){
+    if(retries > 40){ // ~10s de tentatives, puis on abandonne proprement
+      console.error('Firestore indisponible, bascule locale.');
+      COURSES = loadCourses(); coursesLoaded = true; afterCoursesLoaded();
+      return;
+    }
+    setTimeout(()=>subscribeCoursesFirestore(retries+1), 250);
+    return;
+  }
+  if(coursesUnsub) coursesUnsub();
+  let coursesResolved = false;
+  setTimeout(()=>{
+    if(coursesResolved || coursesLoaded) return;
+    console.error('Chargement des cours trop long, bascule locale.');
+    COURSES = loadCourses(); coursesLoaded = true; afterCoursesLoaded();
+  }, 8000);
+  coursesUnsub = forumDb.collection('courses').onSnapshot(snapshot=>{
+    coursesResolved = true;
+    COURSES = [];
+    snapshot.forEach(doc=> COURSES.push({id:doc.id, ...doc.data()}));
+    coursesLoaded = true;
+    afterCoursesLoaded();
+    // Si la base est vide, seul l'admin connecté peut l'amorcer (voir bouton dans le panneau admin).
+    if(COURSES.length===0) trySeedIfAdmin();
+  }, err=>{
+    coursesResolved = true;
+    console.error('Erreur Firestore courses:', err);
+    COURSES = loadCourses(); coursesLoaded = true; afterCoursesLoaded();
+  });
+}
+async function trySeedIfAdmin(){
+  if(isAdminAuthed()) await seedFirestoreCoursesOnce();
+}
+async function seedFirestoreCoursesOnce(){
+  try {
+    const seedRef = forumDb.collection('meta').doc('coursesSeed');
+    const seedDoc = await seedRef.get();
+    if(seedDoc.exists) return; // déjà initialisé par un autre visiteur
+    await seedRef.set({ seededAt: firebase.firestore.FieldValue.serverTimestamp() });
+    const seed = seedCourses();
+    const batch = forumDb.batch();
+    seed.forEach(c=>{
+      const { id, ...rest } = c;
+      batch.set(forumDb.collection('courses').doc(id), rest);
+    });
+    await batch.commit();
+    showToast('🌱 Cours de démarrage importés');
+  } catch(e){ console.error('Erreur seed courses:', e); showToast("⚠️ Impossible d'importer les cours (vérifie les règles Firestore)"); }
+}
+function afterCoursesLoaded(){
+  updateSubjectCounts();
+  renderReco();
+  const activePage = document.querySelector('.page.active')?.id;
+  if(activePage==='page-cours') renderCoursList();
+  if(activePage==='page-admin') renderAdminIfLogged();
+  const themeSelect = document.getElementById('forum-theme-select');
+  if(themeSelect) populateForumThemeSelect();
+}
+
+function forumAuthorName(){
+  const user = getCurrentUser();
+  return (user && !user.guest && user.name) ? user.name : 'Élève invité';
+}
+function forumInitials(name){
+  return (name||'?').trim().split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+}
+function timeAgo(date){
+  const diff = Math.floor((Date.now() - date.getTime())/1000);
+  if(diff < 60) return "à l'instant";
+  if(diff < 3600) return Math.floor(diff/60) + ' min';
+  if(diff < 86400) return Math.floor(diff/3600) + ' h';
+  return Math.floor(diff/86400) + ' j';
+}
+
+function selectForumTab(subject){
+  forumSubject = subject;
+  document.getElementById('forum-tab-maths').classList.toggle('active', subject==='maths');
+  document.getElementById('forum-tab-physique').classList.toggle('active', subject==='physique');
+  populateForumThemeSelect();
+  subscribeForumFeed();
+}
+function populateForumThemeSelect(){
+  const sel = document.getElementById('forum-theme-select');
+  const themes = ['Question générale', ...COURSES.filter(c=>c.matiere===forumSubject).map(c=>c.titre)];
+  sel.innerHTML = themes.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+}
+
+function initForum(){
+  initFirebaseIfNeeded();
+  if(!isFirebaseConfigured()){
+    document.getElementById('forum-feed').innerHTML = '';
+    document.querySelector('.forum-composer').style.display = 'none';
+    document.getElementById('forum-feed').innerHTML = `<div class="forum-empty-config"><div class="emoji">🛠️</div><strong>Le forum arrive bientôt</strong><br>L'administrateur doit d'abord connecter une base de données gratuite (Firebase) pour activer les discussions entre élèves.</div>`;
+    return;
+  }
+  document.querySelector('.forum-composer').style.display = 'block';
+  populateForumThemeSelect();
+  subscribeForumFeed();
+}
+
+function subscribeForumFeed(){
+  if(!forumDb) return;
+  if(forumUnsub) forumUnsub();
+  const body = document.getElementById('forum-feed');
+  body.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement des discussions...</strong></div>`;
+  const subjectAtCallTime = forumSubject;
+  let resolved = false;
+  const timeoutId = setTimeout(()=>{
+    if(resolved) return;
+    body.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Le chargement prend trop de temps</strong>Vérifie ta connexion internet, ou essaie d'ouvrir le site depuis un navigateur (Chrome) plutôt que depuis l'appli de téléchargements.<br><br><button class="btn-action" onclick="subscribeForumFeed()">🔄 Réessayer</button></div>`;
+  }, 8000);
+  forumUnsub = forumDb.collection('forumPosts')
+    .where('matiere','==', forumSubject)
+    .orderBy('createdAt','desc')
+    .limit(50)
+    .onSnapshot(snapshot=>{
+      resolved = true;
+      clearTimeout(timeoutId);
+      if(subjectAtCallTime !== forumSubject) return; // l'utilisateur a changé d'onglet entre-temps
+      const posts = [];
+      snapshot.forEach(doc=> posts.push({id:doc.id, ...doc.data()}));
+      renderForumFeed(posts);
+    }, err=>{
+      resolved = true;
+      clearTimeout(timeoutId);
+      body.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de charger le forum</strong>Vérifie la configuration Firebase et les règles Firestore.<br><br><button class="btn-action" onclick="subscribeForumFeed()">🔄 Réessayer</button></div>`;
+      console.error(err);
+    });
+}
+
+function renderForumFeed(posts){
+  const body = document.getElementById('forum-feed');
+  if(posts.length===0){
+    body.innerHTML = `<div class="empty-state"><div class="emoji">💬</div><strong>Aucune question pour l'instant</strong>Sois le premier à lancer une discussion !</div>`;
+    return;
+  }
+  const favs = loadFavs(); // not used here but keep pattern consistent
+  const likedPosts = JSON.parse(localStorage.getItem('solci_liked_posts')||'[]');
+  body.innerHTML = posts.map(p=>{
+    const created = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate() : new Date();
+    const isLiked = likedPosts.includes(p.id);
+    const replies = p.replies || [];
+    return `<div class="forum-post-card">
+      <div class="forum-post-head">
+        <div class="forum-avatar">${escapeHtml(forumInitials(p.author))}</div>
+        <div class="forum-post-meta">
+          <div class="author">${escapeHtml(p.author)}</div>
+          <div class="time">${timeAgo(created)}</div>
+        </div>
+        <span class="forum-post-tag">${escapeHtml(p.theme||'Question générale')}</span>
+      </div>
+      <div class="forum-post-text">${escapeHtml(p.text)}</div>
+      <div class="forum-post-actions">
+        <button class="forum-action-btn ${isLiked?'liked':''}" onclick="toggleForumLike('${p.id}', ${p.likes||0})">👍 ${p.likes||0}</button>
+        <button class="forum-action-btn" onclick="toggleReplyForm('${p.id}')">💬 ${replies.length} réponse${replies.length>1?'s':''}</button>
+        ${isAdminAuthed() ? `<button class="forum-action-btn" style="margin-left:auto;color:#ef4444;" onclick="moderateDeletePost('${p.id}')">🗑️ Supprimer</button>` : ''}
+      </div>
+      ${replies.length ? `<div class="forum-replies">${replies.map(r=>`
+        <div class="forum-reply">
+          <div class="forum-avatar">${escapeHtml(forumInitials(r.author))}</div>
+          <div class="forum-reply-bubble"><div class="author">${escapeHtml(r.author)}</div><div class="text">${escapeHtml(r.text)}</div></div>
+        </div>`).join('')}</div>` : ''}
+      <div class="forum-reply-form" id="reply-form-${p.id}" style="display:none;">
+        <input type="text" id="reply-input-${p.id}" placeholder="Répondre..." maxlength="300" onkeydown="if(event.key==='Enter') submitForumReply('${p.id}')">
+        <button onclick="submitForumReply('${p.id}')">➤</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleReplyForm(postId){
+  const form = document.getElementById('reply-form-'+postId);
+  if(form) form.style.display = form.style.display==='none' ? 'flex' : 'none';
+}
+async function moderateDeletePost(postId){
+  if(!isAdminAuthed() || !forumDb) return;
+  if(!confirm('Supprimer ce message du forum ?')) return;
+  try {
+    await forumDb.collection('forumPosts').doc(postId).delete();
+    showToast('🗑️ Message supprimé');
+  } catch(e){
+    console.error(e);
+    showToast("⚠️ Suppression refusée (vérifie les règles Firestore)");
+  }
+}
+function toggleForumLike(postId, currentLikes){
+  if(!forumDb) return;
+  let likedPosts = JSON.parse(localStorage.getItem('solci_liked_posts')||'[]');
+  const ref = forumDb.collection('forumPosts').doc(postId);
+  if(likedPosts.includes(postId)){
+    likedPosts = likedPosts.filter(id=>id!==postId);
+    ref.update({ likes: Math.max(0,(currentLikes||1)-1) });
+  } else {
+    likedPosts.push(postId);
+    ref.update({ likes: (currentLikes||0)+1 });
+  }
+  localStorage.setItem('solci_liked_posts', JSON.stringify(likedPosts));
+}
+/* ============ ANTI-SPAM : délai minimum entre deux publications ============ */
+const FORUM_COOLDOWN_MS = 20000; // 20 secondes entre deux messages/réponses
+function forumCooldownRemaining(){
+  const last = Number(localStorage.getItem('solci_last_post_ts')||0);
+  const remaining = FORUM_COOLDOWN_MS - (Date.now() - last);
+  return remaining > 0 ? remaining : 0;
+}
+function markForumPosted(){ localStorage.setItem('solci_last_post_ts', String(Date.now())); }
+function startCooldownUI(btn, originalLabel){
+  let remaining = Math.ceil(forumCooldownRemaining()/1000);
+  if(remaining<=0) return;
+  btn.disabled = true;
+  const tick = ()=>{
+    remaining--;
+    if(remaining<=0){ btn.disabled = false; btn.textContent = originalLabel; return; }
+    btn.textContent = `Attends ${remaining}s...`;
+    setTimeout(tick, 1000);
+  };
+  btn.textContent = `Attends ${remaining}s...`;
+  setTimeout(tick, 1000);
+}
+
+async function submitForumReply(postId){
+  const input = document.getElementById('reply-input-'+postId);
+  const text = input.value.trim();
+  if(!text || !forumDb) return;
+  const remaining = forumCooldownRemaining();
+  if(remaining > 0){ showToast(`⏳ Attends encore ${Math.ceil(remaining/1000)}s avant de publier à nouveau`); return; }
+  input.value = '';
+  try {
+    await forumDb.collection('forumPosts').doc(postId).update({
+      replies: firebase.firestore.FieldValue.arrayUnion({ author: forumAuthorName(), text, createdAt: new Date().toISOString() })
+    });
+    markForumPosted();
+  } catch(e){ showToast("⚠️ Impossible d'envoyer la réponse"); }
+}
+async function postForumMessage(){
+  const input = document.getElementById('forum-input');
+  const text = input.value.trim();
+  if(!text){ showToast('Écris ta question avant de publier'); return; }
+  if(!forumDb){ showToast("Le forum n'est pas encore configuré"); return; }
+  const btn = document.getElementById('forum-post-btn');
+  const remaining = forumCooldownRemaining();
+  if(remaining > 0){
+    showToast(`⏳ Attends encore ${Math.ceil(remaining/1000)}s avant de publier à nouveau`);
+    startCooldownUI(btn, 'Publier');
+    return;
+  }
+  const theme = document.getElementById('forum-theme-select').value;
+  btn.disabled = true;
+  try {
+    await forumDb.collection('forumPosts').add({
+      matiere: forumSubject,
+      theme,
+      author: forumAuthorName(),
+      text,
+      likes: 0,
+      replies: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    input.value = '';
+    markForumPosted();
+    showToast('✅ Question publiée');
+    startCooldownUI(btn, 'Publier');
+  } catch(e){
+    showToast('⚠️ Erreur lors de la publication');
+    console.error(e);
+    btn.disabled = false;
+  }
+}
+
+/* ============ QUIZ AUTO-CORRIGÉ (généré par IA, mis en cache) ============ */
+let quizCache = {}; // en mémoire pour la session en cours
+let currentQuiz = null;     // { courseId, titre, questions:[...] }
+let currentQIndex = 0;
+let currentAnswers = [];    // index choisi par question
+let quizAnswered = false;
+
+function closeOnOverlayQuiz(e){ if(e.target===document.getElementById('quiz-overlay')) closeQuiz(); }
+function closeQuiz(){
+  document.getElementById('quiz-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function openQuiz(courseId){
+  const course = COURSES.find(c=>c.id===courseId);
+  if(!course) return;
+  document.getElementById('quiz-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('quiz-title').textContent = course.titre;
+  document.getElementById('quiz-footer').style.display = 'none';
+  document.getElementById('quiz-progress-fill').style.width = '0%';
+  document.getElementById('quiz-body').innerHTML = `<div class="quiz-loading"><div class="spinner"></div><strong>Préparation de ton quiz...</strong><p style="margin-top:6px;font-size:12px;">Génération IA en cours, quelques secondes</p></div>`;
+
+  try {
+    const questions = await getQuizQuestions(course);
+    if(!questions || questions.length===0) throw new Error('empty');
+    currentQuiz = { courseId, titre: course.titre, questions };
+    currentQIndex = 0;
+    currentAnswers = new Array(questions.length).fill(null);
+    quizAnswered = false;
+    renderQuizQuestion();
+  } catch(e){
+    console.error(e);
+    document.getElementById('quiz-body').innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de générer le quiz</strong>Vérifie ta connexion et réessaie dans un instant.</div>`;
+  }
+}
+
+async function getQuizQuestions(course){
+  // 1. cache mémoire de la session
+  if(quizCache[course.id]) return quizCache[course.id];
+
+  // 2. cache partagé Firestore (déjà généré par un autre élève)
+  if(isFirebaseConfigured() && forumDb){
+    try {
+      const doc = await forumDb.collection('quizzes').doc(course.id).get();
+      if(doc.exists){
+        const data = doc.data();
+        if(Array.isArray(data.questions) && data.questions.length){
+          quizCache[course.id] = data.questions;
+          return data.questions;
+        }
+      }
+    } catch(e){ console.error('Lecture quiz Firestore échouée', e); }
+  }
+
+  // 3. génération IA (Puter.js)
+  const questions = await generateQuizWithAI(course);
+  quizCache[course.id] = questions;
+
+  // 4. mise en cache partagée pour les prochains élèves
+  if(isFirebaseConfigured() && forumDb){
+    try {
+      await forumDb.collection('quizzes').doc(course.id).set({
+        questions,
+        matiere: course.matiere,
+        titre: course.titre,
+        generatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } catch(e){ console.error('Sauvegarde quiz Firestore échouée (pas grave, ça reste en cache local)', e); }
+  }
+  return questions;
+}
+
+async function generateQuizWithAI(course){
+  if(typeof puter === 'undefined') throw new Error('Puter.js indisponible');
+  const matiereLabel = course.matiere==='maths' ? 'Mathématiques' : 'Physique-Chimie';
+  const prompt = `Crée un QCM de 5 questions pour réviser le chapitre "${course.titre}" en ${matiereLabel}, niveau ${course.niveau || 'Terminale D'} (programme de Côte d'Ivoire).
+
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte autour, sans markdown, au format exact :
+[
+  {"q": "texte de la question", "options": ["option A", "option B", "option C", "option D"], "correct": 0, "explain": "courte explication de la bonne réponse (1-2 phrases)"}
+]
+"correct" est l'index (0 à 3) de la bonne réponse dans "options". Questions claires, progressives, adaptées au niveau lycée. Pas de LaTeX complexe, texte clair uniquement.`;
+
+  const result = await puter.ai.chat(prompt, { model: 'anthropic/claude-sonnet-5' });
+  let text = '';
+  if(typeof result === 'string') text = result;
+  else if(result?.message?.content){
+    const c = result.message.content;
+    text = Array.isArray(c) ? (c.find(b=>b.type==='text')?.text || '') : c;
+  } else if(result?.text){ text = result.text; }
+
+  text = text.trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+  const parsed = JSON.parse(text);
+  if(!Array.isArray(parsed)) throw new Error('format inattendu');
+  return parsed.slice(0,5).map(q=>({
+    q: String(q.q||'').slice(0,300),
+    options: Array.isArray(q.options) ? q.options.slice(0,4).map(o=>String(o).slice(0,150)) : [],
+    correct: Number.isInteger(q.correct) ? q.correct : 0,
+    explain: String(q.explain||'').slice(0,300)
+  })).filter(q=>q.q && q.options.length===4);
+}
+
+function renderQuizQuestion(){
+  const { questions } = currentQuiz;
+  const q = questions[currentQIndex];
+  quizAnswered = false;
+  document.getElementById('quiz-progress-fill').style.width = Math.round((currentQIndex/questions.length)*100)+'%';
+  document.getElementById('quiz-footer').style.display = 'block';
+  const nextBtn = document.getElementById('quiz-next-btn');
+  nextBtn.disabled = true;
+  nextBtn.textContent = currentQIndex === questions.length-1 ? 'Voir mon score' : 'Valider';
+
+  const letters = ['A','B','C','D'];
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="quiz-question-card">
+      <div class="quiz-q-label">Question ${currentQIndex+1} / ${questions.length}</div>
+      <div class="quiz-q-text">${escapeHtml(q.q)}</div>
+      ${q.options.map((opt,i)=>`
+        <button class="quiz-option" data-idx="${i}" onclick="selectQuizOption(${i})">
+          <span class="opt-letter">${letters[i]}</span><span>${escapeHtml(opt)}</span>
+        </button>`).join('')}
+      <div id="quiz-explain-slot"></div>
+    </div>`;
+}
+
+function selectQuizOption(idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  currentAnswers[currentQIndex] = idx;
+  const q = currentQuiz.questions[currentQIndex];
+  document.querySelectorAll('.quiz-option').forEach(btn=>{
+    const i = Number(btn.dataset.idx);
+    btn.disabled = true;
+    if(i === q.correct) btn.classList.add('correct');
+    else if(i === idx) btn.classList.add('incorrect');
+  });
+  if(q.explain){
+    document.getElementById('quiz-explain-slot').innerHTML = `<div class="quiz-explain">💡 ${escapeHtml(q.explain)}</div>`;
+  }
+  document.getElementById('quiz-next-btn').disabled = false;
+}
+
+function quizNext(){
+  if(currentQIndex < currentQuiz.questions.length - 1){
+    currentQIndex++;
+    renderQuizQuestion();
+  } else {
+    renderQuizResult();
+  }
+}
+
+function renderQuizResult(){
+  const { questions } = currentQuiz;
+  const score = currentAnswers.reduce((acc,ans,i)=> acc + (ans===questions[i].correct ? 1 : 0), 0);
+  const pct = Math.round((score/questions.length)*100);
+  document.getElementById('quiz-progress-fill').style.width = '100%';
+  document.getElementById('quiz-footer').style.display = 'none';
+  const color = pct >= 70 ? '#1a9640' : pct >= 40 ? '#F47B20' : '#ef4444';
+  const msg = pct >= 70 ? 'Excellent travail ! 🎉' : pct >= 40 ? 'Pas mal, continue à réviser 💪' : 'Ce chapitre mérite une relecture 📖';
+
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="quiz-result">
+      <div class="score-ring" style="background: conic-gradient(${color} ${pct}%, #e2e8f0 ${pct}% 100%);">
+        <div class="inner"><span class="big">${pct}%</span><span class="small">${score}/${questions.length}</span></div>
+      </div>
+      <h3>${msg}</h3>
+      <p>Quiz sur "${escapeHtml(currentQuiz.titre)}"</p>
+      <button class="btn-download-trigger" style="margin-bottom:10px;" onclick="restartQuiz()">🔁 Refaire le quiz</button>
+      <button class="btn-dismiss" onclick="closeQuiz()">Fermer</button>
+    </div>`;
+  saveQuizResult(currentQuiz.courseId, currentQuiz.titre, pct);
+}
+function restartQuiz(){
+  currentQIndex = 0;
+  currentAnswers = new Array(currentQuiz.questions.length).fill(null);
+  renderQuizQuestion();
+}
+function saveQuizResult(courseId, titre, pct){
+  const entry = { titre, pct, date: new Date().toISOString() };
+  if(isRealAccount() && userProfile){
+    userProfile.quizResults = userProfile.quizResults || {};
+    userProfile.quizResults[courseId] = entry;
+    saveUserProfileField('quizResults', userProfile.quizResults);
+    return;
+  }
+  try {
+    const key = 'solci_quiz_results';
+    const results = JSON.parse(localStorage.getItem(key)||'{}');
+    results[courseId] = entry;
+    localStorage.setItem(key, JSON.stringify(results));
+  } catch(e){}
+}
+
+/* ============ SUIVI D'ERREURS (auto-hébergé sur Firestore, gratuit) ============ */
+const loggedErrorMessages = new Set(); // évite de spammer la même erreur en boucle sur une session
+function logClientError(message, source, lineno, stack){
+  try {
+    const key = String(message).slice(0,150);
+    if(loggedErrorMessages.has(key)) return; // déjà signalée cette session
+    loggedErrorMessages.add(key);
+    if(!isFirebaseConfigured() || !forumDb) return; // rien à faire si pas de base connectée
+    const activePage = document.querySelector('.page.active')?.id || 'inconnue';
+    forumDb.collection('errorLogs').add({
+      message: String(message||'').slice(0,500),
+      source: String(source||'').slice(0,200),
+      lineno: lineno || null,
+      stack: String(stack||'').slice(0,1000),
+      page: activePage,
+      userEmail: (firebaseUser && !firebaseUser.isAnonymous) ? firebaseUser.email : 'anonyme/invité',
+      userAgent: navigator.userAgent.slice(0,200),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(()=>{}); // si ça échoue (ex: règles pas encore posées), on n'embête pas l'utilisateur
+  } catch(e){ /* le suivi d'erreurs ne doit jamais lui-même casser le site */ }
+}
+window.addEventListener('error', (e)=>{
+  logClientError(e.message, e.filename, e.lineno, e.error && e.error.stack);
+});
+window.addEventListener('unhandledrejection', (e)=>{
+  const reason = e.reason;
+  logClientError(reason && reason.message ? reason.message : String(reason), 'promise', '', reason && reason.stack);
+});
+
+/* ============ PAGE LÉGALE ============ */
+function selectLegalTab(tab){
+  document.getElementById('legal-tab-privacy').classList.toggle('active', tab==='privacy');
+  document.getElementById('legal-tab-terms').classList.toggle('active', tab==='terms');
+  document.getElementById('legal-privacy').style.display = tab==='privacy' ? 'block' : 'none';
+  document.getElementById('legal-terms').style.display = tab==='terms' ? 'block' : 'none';
+}
+function openLegalFromAuth(tab){
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'block';
+  document.getElementById('legal-back-btn').style.display = 'inline';
+  switchPage('legal');
+  selectLegalTab(tab);
+}
+function exitLegalPage(){
+  document.getElementById('legal-back-btn').style.display = 'none';
+  if(getCurrentUser()){
+    switchPage('profil');
+  } else {
+    document.getElementById('app-shell').style.display = 'none';
+    document.getElementById('auth-screen').style.display = 'flex';
+  }
+}
+
+async function loadAdminErrorLogs(){
+  const box = document.getElementById('admin-error-list');
+  if(!box || !forumDb) return;
+  box.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement...</strong></div>`;
+  try {
+    const snap = await forumDb.collection('errorLogs').orderBy('createdAt','desc').limit(30).get();
+    const countEl = document.getElementById('admin-error-count');
+    if(countEl) countEl.textContent = snap.size;
+    if(snap.empty){ box.innerHTML = `<div class="empty-state"><div class="emoji">✅</div><strong>Aucune erreur récente</strong>Tout va bien !</div>`; return; }
+    box.innerHTML = snap.docs.map(doc=>{
+      const d = doc.data();
+      const date = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('fr-FR') : '';
+      return `<div class="admin-list-item" style="align-items:flex-start;">
+        <div class="grow">
+          <h5 style="white-space:normal;">${escapeHtml(d.message||'Erreur inconnue')}</h5>
+          <div class="tags"><span>${escapeHtml(d.userEmail||'?')}</span><span>${date}</span></div>
+        </div>
+        <button class="admin-icon-btn danger" onclick="deleteErrorLog('${doc.id}')" aria-label="Supprimer">🗑️</button>
+      </div>`;
+    }).join('');
+  } catch(e){
+    box.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de charger les erreurs</strong>Vérifie les règles Firestore.</div>`;
+  }
+}
+async function deleteErrorLog(id){
+  try { await forumDb.collection('errorLogs').doc(id).delete(); loadAdminErrorLogs(); }
+  catch(e){ showToast('⚠️ Suppression refusée'); }
+}
+
+/* ============ INIT ============ */
+document.querySelectorAll('.bottom-nav-dock .dock-item[data-page]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.bottom-nav-dock .dock-item').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+renderReco();
+updateSubjectCounts();
+initCoursesData();
+if(isFirebaseConfigured()){
+  // L'écran (connexion vs app) est décidé par handleAuthStateChange une fois la session Firebase résolue.
+  initFirebaseIfNeeded();
+} else if(getCurrentUserLocal()){
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'block';
+}
+</script>
+</body>
+</html>
