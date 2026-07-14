@@ -857,6 +857,10 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
         <label>Lien du fichier (Drive, PDF hébergé...)</label>
         <input id="f-lien" placeholder="https://...">
       </div>
+      <div class="form-sheet-field">
+        <label>ID vidéo YouTube (optionnel)</label>
+        <input id="f-videoid" placeholder="Ex : ACuKml7PXDg (dans l'URL après v=)">
+      </div>
       <button class="btn-save-form" onclick="saveCourseForm()">💾 Enregistrer</button>
       <button class="btn-cancel-form" onclick="closeFormModal()">Annuler</button>
     </div>
@@ -1167,8 +1171,8 @@ function renderCoursList(){
     container.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement des cours...</strong></div>`;
     return;
   }
-  let list = COURSES.filter(c=>c.matiere===coursSubject);
-  if(currentSearch){ list = list.filter(c=>c.titre.toLowerCase().includes(currentSearch)); }
+  let list = COURSES.filter(c=>c.matiere===coursSubject && c.titre);
+  if(currentSearch){ list = list.filter(c=>(c.titre||'').toLowerCase().includes(currentSearch)); }
 
   if(coursSubTab==='video'){
     renderCoursVideoGrid(container, list.filter(c=>c.videoId));
@@ -1251,7 +1255,7 @@ function exoItemHtml(e){
 function renderExoList(){
   const container = document.getElementById('exo-list-container');
   let list = EXERCICES.filter(e=>e.matiere===exoSubject && e.sous===exoSubTab);
-  if(currentSearch){ list = list.filter(e=>e.titre.toLowerCase().includes(currentSearch)); }
+  if(currentSearch){ list = list.filter(e=>(e.titre||'').toLowerCase().includes(currentSearch)); }
   if(list.length===0){
     container.innerHTML = `<div class="empty-state"><div class="emoji">🎬</div><strong>Rien ici pour l'instant</strong>De nouveaux exercices arrivent bientôt.</div>`;
     return;
@@ -1283,7 +1287,7 @@ function clearSearch(){
 /* ============ ACCUEIL: recommandations ============ */
 function renderReco(){
   const scroller = document.getElementById('reco-scroller');
-  const picks = [COURSES.find(c=>c.id==='m9'), COURSES.find(c=>c.id==='p16'), COURSES.find(c=>c.id==='p1')].filter(Boolean);
+  const picks = [COURSES.find(c=>c.id==='m9'), COURSES.find(c=>c.id==='p16'), COURSES.find(c=>c.id==='p1')].filter(c=>c && c.titre);
   scroller.innerHTML = picks.map(c=>`
     <div class="premium-course-card">
       <span class="card-tag ${c.matiere==='maths'?'maths-tag':'physique-tag'}">${c.matiere==='maths'?'Maths':'Physique-Chimie'}</span>
@@ -1431,7 +1435,7 @@ function adminLogout(){
 function isAdminAuthed(){
   if(isFirebaseConfigured() && forumDb){
     const u = firebase.auth().currentUser;
-    return !!(u && !u.isAnonymous && u.email) && sessionStorage.getItem(AUTH_KEY)==='1';
+    return !!(u && !u.isAnonymous && u.email === ADMIN_EMAIL) && sessionStorage.getItem(AUTH_KEY)==='1';
   }
   return sessionStorage.getItem(AUTH_KEY)==='1';
 }
@@ -1454,20 +1458,52 @@ function renderAdminDashboard(){
       <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreCoursesOnce()">🌱 Importer les cours de démarrage</button>`;
     return;
   }
-  list.innerHTML = COURSES.map(c=>`
+  const corrupted = COURSES.filter(c=>!c.titre);
+  let html = '';
+  if(corrupted.length > 0 && isFirebaseConfigured()){
+    html += `<div class="empty-state" style="background:#fee2e2;border-radius:14px;margin-bottom:12px;">
+      <div class="emoji">⚠️</div><strong>${corrupted.length} cours sans titre détecté(s)</strong>
+      Ça arrive si un import a été interrompu. Tu peux tout réinitialiser proprement (les vrais fichiers/liens PDF déjà ajoutés seront perdus, mais ils étaient déjà à "bientôt disponible").
+      <br><br><button class="admin-add-btn" style="background:#dc2626; box-shadow:none;" onclick="resetAndReseedCourses()">🧹 Réinitialiser complètement les cours</button>
+    </div>`;
+  }
+  html += COURSES.map(c=>`
     <div class="admin-list-item">
       <div class="grow">
-        <h5>${escapeHtml(c.titre)}</h5>
+        <h5>${escapeHtml(c.titre || 'Cours sans titre (donnée corrompue)')}</h5>
         <div class="tags">
-          <span>${c.matiere==='maths'?'🧮 Maths':'⚗️ Phys-Chimie'}</span>
+          <span>${c.matiere==='maths'?'🧮 Maths':(c.matiere==='physique'?'⚗️ Phys-Chimie':'❓ '+escapeHtml(String(c.matiere||'?')))}</span>
           ${c.theme? `<span>${escapeHtml(c.theme)}</span>`:''}
-          <span>${c.type}</span>
+          <span>${escapeHtml(c.type || '?')}</span>
         </div>
       </div>
       <button class="admin-icon-btn edit" aria-label="Modifier" onclick="openCourseForm('${c.id}')">✏️</button>
       <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteCourse('${c.id}')">🗑️</button>
     </div>`).join('');
-  loadAdminErrorLogs();
+  list.innerHTML = html;
+}
+async function resetAndReseedCourses(){
+  if(!confirm("⚠️ Ceci va SUPPRIMER tous les cours actuels et les remplacer par la liste de démarrage propre. Les liens PDF ajoutés manuellement seront perdus. Continuer ?")) return;
+  try {
+    const snap = await forumDb.collection('courses').get();
+    const delBatch = forumDb.batch();
+    snap.docs.forEach(doc=> delBatch.delete(doc.ref));
+    delBatch.delete(forumDb.collection('meta').doc('coursesSeed'));
+    await delBatch.commit();
+
+    const seed = seedCourses();
+    const addBatch = forumDb.batch();
+    seed.forEach(c=>{
+      const { id, ...rest } = c;
+      addBatch.set(forumDb.collection('courses').doc(id), rest);
+    });
+    addBatch.set(forumDb.collection('meta').doc('coursesSeed'), { seededAt: firebase.firestore.FieldValue.serverTimestamp() });
+    await addBatch.commit();
+    showToast('🧹 Base de cours réinitialisée : ' + seed.length + ' cours propres importés');
+  } catch(e){
+    console.error('Erreur reset courses:', e);
+    showToast("⚠️ Échec de la réinitialisation : " + (e && e.message ? e.message : 'vérifie les règles Firestore'));
+  }
 }
 async function loadAdminErrorLogs(){
   const listEl = document.getElementById('admin-error-list');
@@ -1521,6 +1557,7 @@ function openCourseForm(id){
   document.getElementById('f-format').value = c ? c.format : 'PDF';
   document.getElementById('f-niveau').value = c ? c.niveau : 'Première / Terminale D';
   document.getElementById('f-lien').value = c ? c.lien : '';
+  document.getElementById('f-videoid').value = c ? (c.videoId || '') : '';
   document.getElementById('form-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1537,6 +1574,7 @@ async function saveCourseForm(){
     format: document.getElementById('f-format').value,
     niveau: document.getElementById('f-niveau').value.trim() || 'Première / Terminale D',
     lien: document.getElementById('f-lien').value.trim() || '#',
+    videoId: document.getElementById('f-videoid').value.trim(),
     date: new Date().toISOString().slice(0,10)
   };
   const useCloud = isFirebaseConfigured() && forumDb;
@@ -2293,7 +2331,7 @@ async function openQuiz(courseId){
   if(!course) return;
   document.getElementById('quiz-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  document.getElementById('quiz-title').textContent = course.titre;
+  document.getElementById('quiz-title').textContent = course.titre || 'Quiz';
   document.getElementById('quiz-footer').style.display = 'none';
   document.getElementById('quiz-progress-fill').style.width = '0%';
   document.getElementById('quiz-body').innerHTML = `<div class="quiz-loading"><div class="spinner"></div><strong>Préparation de ton quiz...</strong><p style="margin-top:6px;font-size:12px;">Génération IA en cours, quelques secondes</p></div>`;
@@ -2520,35 +2558,6 @@ function exitLegalPage(){
     document.getElementById('app-shell').style.display = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
   }
-}
-
-async function loadAdminErrorLogs(){
-  const box = document.getElementById('admin-error-list');
-  if(!box || !forumDb) return;
-  box.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement...</strong></div>`;
-  try {
-    const snap = await forumDb.collection('errorLogs').orderBy('createdAt','desc').limit(30).get();
-    const countEl = document.getElementById('admin-error-count');
-    if(countEl) countEl.textContent = snap.size;
-    if(snap.empty){ box.innerHTML = `<div class="empty-state"><div class="emoji">✅</div><strong>Aucune erreur récente</strong>Tout va bien !</div>`; return; }
-    box.innerHTML = snap.docs.map(doc=>{
-      const d = doc.data();
-      const date = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('fr-FR') : '';
-      return `<div class="admin-list-item" style="align-items:flex-start;">
-        <div class="grow">
-          <h5 style="white-space:normal;">${escapeHtml(d.message||'Erreur inconnue')}</h5>
-          <div class="tags"><span>${escapeHtml(d.userEmail||'?')}</span><span>${date}</span></div>
-        </div>
-        <button class="admin-icon-btn danger" onclick="deleteErrorLog('${doc.id}')" aria-label="Supprimer">🗑️</button>
-      </div>`;
-    }).join('');
-  } catch(e){
-    box.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de charger les erreurs</strong>Vérifie les règles Firestore.</div>`;
-  }
-}
-async function deleteErrorLog(id){
-  try { await forumDb.collection('errorLogs').doc(id).delete(); loadAdminErrorLogs(); }
-  catch(e){ showToast('⚠️ Suppression refusée'); }
 }
 
 /* ============ INIT ============ */
