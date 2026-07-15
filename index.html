@@ -1494,8 +1494,7 @@ async function resetAndReseedCourses(){
     const snap = await forumDb.collection('courses').get();
     const delBatch = forumDb.batch();
     snap.docs.forEach(doc=> delBatch.delete(doc.ref));
-    delBatch.delete(forumDb.collection('meta').doc('coursesSeed'));
-    await delBatch.commit();
+    if(snap.docs.length > 0) await delBatch.commit();
 
     const seed = seedCourses();
     const addBatch = forumDb.batch();
@@ -1503,7 +1502,6 @@ async function resetAndReseedCourses(){
       const { id, ...rest } = c;
       addBatch.set(forumDb.collection('courses').doc(id), rest);
     });
-    addBatch.set(forumDb.collection('meta').doc('coursesSeed'), { seededAt: firebase.firestore.FieldValue.serverTimestamp() });
     await addBatch.commit();
     showToast('🧹 Base de cours réinitialisée : ' + seed.length + ' cours propres importés');
   } catch(e){
@@ -1961,7 +1959,7 @@ const RECAPTCHA_SITE_KEY = "6LelAU0tAAAAAOek4yBxmg9Dbuq7JfTiTw2C_QBB";
 // Sert uniquement à cacher le menu admin pour les autres élèves. La vraie sécurité est dans les règles Firestore.
 const ADMIN_EMAIL = "synfamory99@gmail.com";
 // Change cette date à chaque nouvelle version que Claude te donne — permet de vérifier que le site déployé est à jour.
-const BUILD_VERSION = "2026-07-15 08:30";
+const BUILD_VERSION = "2026-07-15 09:15";
 
 let forumDb = null;
 let forumReady = false;
@@ -2069,7 +2067,6 @@ async function seedFirestoreCoursesOnce(){
       const { id, ...rest } = c;
       batch.set(forumDb.collection('courses').doc(id), rest);
     });
-    batch.set(forumDb.collection('meta').doc('coursesSeed'), { seededAt: firebase.firestore.FieldValue.serverTimestamp() });
     await batch.commit();
     showToast('🌱 ' + seed.length + ' cours importés avec succès !');
   } catch(e){
