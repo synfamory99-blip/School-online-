@@ -675,6 +675,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
         <span class="chev">›</span>
       </button>
     </div>
+    <p style="text-align:center; font-size:11px; color:var(--text-muted); padding:16px 20px 30px;">Version du site : <strong id="profil-build-version"></strong></p>
   </div>
 
   <div id="page-legal" class="page">
@@ -764,6 +765,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
       <button class="settings-row" style="margin:20px; width:calc(100% - 40px); background:white; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);" onclick="adminLogout()">
         <div class="settings-label-side">🚪 <span>Se déconnecter</span></div>
       </button>
+      <p style="text-align:center; font-size:11px; color:var(--text-muted); padding:0 20px 30px;">Version du code : <strong id="build-version-tag"></strong></p>
     </div>
   </div>
 
@@ -1318,6 +1320,8 @@ function toggleMiniList(id){
   if(show) renderProfil();
 }
 function renderProfil(){
+  const versionTag = document.getElementById('profil-build-version');
+  if(versionTag) versionTag.textContent = BUILD_VERSION;
   const user = getCurrentUser();
   if(user){
     document.getElementById('profil-name').textContent = user.guest ? 'Invité' : user.name;
@@ -1446,6 +1450,8 @@ function renderAdminIfLogged(){
   if(logged) renderAdminDashboard();
 }
 function renderAdminDashboard(){
+  const vTag = document.getElementById('build-version-tag');
+  if(vTag) vTag.textContent = BUILD_VERSION;
   const nbMaths = COURSES.filter(c=>c.matiere==='maths').length;
   const nbPhysique = COURSES.filter(c=>c.matiere==='physique').length;
   document.getElementById('admin-stat-maths').textContent = nbMaths;
@@ -1954,6 +1960,8 @@ const FIREBASE_CONFIG = {
 const RECAPTCHA_SITE_KEY = "6LelAU0tAAAAAOek4yBxmg9Dbuq7JfTiTw2C_QBB";
 // Sert uniquement à cacher le menu admin pour les autres élèves. La vraie sécurité est dans les règles Firestore.
 const ADMIN_EMAIL = "synfamory99@gmail.com";
+// Change cette date à chaque nouvelle version que Claude te donne — permet de vérifier que le site déployé est à jour.
+const BUILD_VERSION = "2026-07-15 08:30";
 
 let forumDb = null;
 let forumReady = false;
