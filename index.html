@@ -456,6 +456,169 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
   .auth-screen { border-radius: 28px; min-height: auto; max-width: 480px; }
 }
 
+/* ============================================================
+   GAMIFICATION + ANIMATIONS PREMIUM
+   ============================================================ */
+
+/* --- Transitions de page --- */
+.page.active { animation: pageFadeIn .38s cubic-bezier(0.4,0,0.2,1); }
+@keyframes pageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- Effet ripple (boutons) --- */
+.btn-action, .subject-tab, .sub-tab, .dock-item, .quiz-option, .forum-post-btn,
+.settings-row, .btn-download-trigger, .btn-dismiss, .quiz-next-btn, .subject-box,
+.gam-tab, .reward-pick-btn, .action-circle-btn, .fav-btn, .forum-action-btn, .btn-mini {
+  position: relative; overflow: hidden;
+}
+.ripple-effect {
+  position: absolute; border-radius: 50%; background: rgba(255,255,255,0.45);
+  transform: scale(0); animation: rippleAnim .6s ease-out forwards; pointer-events: none;
+}
+@keyframes rippleAnim { to { transform: scale(1); opacity: 0; } }
+.btn-action:active, .btn-mini:active, .quiz-next-btn:active, .subject-box:active { transform: scale(0.97); }
+button { transition: transform .15s ease, box-shadow .25s ease; }
+
+/* --- Survol des cartes --- */
+.premium-list-item, .premium-course-card, .subject-box, .progression-card,
+.forum-post-card, .challenge-card, .badge-card, .leaderboard-row, .reco-mini-card {
+  transition: transform .25s cubic-bezier(0.4,0,0.2,1), box-shadow .25s ease;
+}
+.premium-list-item:hover, .premium-course-card:hover, .forum-post-card:hover, .reco-mini-card:hover {
+  transform: translateY(-3px); box-shadow: 0 12px 28px rgba(15,23,42,0.1);
+}
+.subject-box:hover, .progression-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 14px 30px rgba(15,23,42,0.12); }
+.badge-card.owned:hover { transform: translateY(-3px) scale(1.03); }
+
+/* --- Skeleton loading --- */
+.skeleton-row, .skeleton-card { background: linear-gradient(90deg, #eef1f5 25%, #f8fafc 37%, #eef1f5 63%); background-size: 400% 100%; animation: skeletonShine 1.3s ease infinite; border-radius: 14px; }
+.skeleton-row { height: 68px; margin-bottom: 10px; }
+.skeleton-card { height: 130px; min-width: 220px; display: inline-block; margin-right: 12px; }
+@keyframes skeletonShine { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+/* --- Quiz : réponses --- */
+.quiz-option.correct { animation: correctPulse .5s ease; }
+.quiz-option.incorrect { animation: shakeX .45s ease; }
+@keyframes correctPulse { 0% { transform: scale(1); } 40% { transform: scale(1.03); } 100% { transform: scale(1); } }
+@keyframes shakeX { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+
+/* --- Toasts --- */
+.toast { animation: toastIn .35s cubic-bezier(0.4,0,0.2,1); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* --- Toast XP flottant --- */
+.xp-float-toast {
+  position: fixed; top: 86px; left: 50%; transform: translateX(-50%) translateY(-14px); z-index: 1300;
+  background: var(--green-gradient); color: #fff; padding: 10px 18px; border-radius: 30px;
+  display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 26px rgba(26,150,64,.35);
+  opacity: 0; transition: all .35s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none;
+}
+.xp-float-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.xp-float-toast .xp-amount { font-family:'Poppins',sans-serif; font-weight: 800; font-size: 14px; }
+.xp-float-toast .xp-reason { font-size: 11px; opacity: .9; }
+
+/* --- Barre XP / niveau (dashboard) --- */
+.gam-topbar { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow-sm); margin: 14px 20px 0; cursor: pointer; }
+.gam-level-badge { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.gam-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; border: 2px solid var(--green); }
+.gam-level-info { flex: 1; min-width: 0; }
+.gam-level-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13px; color: var(--text-main); }
+.gam-xp-bar { height: 8px; background: #e2e8f0; border-radius: 6px; margin: 5px 0 3px; overflow: hidden; }
+.gam-xp-fill { height: 100%; background: var(--green-gradient); border-radius: 6px; width: 0%; transition: width .6s cubic-bezier(0.4,0,0.2,1); }
+.gam-xp-label { font-size: 10px; color: var(--text-muted); }
+.gam-streak { display: flex; align-items: center; gap: 5px; background: var(--orange-light); color: var(--orange-dark); font-weight: 800; font-size: 14px; padding: 8px 12px; border-radius: 30px; flex-shrink: 0; }
+.gam-streak .flame { animation: flamePulse 1.4s ease-in-out infinite; display: inline-block; }
+@keyframes flamePulse { 0%,100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.15) rotate(2deg); } }
+
+/* --- Citation du jour --- */
+.gam-quote-card { margin: 12px 20px 0; background: var(--orange-gradient); color: #fff; border-radius: var(--radius-md); padding: 14px 18px; font-size: 13px; font-weight: 600; display: flex; gap: 10px; align-items: flex-start; box-shadow: var(--shadow-sm); }
+.gam-quote-card .quote-mark { font-size: 22px; font-family: 'Poppins', sans-serif; opacity: .8; line-height: 1; }
+
+/* --- Défis quotidiens --- */
+.daily-challenges-list { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; }
+.challenge-card { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: var(--radius-md); padding: 10px 14px; box-shadow: var(--shadow-sm); }
+.challenge-card.done { background: var(--green-light); }
+.challenge-icon { font-size: 18px; }
+.challenge-info { flex: 1; min-width: 0; }
+.challenge-label { font-size: 12.5px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px; }
+.challenge-bar { height: 6px; background: #e2e8f0; border-radius: 6px; overflow: hidden; }
+.challenge-fill { height: 100%; background: var(--green-gradient); border-radius: 6px; transition: width .5s ease; }
+.challenge-status { font-size: 12px; font-weight: 800; color: var(--green); flex-shrink: 0; }
+
+/* --- Page Gamification --- */
+.gam-hero { text-align: center; padding: 26px 20px 10px; }
+.gam-big-avatar { width: 92px; height: 92px; border-radius: 50%; background: var(--green-light); border: 3px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 44px; margin: 0 auto 10px; box-shadow: 0 10px 24px rgba(26,150,64,.18); }
+.gam-big-avatar.frame_argent { border-color: #94a3b8; box-shadow: 0 10px 24px rgba(148,163,184,.35); }
+.gam-big-avatar.frame_or { border-color: #f59e0b; box-shadow: 0 10px 24px rgba(245,158,11,.4); }
+.gam-hero-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 17px; }
+.gam-hero-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.gam-ring { width: 130px; height: 130px; border-radius: 50%; margin: 14px auto; display: flex; align-items: center; justify-content: center; position: relative; background: conic-gradient(var(--green) calc(var(--p, 0%)), #e2e8f0 0); }
+.gam-ring::before { content: ''; position: absolute; inset: 9px; background: #fff; border-radius: 50%; }
+.gam-ring .gam-ring-label { position: relative; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 16px; text-align: center; }
+.gam-stat-row { display: flex; gap: 10px; padding: 0 20px; margin-top: 14px; }
+.gam-stat-box { flex: 1; background: #fff; border-radius: var(--radius-md); padding: 12px; text-align: center; box-shadow: var(--shadow-sm); }
+.gam-stat-box .num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 15px; color: var(--green-dark); display: block; }
+.gam-stat-box .lbl { font-size: 10.5px; color: var(--text-muted); }
+
+.gam-badges-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 20px; }
+.badge-card { background: #fff; border-radius: var(--radius-md); padding: 14px 10px; text-align: center; box-shadow: var(--shadow-sm); }
+.badge-card.locked { opacity: .5; }
+.badge-icon { font-size: 26px; display: block; margin-bottom: 6px; }
+.badge-name { font-size: 11.5px; font-weight: 800; display: block; }
+.badge-date, .badge-desc { font-size: 9.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+.gam-activity-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 0 20px; }
+.cal-cell { aspect-ratio: 1; border-radius: 5px; background: #e2e8f0; }
+.cal-cell.active { background: var(--green); }
+
+.gam-tabs { display: flex; gap: 6px; padding: 0 20px; overflow-x: auto; }
+.gam-tab { flex-shrink: 0; padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--border-color); background: #fff; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+.gam-tab.active { background: var(--green-gradient); color: #fff; border-color: transparent; }
+.leaderboard-row { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: var(--radius-md); padding: 10px 14px; margin: 8px 20px 0; box-shadow: var(--shadow-sm); }
+.leaderboard-row.me { background: var(--green-light); border: 1.5px solid var(--green); }
+.lb-rank { font-weight: 800; color: var(--text-muted); width: 28px; }
+.lb-avatar { font-size: 18px; }
+.lb-name { flex: 1; font-size: 12.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-level { font-size: 11px; color: var(--text-muted); }
+.lb-xp { font-size: 12px; font-weight: 800; color: var(--green-dark); }
+
+.gam-settings-block { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; }
+.gam-settings-block input[type="text"], .gam-settings-block input[type="email"] {
+  border: 1.5px solid var(--border-color); border-radius: 12px; padding: 10px 12px; font-size: 13px; width: 100%;
+}
+.gam-inline-form { display: flex; gap: 8px; }
+.gam-inline-form input { flex: 1; }
+.btn-mini { background: var(--green-gradient); color: #fff; border: none; border-radius: 12px; padding: 9px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.gam-friends-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.friend-chip { background: var(--green-light); color: var(--green-dark); font-size: 11px; padding: 5px 8px; border-radius: 14px; display: flex; align-items: center; gap: 5px; }
+.friend-chip button { background: none; border: none; color: var(--green-dark); cursor: pointer; font-size: 11px; }
+.gam-toggle-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-main); font-weight: 600; }
+.reward-avatar-row, .reward-title-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 14px; }
+.reward-pick-btn { border: 1.5px solid var(--border-color); background: #fff; border-radius: 12px; padding: 8px 12px; font-size: 16px; cursor: pointer; }
+.reward-pick-btn.active { border-color: var(--green); background: var(--green-light); }
+.history-row { display: flex; justify-content: space-between; background: #fff; border-radius: 12px; padding: 10px 14px; margin: 0 20px 8px; box-shadow: var(--shadow-sm); font-size: 12.5px; }
+.history-pct { font-weight: 800; }
+.reco-mini-card { display: flex; align-items: center; gap: 8px; background: #fff; border-radius: 12px; padding: 10px 14px; margin: 0 20px 8px; box-shadow: var(--shadow-sm); font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.empty-hint { font-size: 12px; color: var(--text-muted); padding: 0 20px; }
+
+/* --- Confetti / notifications --- */
+.confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; display: none; }
+
+.levelup-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); display: none; align-items: center; justify-content: center; z-index: 2100; padding: 20px; }
+.levelup-overlay.open { display: flex; }
+.levelup-card { background: #fff; border-radius: 24px; padding: 34px 26px; text-align: center; max-width: 320px; width: 100%; animation: levelUpPop .5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
+@keyframes levelUpPop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); } }
+.levelup-emoji { font-size: 54px; animation: levelUpSpin 1s ease; }
+@keyframes levelUpSpin { from { transform: rotate(-15deg) scale(0.8); } to { transform: rotate(0) scale(1); } }
+.levelup-card h2 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; margin: 8px 0 6px; }
+.levelup-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+
+/* --- Forum : rebond du like --- */
+.forum-action-btn.like-pop { animation: likeBounce .4s ease; }
+@keyframes likeBounce { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .gam-streak .flame, .levelup-emoji { animation: none !important; }
+}
 </style>
 </head>
 <body>
@@ -541,6 +704,22 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
       <p>Accède instantanément aux fiches de cours, TD et exercices corrigés de Maths et Physique-Chimie.</p>
       <button class="btn-action" onclick="switchPage('cours')">🚀 Découvrir les chapitres</button>
     </div>
+
+    <div class="gam-topbar" onclick="switchPage('gamification')">
+      <div class="gam-level-badge">
+        <span class="gam-avatar" id="gam-avatar-emoji">🎓</span>
+        <div class="gam-level-info">
+          <span class="gam-level-num" id="gam-level-num">Niveau 1</span>
+          <div class="gam-xp-bar"><div class="gam-xp-fill" id="gam-xp-fill" style="width:0%"></div></div>
+          <span class="gam-xp-label" id="gam-xp-label">0 / 100 XP</span>
+        </div>
+      </div>
+      <div class="gam-streak" id="gam-streak-box"><span class="flame">🔥</span><span id="gam-streak-num">0</span></div>
+    </div>
+    <div class="gam-quote-card" id="gam-quote-card"></div>
+
+    <div class="section-headline"><h3>🎯 Défis du jour</h3><button class="link" onclick="switchPage('gamification')">Voir tout</button></div>
+    <div class="daily-challenges-list" id="daily-challenges-list"></div>
 
     <div class="section-headline" style="padding-top:10px;"><h3>Mon parcours de progression</h3></div>
     <div class="progression-container">
@@ -638,6 +817,10 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
       <div class="big-avatar-sub" id="profil-sub">Lycée Connecté • Côte d'Ivoire</div>
     </div>
     <div class="settings-group">
+      <button class="settings-row" onclick="switchPage('gamification')">
+        <div class="settings-label-side">🏆 <span>Ma progression & récompenses</span></div>
+        <span class="chev">›</span>
+      </button>
       <button class="settings-row" onclick="toggleMiniList('dl-list')">
         <div class="settings-label-side">💾 <span>Mes téléchargements récents</span></div>
         <span class="chev">›</span>
@@ -676,6 +859,72 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
       </button>
     </div>
     <p style="text-align:center; font-size:11px; color:var(--text-muted); padding:16px 20px 30px;">Version du site : <strong id="profil-build-version"></strong></p>
+  </div>
+
+  <div id="page-gamification" class="page">
+    <div class="section-headline" style="padding-top:10px;">
+      <button class="link" onclick="switchPage('accueil')">← Retour</button>
+    </div>
+
+    <div class="gam-hero">
+      <div class="gam-big-avatar" id="gam-page-avatar">🎓</div>
+      <div class="gam-hero-title" id="gam-page-title">Élève Scientifique</div>
+      <div class="gam-hero-sub" id="gam-page-sub">Niveau <span id="gam-page-level-num">1</span></div>
+      <div class="gam-ring" id="gam-big-ring" style="--p:0%">
+        <span class="gam-ring-label" id="gam-page-xp-label">0 / 100 XP</span>
+      </div>
+    </div>
+
+    <div class="gam-stat-row">
+      <div class="gam-stat-box"><span class="num" id="gam-streak-detail">0 🔥</span><span class="lbl">Série de jours</span></div>
+      <div class="gam-stat-box"><span class="num" id="gam-total-time">0 min</span><span class="lbl">Temps total</span></div>
+      <div class="gam-stat-box"><span class="num" id="gam-week-time">0 min</span><span class="lbl">Cette semaine</span></div>
+    </div>
+
+    <div class="section-headline"><h3>📅 Activité (35 derniers jours)</h3></div>
+    <div class="gam-activity-calendar" id="gam-activity-calendar"></div>
+
+    <div class="section-headline"><h3>🎯 Défis du jour</h3></div>
+    <div class="daily-challenges-list" id="daily-challenges-list-page"></div>
+
+    <div class="section-headline"><h3>🏅 Badges</h3></div>
+    <div class="gam-badges-grid" id="gam-badges-grid"></div>
+
+    <div class="section-headline"><h3>🎨 Personnalisation</h3></div>
+    <div class="gam-settings-block" id="gam-rewards-picker"></div>
+
+    <div class="section-headline"><h3>📊 Mes performances</h3></div>
+    <div class="gam-stat-row">
+      <div class="gam-stat-box"><span class="num" id="gam-strong-subject">—</span><span class="lbl">Matière forte</span></div>
+      <div class="gam-stat-box"><span class="num" id="gam-weak-subject">—</span><span class="lbl">À améliorer</span></div>
+    </div>
+    <div id="gam-history-list" style="margin-top:12px;"></div>
+
+    <div class="section-headline"><h3>✨ Recommandé pour toi</h3></div>
+    <div id="gam-recommendations"></div>
+
+    <div class="section-headline"><h3>🏆 Classement</h3></div>
+    <div class="gam-tabs">
+      <button class="gam-tab active" data-tab="general" onclick="selectLeaderboardTab('general')">🌍 National</button>
+      <button class="gam-tab" data-tab="school" onclick="selectLeaderboardTab('school')">🏫 Établissement</button>
+      <button class="gam-tab" data-tab="city" onclick="selectLeaderboardTab('city')">🏙️ Ville</button>
+      <button class="gam-tab" data-tab="friends" onclick="selectLeaderboardTab('friends')">👥 Amis</button>
+    </div>
+    <div id="gam-leaderboard-list" style="margin-top:10px;"></div>
+
+    <div class="section-headline"><h3>⚙️ Réglages du classement</h3></div>
+    <div class="gam-settings-block">
+      <label style="font-size:12px;font-weight:700;">🏫 Établissement</label>
+      <input id="gam-school-input" type="text" maxlength="60" placeholder="Ex : Lycée Moderne d'Abidjan">
+      <label style="font-size:12px;font-weight:700;">🏙️ Ville</label>
+      <input id="gam-city-input" type="text" maxlength="40" placeholder="Ex : Abidjan">
+      <button class="btn-mini" style="align-self:flex-start;" onclick="saveSchoolCity()">💾 Enregistrer</button>
+      <label style="font-size:12px;font-weight:700;margin-top:6px;">👥 Ajouter un ami (par email)</label>
+      <div class="gam-inline-form"><input id="gam-friend-input" type="email" placeholder="email@exemple.com"><button class="btn-mini" onclick="addFriend()">Ajouter</button></div>
+      <div class="gam-friends-list" id="gam-friends-list"></div>
+      <label class="gam-toggle-row" style="margin-top:10px;"><input type="checkbox" id="gam-sound-toggle" checked onchange="toggleSound(this.checked)"> 🔈 Sons de progression</label>
+    </div>
+    <div style="height:20px;"></div>
   </div>
 
   <div id="page-legal" class="page">
@@ -926,6 +1175,17 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
   </div>
 </div>
 
+<canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+<div class="levelup-overlay" id="levelup-overlay">
+  <div class="levelup-card">
+    <div class="levelup-emoji" id="levelup-emoji">🎉</div>
+    <h2>Niveau <span id="levelup-num">2</span> débloqué !</h2>
+    <p id="levelup-reward-text">Continue comme ça, tu progresses vite !</p>
+    <button class="btn-action" onclick="closeLevelUp()">Super, merci !</button>
+  </div>
+</div>
+
 <div class="toast-stack" id="toast-stack"></div>
 
 </div>
@@ -1111,6 +1371,7 @@ function switchPage(pageId){
   if(pageId==='profil') renderProfil();
   if(pageId==='admin') renderAdminIfLogged();
   if(pageId==='forum') initForum();
+  if(pageId==='gamification') renderGamificationPage();
 }
 
 function selectSubjectTab(scope, subject){
@@ -1218,16 +1479,25 @@ function renderCoursVideoGrid(container, list){
       </div>`).join('')}
   </div>`;
 }
+let videoWatchStart = null;
+let videoWatchCourseId = null;
 function openVideoPlayer(courseId){
   const c = COURSES.find(x=>x.id===courseId);
   if(!c || !c.videoId) return;
   document.getElementById('video-overlay-title').textContent = c.titre;
   document.getElementById('video-overlay-iframe').src = `https://www.youtube.com/embed/${c.videoId}?autoplay=1&rel=0`;
   document.getElementById('video-overlay').classList.add('open');
+  videoWatchStart = Date.now();
+  videoWatchCourseId = courseId;
 }
 function closeVideoPlayer(){
   document.getElementById('video-overlay').classList.remove('open');
   document.getElementById('video-overlay-iframe').src = ''; // stoppe la lecture
+  if(videoWatchStart && (Date.now() - videoWatchStart) >= 25000){
+    onVideoWatched(videoWatchCourseId);
+  }
+  videoWatchStart = null;
+  videoWatchCourseId = null;
 }
 function closeOnOverlayVideo(e){ if(e.target===document.getElementById('video-overlay')) closeVideoPlayer(); }
 
@@ -1349,6 +1619,7 @@ function openModalById(kind, id){
     const c = COURSES.find(x=>x.id===id);
     if(!c) return;
     openModal(c.titre, c.matiere==='maths'?'Mathématiques':'Physique-Chimie', c.type, c.niveau, c.format, c.date, c.lien, c.id);
+    onChapterOpened(c.id);
   } else if(kind==='exo'){
     const e = EXERCICES.find(x=>x.id===id);
     if(!e) return;
@@ -1796,6 +2067,7 @@ function enterApp(){
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-shell').style.display = 'block';
   renderProfil();
+  initGamification();
 }
 function showAuthScreen(){
   document.getElementById('app-shell').style.display = 'none';
@@ -2153,7 +2425,7 @@ function subscribeForumFeed(){
   if(!forumDb) return;
   if(forumUnsub) forumUnsub();
   const body = document.getElementById('forum-feed');
-  body.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement des discussions...</strong></div>`;
+  body.innerHTML = `<div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>`;
   const subjectAtCallTime = forumSubject;
   let resolved = false;
   const timeoutId = setTimeout(()=>{
@@ -2202,7 +2474,7 @@ function renderForumFeed(posts){
       </div>
       <div class="forum-post-text">${escapeHtml(p.text)}</div>
       <div class="forum-post-actions">
-        <button class="forum-action-btn ${isLiked?'liked':''}" onclick="toggleForumLike('${p.id}', ${p.likes||0})">👍 ${p.likes||0}</button>
+        <button class="forum-action-btn ${isLiked?'liked':''}" onclick="this.classList.add('like-pop'); setTimeout(()=>this.classList.remove('like-pop'),400); toggleForumLike('${p.id}', ${p.likes||0})">👍 ${p.likes||0}</button>
         <button class="forum-action-btn" onclick="toggleReplyForm('${p.id}')">💬 ${replies.length} réponse${replies.length>1?'s':''}</button>
         ${isAdminAuthed() ? `<button class="forum-action-btn" style="margin-left:auto;color:#ef4444;" onclick="moderateDeletePost('${p.id}')">🗑️ Supprimer</button>` : ''}
       </div>
@@ -2281,6 +2553,7 @@ async function submitForumReply(postId){
       replies: firebase.firestore.FieldValue.arrayUnion({ author: forumAuthorName(), text, createdAt: new Date().toISOString() })
     });
     markForumPosted();
+    onForumGamification();
   } catch(e){ showToast("⚠️ Impossible d'envoyer la réponse"); }
 }
 async function postForumMessage(){
@@ -2311,6 +2584,7 @@ async function postForumMessage(){
     markForumPosted();
     showToast('✅ Question publiée');
     startCooldownUI(btn, 'Publier');
+    onForumGamification();
   } catch(e){
     showToast('⚠️ Erreur lors de la publication');
     console.error(e);
@@ -2455,6 +2729,7 @@ function selectQuizOption(idx){
     if(i === q.correct) btn.classList.add('correct');
     else if(i === idx) btn.classList.add('incorrect');
   });
+  if(idx !== q.correct && navigator.vibrate) { try{ navigator.vibrate(120); }catch(e){} }
   if(q.explain){
     document.getElementById('quiz-explain-slot').innerHTML = `<div class="quiz-explain">💡 ${escapeHtml(q.explain)}</div>`;
   }
@@ -2498,6 +2773,7 @@ function restartQuiz(){
 }
 function saveQuizResult(courseId, titre, pct){
   const entry = { titre, pct, date: new Date().toISOString() };
+  onQuizGamification(courseId, pct);
   if(isRealAccount() && userProfile){
     userProfile.quizResults = userProfile.quizResults || {};
     userProfile.quizResults[courseId] = entry;
@@ -2565,6 +2841,666 @@ function exitLegalPage(){
   }
 }
 
+/* ============ GAMIFICATION (XP, niveaux, badges, séries, défis, classement) ============ */
+const GAM_LOCAL_KEY = 'solci_gam_v1';
+let GAM = null;
+
+function defaultGam(){
+  return {
+    xp: 0, streak: 0, lastActiveDate: null, activeDates: [],
+    badges: {}, challenges: {}, school: '', city: '', friends: [],
+    forumActionsCount: 0, openedCourses: [], watchedVideos: [],
+    totalStudySeconds: 0, weekStudy: {},
+    unlockedRewards: [], activeAvatar: '🎓', activeTitle: '', soundEnabled: true
+  };
+}
+function loadGam(){
+  if(isRealAccount() && userProfile){
+    GAM = Object.assign(defaultGam(), userProfile.gamification || {});
+    if(userProfile.school) GAM.school = userProfile.school;
+    if(userProfile.city) GAM.city = userProfile.city;
+  } else {
+    try{ GAM = Object.assign(defaultGam(), JSON.parse(localStorage.getItem(GAM_LOCAL_KEY)) || {}); }
+    catch(e){ GAM = defaultGam(); }
+  }
+  return GAM;
+}
+function persistGam(){
+  if(!GAM) return;
+  if(isRealAccount()){
+    saveUserProfileField('gamification', GAM);
+  } else {
+    localStorage.setItem(GAM_LOCAL_KEY, JSON.stringify(GAM));
+  }
+}
+function getQuizResultsMap(){
+  if(isRealAccount() && userProfile) return userProfile.quizResults || {};
+  try{ return JSON.parse(localStorage.getItem('solci_quiz_results')) || {}; }catch(e){ return {}; }
+}
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function weekKey(d){
+  const onejan = new Date(d.getFullYear(), 0, 1);
+  const week = Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+  return d.getFullYear() + '-S' + week;
+}
+function formatDuration(sec){
+  sec = sec || 0;
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
+  return h > 0 ? `${h}h ${m}min` : `${m} min`;
+}
+
+/* --- Niveaux & XP --- */
+function xpToNextLevel(level){ return 100 + (level - 1) * 40; }
+function levelFromTotalXP(xp){
+  let level = 1, remaining = xp || 0, needed = xpToNextLevel(level);
+  while(remaining >= needed){ remaining -= needed; level++; needed = xpToNextLevel(level); }
+  return { level, xpIntoLevel: remaining, xpForNext: needed };
+}
+function levelEmoji(level){
+  if(level >= 15) return '💎';
+  if(level >= 10) return '🥇';
+  if(level >= 5) return '🥈';
+  return '🥉';
+}
+const LEVEL_REWARDS = [
+  { level: 2, id: 'title_debutant', type: 'title', label: 'Titre « Apprenti Motivé »' },
+  { level: 3, id: 'avatar_🧠', type: 'avatar', label: 'Avatar 🧠 débloqué' },
+  { level: 4, id: 'frame_argent', type: 'frame', label: 'Cadre de profil Argent' },
+  { level: 5, id: 'avatar_⚡', type: 'avatar', label: 'Avatar ⚡ débloqué' },
+  { level: 6, id: 'title_serieux', type: 'title', label: 'Titre « Élève Sérieux »' },
+  { level: 8, id: 'avatar_🚀', type: 'avatar', label: 'Avatar 🚀 débloqué' },
+  { level: 10, id: 'frame_or', type: 'frame', label: 'Cadre de profil Or' },
+  { level: 10, id: 'avatar_🏆', type: 'avatar', label: 'Avatar 🏆 débloqué' },
+  { level: 12, id: 'title_futur_bachelier', type: 'title', label: 'Titre « Futur Bachelier »' },
+  { level: 20, id: 'avatar_👑', type: 'avatar', label: 'Avatar 👑 débloqué' }
+];
+function grantLevelRewards(level){
+  let text = 'Continue comme ça, tu progresses vite !';
+  LEVEL_REWARDS.filter(r => r.level <= level && !GAM.unlockedRewards.includes(r.id)).forEach(r => {
+    GAM.unlockedRewards.push(r.id);
+    text = '🎁 ' + r.label;
+  });
+  persistGam();
+  return text;
+}
+function activeFrameClass(){
+  if(GAM.unlockedRewards.includes('frame_or')) return 'frame_or';
+  if(GAM.unlockedRewards.includes('frame_argent')) return 'frame_argent';
+  return '';
+}
+
+function addXP(amount, reason){
+  if(!GAM) loadGam();
+  const before = levelFromTotalXP(GAM.xp || 0).level;
+  GAM.xp = (GAM.xp || 0) + amount;
+  const after = levelFromTotalXP(GAM.xp);
+  persistGam();
+  showXPGainToast(amount, reason);
+  updateXPBarUI();
+  if(after.level > before) onLevelUp(after.level);
+  checkBadges();
+}
+function showXPGainToast(amount, reason){
+  const el = document.createElement('div');
+  el.className = 'xp-float-toast';
+  el.innerHTML = `<span class="xp-amount">+${amount} XP</span><span class="xp-reason">${escapeHtml(reason||'')}</span>`;
+  document.body.appendChild(el);
+  requestAnimationFrame(()=> el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=> el.remove(), 400); }, 2200);
+}
+function updateXPBarUI(){
+  if(!GAM) return;
+  const info = levelFromTotalXP(GAM.xp || 0);
+  const pct = Math.round((info.xpIntoLevel / info.xpForNext) * 100);
+  const avatar = GAM.activeAvatar || '🎓';
+  ['gam-avatar-emoji'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent = avatar; });
+  const fill = document.getElementById('gam-xp-fill');
+  if(fill) fill.style.width = pct + '%';
+  const numEl = document.getElementById('gam-level-num');
+  if(numEl) numEl.textContent = 'Niveau ' + info.level;
+  const labelEl = document.getElementById('gam-xp-label');
+  if(labelEl) labelEl.textContent = `${info.xpIntoLevel} / ${info.xpForNext} XP`;
+  const streakEl = document.getElementById('gam-streak-num');
+  if(streakEl) streakEl.textContent = GAM.streak || 0;
+  const bigRing = document.getElementById('gam-big-ring');
+  if(bigRing) bigRing.style.setProperty('--p', pct + '%');
+  const pageXpLabel = document.getElementById('gam-page-xp-label');
+  if(pageXpLabel) pageXpLabel.textContent = `${info.xpIntoLevel} / ${info.xpForNext} XP`;
+  const pageLevel = document.getElementById('gam-page-level-num');
+  if(pageLevel) pageLevel.textContent = info.level;
+  const pageAvatar = document.getElementById('gam-page-avatar');
+  if(pageAvatar){ pageAvatar.textContent = avatar; pageAvatar.className = 'gam-big-avatar ' + activeFrameClass(); }
+  const pageTitle = document.getElementById('gam-page-title');
+  if(pageTitle){
+    const titleDef = LEVEL_REWARDS.find(r=>r.id===GAM.activeTitle);
+    pageTitle.textContent = titleDef ? titleDef.label.replace('Titre ','').replace(/«|»/g,'').trim() : 'Élève Scientifique';
+  }
+  const streakDetail = document.getElementById('gam-streak-detail');
+  if(streakDetail) streakDetail.textContent = (GAM.streak||0) + ' 🔥';
+}
+
+/* --- Connexion quotidienne & série --- */
+function handleDailyLogin(){
+  const today = todayStr();
+  if(GAM.lastActiveDate === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  GAM.streak = (GAM.lastActiveDate === yesterday) ? (GAM.streak || 0) + 1 : 1;
+  GAM.lastActiveDate = today;
+  GAM.activeDates = (GAM.activeDates || []).concat(today).slice(-60);
+  persistGam();
+  addXP(5, 'Connexion quotidienne');
+  if(GAM.streak > 1) setTimeout(()=> showToast(`🔥 Série de ${GAM.streak} jours !`), 900);
+  checkBadges();
+}
+
+/* --- Badges --- */
+const BADGE_DEFS = [
+  { id: 'first_quiz', icon: '🥇', name: 'Premier Quiz', desc: 'Terminer ton premier quiz.' },
+  { id: 'assidu', icon: '📚', name: 'Élève Assidu', desc: 'Faire un quiz sur 10 chapitres différents.' },
+  { id: 'streak7', icon: '🔥', name: '7 jours consécutifs', desc: 'Se connecter 7 jours de suite.' },
+  { id: 'streak30', icon: '💎', name: '30 jours consécutifs', desc: 'Se connecter 30 jours de suite.' },
+  { id: 'expert_maths', icon: '🧮', name: 'Expert en Mathématiques', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de maths.' },
+  { id: 'roi_forum', icon: '👑', name: 'Roi du Forum', desc: 'Participer 20 fois au forum.' },
+  { id: 'champion_sciences', icon: '⚗️', name: 'Champion des Sciences', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de physique-chimie.' },
+  { id: 'bac_ready', icon: '🎓', name: 'Bac Ready', desc: 'Atteindre le niveau 10.' }
+];
+function checkBadges(){
+  if(!GAM) return;
+  const results = getQuizResultsMap();
+  const entries = Object.entries(results);
+  let mathsSum=0, mathsCount=0, physSum=0, physCount=0;
+  entries.forEach(([courseId, r])=>{
+    const c = COURSES.find(x=>x.id===courseId);
+    if(!c) return;
+    if(c.matiere==='maths'){ mathsSum += r.pct; mathsCount++; } else { physSum += r.pct; physCount++; }
+  });
+  const lvl = levelFromTotalXP(GAM.xp||0).level;
+  const toAward = [];
+  if(entries.length>=1) toAward.push('first_quiz');
+  if(entries.length>=10) toAward.push('assidu');
+  if((GAM.streak||0)>=7) toAward.push('streak7');
+  if((GAM.streak||0)>=30) toAward.push('streak30');
+  if(mathsCount>=5 && (mathsSum/mathsCount)>=85) toAward.push('expert_maths');
+  if((GAM.forumActionsCount||0)>=20) toAward.push('roi_forum');
+  if(physCount>=5 && (physSum/physCount)>=85) toAward.push('champion_sciences');
+  if(lvl>=10) toAward.push('bac_ready');
+  let changed = false;
+  toAward.forEach(id=>{
+    if(!GAM.badges[id]){ GAM.badges[id] = { date: new Date().toISOString() }; changed = true; announceBadge(id); }
+  });
+  if(changed){ persistGam(); renderBadgesGrid(); }
+}
+function announceBadge(id){
+  const b = BADGE_DEFS.find(x=>x.id===id);
+  if(!b) return;
+  fireConfetti(60);
+  showToast(`🏆 Badge débloqué : ${b.name}`);
+}
+function renderBadgesGrid(){
+  const el = document.getElementById('gam-badges-grid');
+  if(!el || !GAM) return;
+  el.innerHTML = BADGE_DEFS.map(b=>{
+    const owned = GAM.badges && GAM.badges[b.id];
+    return `<div class="badge-card ${owned?'owned':'locked'}" title="${escapeHtml(b.desc)}">
+      <span class="badge-icon">${owned ? b.icon : '🔒'}</span>
+      <span class="badge-name">${escapeHtml(b.name)}</span>
+      ${owned ? `<span class="badge-date">${new Date(owned.date).toLocaleDateString('fr-FR')}</span>` : `<span class="badge-desc">${escapeHtml(b.desc)}</span>`}
+    </div>`;
+  }).join('');
+}
+
+/* --- Défis quotidiens --- */
+const CHALLENGE_POOL = [
+  { id: 'lire_chapitre', label: 'Lire un chapitre', icon: '📖', target: 1 },
+  { id: 'deux_quiz', label: 'Réussir deux quiz', icon: '✅', target: 2 },
+  { id: 'obtenir80', label: 'Obtenir 80% à un quiz', icon: '🎯', target: 1 },
+  { id: 'repondre_forum', label: 'Répondre à une question sur le forum', icon: '💬', target: 1 },
+  { id: 'regarder_video', label: 'Regarder une vidéo jusqu\'à la fin', icon: '🎥', target: 1 }
+];
+function seededShuffle(dateStr, arr){
+  let seed = 0;
+  for(const c of dateStr) seed = (seed * 31 + c.charCodeAt(0)) >>> 0;
+  const out = arr.slice();
+  for(let i=out.length-1;i>0;i--){
+    seed = (seed * 1103515245 + 12345) >>> 0;
+    const j = seed % (i+1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+function generateDailyChallenges(){
+  const today = todayStr();
+  GAM.challenges = GAM.challenges || {};
+  if(!GAM.challenges[today]){
+    const picks = seededShuffle(today, CHALLENGE_POOL).slice(0,3);
+    const obj = {};
+    picks.forEach(p=> obj[p.id] = { progress: 0, target: p.target, done: false });
+    GAM.challenges[today] = obj;
+    const keys = Object.keys(GAM.challenges).sort();
+    if(keys.length>14) keys.slice(0, keys.length-14).forEach(k=> delete GAM.challenges[k]);
+    persistGam();
+  }
+  renderDailyChallenges();
+}
+function bumpChallenge(id, amount){
+  if(!GAM) return;
+  amount = amount || 1;
+  const today = todayStr();
+  const todayC = GAM.challenges && GAM.challenges[today];
+  if(!todayC || !todayC[id] || todayC[id].done) return;
+  todayC[id].progress = Math.min(todayC[id].target, todayC[id].progress + amount);
+  if(todayC[id].progress >= todayC[id].target){
+    todayC[id].done = true;
+    addXP(10, 'Défi accompli');
+    showToast('🏅 Défi accompli !');
+    if(Object.values(todayC).every(c=>c.done)){
+      addXP(30, 'Tous les défis du jour !');
+      showToast('🌟 Tous les défis du jour terminés !');
+      fireConfetti(90);
+    }
+  }
+  persistGam();
+  renderDailyChallenges();
+}
+function renderDailyChallenges(){
+  if(!GAM) return;
+  const today = todayStr();
+  const todayC = (GAM.challenges && GAM.challenges[today]) || {};
+  const html = Object.keys(todayC).map(id=>{
+    const def = CHALLENGE_POOL.find(p=>p.id===id);
+    const c = todayC[id];
+    const pct = Math.min(100, Math.round((c.progress / c.target) * 100));
+    return `<div class="challenge-card ${c.done?'done':''}">
+      <span class="challenge-icon">${def ? def.icon : '🎯'}</span>
+      <div class="challenge-info">
+        <span class="challenge-label">${def ? escapeHtml(def.label) : id}</span>
+        <div class="challenge-bar"><div class="challenge-fill" style="width:${pct}%"></div></div>
+      </div>
+      <span class="challenge-status">${c.done ? '✔️' : c.progress + '/' + c.target}</span>
+    </div>`;
+  }).join('');
+  ['daily-challenges-list', 'daily-challenges-list-page'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = html || '<p class="empty-hint">Pas de défi aujourd\'hui.</p>';
+  });
+}
+
+/* --- Événements déclencheurs d'XP --- */
+function onChapterOpened(courseId){
+  if(!GAM) loadGam();
+  bumpChallenge('lire_chapitre');
+  GAM.openedCourses = GAM.openedCourses || [];
+  if(!GAM.openedCourses.includes(courseId)){
+    GAM.openedCourses.push(courseId);
+    persistGam();
+    addXP(15, 'Chapitre terminé');
+  }
+}
+function onQuizGamification(courseId, pct){
+  if(!GAM) loadGam();
+  let xp = 20, reason = 'Quiz réussi';
+  if(pct>=90){ xp = 40; reason = 'Excellente note !'; }
+  else if(pct<40){ xp = 8; reason = 'Quiz terminé'; }
+  addXP(xp, reason);
+  bumpChallenge('deux_quiz');
+  if(pct>=80) bumpChallenge('obtenir80');
+  if(pct===100) fireConfetti(150);
+}
+function onForumGamification(){
+  if(!GAM) loadGam();
+  GAM.forumActionsCount = (GAM.forumActionsCount||0) + 1;
+  persistGam();
+  addXP(10, 'Participation au forum');
+  bumpChallenge('repondre_forum');
+}
+function onVideoWatched(courseId){
+  if(!GAM) loadGam();
+  const key = todayStr() + '_' + courseId;
+  GAM.watchedVideos = GAM.watchedVideos || [];
+  if(GAM.watchedVideos.includes(key)) return;
+  GAM.watchedVideos = GAM.watchedVideos.slice(-100).concat(key);
+  persistGam();
+  addXP(15, 'Vidéo visionnée');
+  bumpChallenge('regarder_video');
+}
+
+/* --- Passage de niveau --- */
+function onLevelUp(level){
+  fireConfetti(120);
+  playLevelSound();
+  const rewardText = grantLevelRewards(level);
+  const numEl = document.getElementById('levelup-num'); if(numEl) numEl.textContent = level;
+  const emojiEl = document.getElementById('levelup-emoji'); if(emojiEl) emojiEl.textContent = levelEmoji(level);
+  const rewardEl = document.getElementById('levelup-reward-text'); if(rewardEl) rewardEl.textContent = rewardText;
+  const overlay = document.getElementById('levelup-overlay');
+  if(overlay){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+}
+function closeLevelUp(){
+  const overlay = document.getElementById('levelup-overlay');
+  if(overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  renderRewardsPicker();
+}
+function playLevelSound(){
+  if(!GAM || GAM.soundEnabled===false) return;
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine';
+    [523.25,659.25,783.99].forEach((freq,i)=> o.frequency.setValueAtTime(freq, ctx.currentTime + i*0.12));
+    g.gain.setValueAtTime(0.001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.5);
+    o.start(); o.stop(ctx.currentTime+0.5);
+  }catch(e){}
+}
+
+/* --- Confettis (canvas léger) --- */
+function fireConfetti(count){
+  const canvas = document.getElementById('confetti-canvas');
+  if(!canvas) return;
+  count = count || 80;
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  const colors = ['#1a9640','#F47B20','#3b82f6','#f59e0b','#ef4444','#a855f7'];
+  const particles = Array.from({length: count}, ()=>({
+    x: Math.random()*canvas.width, y: -20 - Math.random()*canvas.height*0.3,
+    r: 4 + Math.random()*5, c: colors[Math.floor(Math.random()*colors.length)],
+    vy: 2 + Math.random()*3, vx: -2 + Math.random()*4, rot: Math.random()*360, vr: -6 + Math.random()*12
+  }));
+  let frame = 0;
+  (function tick(){
+    frame++;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.6);
+      ctx.restore();
+    });
+    if(frame < 130){ requestAnimationFrame(tick); }
+    else { ctx.clearRect(0,0,canvas.width,canvas.height); canvas.style.display = 'none'; }
+  })();
+}
+
+/* --- Ripple sur les boutons --- */
+function initRippleEffect(){
+  const selector = '.btn-action, .subject-tab, .sub-tab, .dock-item, .quiz-option, .forum-post-btn, .settings-row, .btn-download-trigger, .btn-dismiss, .quiz-next-btn, .subject-box, .gam-tab, .reward-pick-btn, .btn-mini';
+  document.addEventListener('pointerdown', function(e){
+    const el = e.target.closest(selector);
+    if(!el) return;
+    const rect = el.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    const size = Math.max(rect.width, rect.height) * 1.6;
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(()=> ripple.remove(), 650);
+  });
+}
+
+/* --- Temps d'étude --- */
+let studySessionStart = null;
+function startStudyTimer(){
+  studySessionStart = Date.now();
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden) flushStudyTime(); else studySessionStart = Date.now();
+  });
+  window.addEventListener('beforeunload', flushStudyTime);
+  setInterval(flushStudyTime, 60000);
+}
+function flushStudyTime(){
+  if(!studySessionStart || !GAM) return;
+  const elapsed = Math.round((Date.now() - studySessionStart) / 1000);
+  studySessionStart = Date.now();
+  if(elapsed<=0 || elapsed>3600) return;
+  GAM.totalStudySeconds = (GAM.totalStudySeconds||0) + elapsed;
+  const wk = weekKey(new Date());
+  GAM.weekStudy = GAM.weekStudy || {};
+  GAM.weekStudy[wk] = (GAM.weekStudy[wk]||0) + elapsed;
+  persistGam();
+  renderStudyStats();
+}
+function renderStudyStats(){
+  if(!GAM) return;
+  const totalEl = document.getElementById('gam-total-time');
+  const weekEl = document.getElementById('gam-week-time');
+  if(totalEl) totalEl.textContent = formatDuration(GAM.totalStudySeconds);
+  if(weekEl) weekEl.textContent = formatDuration((GAM.weekStudy||{})[weekKey(new Date())]||0);
+}
+
+/* --- Calendrier d'activité --- */
+function renderActivityCalendar(){
+  const el = document.getElementById('gam-activity-calendar');
+  if(!el || !GAM) return;
+  let html = '';
+  for(let i=34;i>=0;i--){
+    const d = new Date(Date.now() - i*86400000);
+    const key = d.toISOString().slice(0,10);
+    const active = (GAM.activeDates||[]).includes(key);
+    html += `<span class="cal-cell ${active?'active':''}" title="${key}"></span>`;
+  }
+  el.innerHTML = html;
+}
+
+/* --- Citation motivante du jour --- */
+const MOTIVATIONAL_QUOTES = [
+  "Chaque exercice résolu te rapproche un peu plus de la réussite au Bac.",
+  "La régularité bat le talent quand le talent ne travaille pas régulièrement.",
+  "Un petit effort chaque jour vaut mieux qu'un grand effort une fois par mois.",
+  "Tu ne rates jamais vraiment : tu apprends, ou tu réussis.",
+  "Les maths et la physique se dominent une formule à la fois.",
+  "Ton futur toi te remerciera pour les révisions d'aujourd'hui.",
+  "La confiance vient de la préparation, pas de la chance.",
+  "Un chapitre relu vaut mieux qu'un chapitre deviné le jour de l'examen.",
+  "Continue : chaque XP gagné est une preuve de ton sérieux.",
+  "Le Bac se prépare un exercice à la fois, pas en une nuit.",
+  "Tu progresses même les jours où tu n'en as pas l'impression.",
+  "La discipline d'aujourd'hui construit les résultats de demain.",
+  "Comprendre vaut mieux que mémoriser : prends le temps qu'il faut.",
+  "Chaque quiz est une occasion de mesurer, pas de juger, tes progrès.",
+  "Reste curieux : la meilleure question est souvent celle qu'on ose poser."
+];
+function renderQuoteOfDay(){
+  const el = document.getElementById('gam-quote-card');
+  if(!el) return;
+  const dayIndex = Math.floor(Date.now() / 86400000);
+  const quote = MOTIVATIONAL_QUOTES[dayIndex % MOTIVATIONAL_QUOTES.length];
+  el.innerHTML = `<span class="quote-mark">❝</span><p>${escapeHtml(quote)}</p>`;
+}
+
+/* --- Performances : matières fortes/faibles, historique, recommandations --- */
+function renderPerformanceInsights(){
+  const results = getQuizResultsMap();
+  const entries = Object.entries(results);
+  let mathsSum=0, mathsCount=0, physSum=0, physCount=0;
+  const historyRows = [];
+  entries.forEach(([courseId, r])=>{
+    const c = COURSES.find(x=>x.id===courseId);
+    if(c){ if(c.matiere==='maths'){ mathsSum+=r.pct; mathsCount++; } else { physSum+=r.pct; physCount++; } }
+    historyRows.push({ titre: r.titre, pct: r.pct, date: r.date, matiere: c ? c.matiere : null });
+  });
+  historyRows.sort((a,b)=> new Date(b.date) - new Date(a.date));
+  const mathsAvg = mathsCount ? Math.round(mathsSum/mathsCount) : null;
+  const physAvg = physCount ? Math.round(physSum/physCount) : null;
+
+  const strongEl = document.getElementById('gam-strong-subject');
+  const weakEl = document.getElementById('gam-weak-subject');
+  if(strongEl && weakEl){
+    const pairs = [['Mathématiques', mathsAvg], ['Physique-Chimie', physAvg]].filter(p=>p[1]!==null);
+    if(!pairs.length){
+      strongEl.textContent = '—'; weakEl.textContent = 'Fais un quiz !';
+    } else {
+      pairs.sort((a,b)=> b[1]-a[1]);
+      strongEl.textContent = `${pairs[0][0]} (${pairs[0][1]}%)`;
+      weakEl.textContent = `${pairs[pairs.length-1][0]} (${pairs[pairs.length-1][1]}%)`;
+    }
+  }
+  const histEl = document.getElementById('gam-history-list');
+  if(histEl){
+    histEl.innerHTML = historyRows.length ? historyRows.slice(0,10).map(r=>`
+      <div class="history-row">
+        <span>${r.matiere==='maths'?'🧮':r.matiere==='physique'?'⚗️':'📘'} ${escapeHtml(r.titre)}</span>
+        <span class="history-pct" style="color:${r.pct>=70?'#1a9640':r.pct>=40?'#F47B20':'#ef4444'}">${r.pct}%</span>
+      </div>`).join('') : '<p class="empty-hint">Aucun quiz effectué pour le moment.</p>';
+  }
+  const recoEl = document.getElementById('gam-recommendations');
+  if(recoEl){
+    let weakSubject = null;
+    if(mathsAvg!==null || physAvg!==null){
+      weakSubject = (physAvg===null || (mathsAvg!==null && mathsAvg<=physAvg)) ? 'maths' : 'physique';
+    }
+    const doneIds = new Set(entries.map(([id])=>id));
+    let recos = COURSES.filter(c=> (!weakSubject || c.matiere===weakSubject) && !doneIds.has(c.id)).slice(0,3);
+    if(recos.length<3){
+      const extra = COURSES.filter(c=> !doneIds.has(c.id) && !recos.includes(c)).slice(0, 3-recos.length);
+      recos = recos.concat(extra);
+    }
+    recoEl.innerHTML = recos.length ? recos.map(c=>`
+      <div class="reco-mini-card" onclick="switchPage('cours'); selectSubjectTab('cours','${c.matiere}'); openModalById('course','${c.id}')">
+        <span>${c.matiere==='maths'?'🧮':'⚗️'}</span><span>${escapeHtml(c.titre)}</span>
+      </div>`).join('') : '<p class="empty-hint">Tu es à jour, continue comme ça !</p>';
+  }
+}
+
+/* --- Personnalisation (avatars / titres) --- */
+function renderRewardsPicker(){
+  const el = document.getElementById('gam-rewards-picker');
+  if(!el || !GAM) return;
+  const avatarIds = LEVEL_REWARDS.filter(r=>r.type==='avatar' && GAM.unlockedRewards.includes(r.id)).map(r=>r.id.replace('avatar_',''));
+  const avatars = ['🎓', ...new Set(avatarIds)];
+  const avatarHtml = avatars.map(a=>`<button class="reward-pick-btn ${GAM.activeAvatar===a?'active':''}" onclick="setActiveAvatar('${a}')">${a}</button>`).join('');
+  const titleDefs = LEVEL_REWARDS.filter(r=>r.type==='title' && GAM.unlockedRewards.includes(r.id));
+  const titleHtml = titleDefs.length
+    ? titleDefs.map(r=>{
+        const label = r.label.replace('Titre ','').replace(/«|»/g,'').trim();
+        return `<button class="reward-pick-btn ${GAM.activeTitle===r.id?'active':''}" onclick="setActiveTitle('${r.id}')">${escapeHtml(label)}</button>`;
+      }).join('')
+    : '<span class="empty-hint">Débloque des niveaux pour obtenir des titres.</span>';
+  el.innerHTML = `<label style="font-size:12px;font-weight:700;">Ton avatar</label><div class="reward-avatar-row">${avatarHtml}</div>
+    <label style="font-size:12px;font-weight:700;">Tes titres</label><div class="reward-title-row">${titleHtml}</div>`;
+}
+function setActiveAvatar(a){ GAM.activeAvatar = a; persistGam(); updateXPBarUI(); renderRewardsPicker(); }
+function setActiveTitle(id){ GAM.activeTitle = id; persistGam(); updateXPBarUI(); renderRewardsPicker(); }
+
+/* --- Établissement / ville / amis --- */
+function saveSchoolCity(){
+  const schoolInput = document.getElementById('gam-school-input');
+  const cityInput = document.getElementById('gam-city-input');
+  GAM.school = schoolInput ? schoolInput.value.trim() : GAM.school;
+  GAM.city = cityInput ? cityInput.value.trim() : GAM.city;
+  persistGam();
+  if(isRealAccount()){ saveUserProfileField('school', GAM.school); saveUserProfileField('city', GAM.city); }
+  showToast('✅ Informations enregistrées');
+}
+function addFriend(){
+  const input = document.getElementById('gam-friend-input');
+  const email = input ? input.value.trim().toLowerCase() : '';
+  if(!email) return;
+  GAM.friends = GAM.friends || [];
+  if(!GAM.friends.includes(email)) GAM.friends.push(email);
+  if(input) input.value = '';
+  persistGam();
+  renderFriendsList();
+  showToast('👥 Ami ajouté au classement');
+}
+function removeFriend(email){
+  GAM.friends = (GAM.friends||[]).filter(f=>f!==email);
+  persistGam();
+  renderFriendsList();
+}
+function renderFriendsList(){
+  const el = document.getElementById('gam-friends-list');
+  if(!el || !GAM) return;
+  el.innerHTML = (GAM.friends||[]).length
+    ? GAM.friends.map(f=>`<span class="friend-chip">${escapeHtml(f)} <button onclick="removeFriend('${f}')">✕</button></span>`).join('')
+    : '<span class="empty-hint">Aucun ami ajouté</span>';
+}
+function toggleSound(v){ if(GAM){ GAM.soundEnabled = v; persistGam(); } }
+
+/* --- Classement --- */
+let leaderboardTab = 'general';
+function selectLeaderboardTab(tab){
+  leaderboardTab = tab;
+  document.querySelectorAll('.gam-tab').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
+  renderLeaderboard();
+}
+async function renderLeaderboard(){
+  const el = document.getElementById('gam-leaderboard-list');
+  if(!el) return;
+  if(!isFirebaseConfigured() || !forumDb){
+    el.innerHTML = '<p class="empty-hint">Le classement est disponible uniquement avec un compte connecté.</p>';
+    return;
+  }
+  el.innerHTML = '<div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>';
+  try {
+    const snap = await forumDb.collection('users').orderBy('gamification.xp','desc').limit(50).get();
+    let rows = snap.docs.map(d=>{
+      const data = d.data();
+      const xp = (data.gamification && data.gamification.xp) || 0;
+      return {
+        name: data.name || 'Élève', email: (data.email||'').toLowerCase(),
+        school: data.school || '', city: data.city || '',
+        xp, level: levelFromTotalXP(xp).level,
+        avatar: (data.gamification && data.gamification.activeAvatar) || '🎓'
+      };
+    });
+    const me = getCurrentUser();
+    if(leaderboardTab==='school') rows = rows.filter(r=> GAM.school && r.school===GAM.school);
+    if(leaderboardTab==='city') rows = rows.filter(r=> GAM.city && r.city===GAM.city);
+    if(leaderboardTab==='friends') rows = rows.filter(r=> (GAM.friends||[]).includes(r.email) || (me && r.email===(me.email||'').toLowerCase()));
+    if(!rows.length){
+      el.innerHTML = '<p class="empty-hint">Aucun résultat pour ce classement pour le moment.</p>';
+      return;
+    }
+    el.innerHTML = rows.map((r,i)=>`
+      <div class="leaderboard-row ${me && r.email===(me.email||'').toLowerCase() ? 'me' : ''}">
+        <span class="lb-rank">#${i+1}</span>
+        <span class="lb-avatar">${r.avatar}</span>
+        <span class="lb-name">${escapeHtml(r.name)}</span>
+        <span class="lb-level">Niv. ${r.level}</span>
+        <span class="lb-xp">${r.xp} XP</span>
+      </div>`).join('');
+  } catch(e){
+    console.error('Classement indisponible', e);
+    el.innerHTML = '<p class="empty-hint">⚠️ Classement indisponible pour le moment. (Vérifie que les règles Firestore autorisent la lecture de la collection "users".)</p>';
+  }
+}
+
+/* --- Initialisation --- */
+function initGamification(){
+  loadGam();
+  handleDailyLogin();
+  generateDailyChallenges();
+  updateXPBarUI();
+  renderQuoteOfDay();
+  renderDailyChallenges();
+  renderBadgesGrid();
+  startStudyTimer();
+}
+function renderGamificationPage(){
+  if(!GAM) loadGam();
+  updateXPBarUI();
+  renderBadgesGrid();
+  renderDailyChallenges();
+  renderActivityCalendar();
+  renderStudyStats();
+  renderPerformanceInsights();
+  renderRewardsPicker();
+  renderFriendsList();
+  const schoolInput = document.getElementById('gam-school-input');
+  const cityInput = document.getElementById('gam-city-input');
+  if(schoolInput) schoolInput.value = GAM.school || '';
+  if(cityInput) cityInput.value = GAM.city || '';
+  const soundToggle = document.getElementById('gam-sound-toggle');
+  if(soundToggle) soundToggle.checked = GAM.soundEnabled !== false;
+  selectLeaderboardTab(leaderboardTab || 'general');
+}
+
 /* ============ INIT ============ */
 document.querySelectorAll('.bottom-nav-dock .dock-item[data-page]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -2575,6 +3511,7 @@ document.querySelectorAll('.bottom-nav-dock .dock-item[data-page]').forEach(btn=
 renderReco();
 updateSubjectCounts();
 initCoursesData();
+initRippleEffect();
 if(isFirebaseConfigured()){
   // L'écran (connexion vs app) est décidé par handleAuthStateChange une fois la session Firebase résolue.
   initFirebaseIfNeeded();
