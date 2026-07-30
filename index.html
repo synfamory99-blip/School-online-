@@ -164,6 +164,43 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .empty-state .emoji { font-size: 38px; margin-bottom: 10px; }
 .empty-state strong { display:block; color: var(--text-main); font-size:14px; margin-bottom:4px; }
 
+/* ============ FILTER CHIPS ============ */
+.filter-chip-row { display:flex; gap:8px; padding: 6px 20px 14px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.filter-chip-row::-webkit-scrollbar { display:none; }
+.filter-chip { flex-shrink:0; padding:7px 14px; border-radius:20px; background:#f1f5f9; border:1.5px solid transparent; font-size:12px; font-weight:800; color:var(--text-muted); cursor:pointer; transition:var(--transition); white-space:nowrap; }
+.filter-chip:hover { background:#e2e8f0; }
+.filter-chip.active.chip-maths { background:var(--green-light); color:var(--green-dark); border-color:var(--green); }
+.filter-chip.active.chip-physique { background:var(--orange-light); color:var(--orange-dark); border-color:var(--orange); }
+
+/* ============ PREMIUM CONTENT CARDS (cours / exercices) ============ */
+.content-card-grid { padding: 4px 20px 20px; display:flex; flex-direction:column; gap:14px; }
+.content-card { background:white; border-radius: var(--radius-lg); border:1px solid var(--border-color); box-shadow: var(--shadow-sm); transition: transform .25s cubic-bezier(0.4,0,0.2,1), box-shadow .25s ease, border-color .25s ease; overflow:hidden; position:relative; }
+.content-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(15,23,42,0.1); border-color:#cbd5e1; }
+.content-card::before { content:''; position:absolute; top:0; left:0; width:5px; height:100%; background: var(--green-gradient); opacity:.9; }
+.content-card.subj-physique::before { background: var(--orange-gradient); }
+.cc-top { display:flex; align-items:flex-start; gap:12px; padding:16px 16px 10px 20px; }
+.cc-icon { width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:21px; flex-shrink:0; background:var(--green-light); color:var(--green); }
+.content-card.subj-physique .cc-icon { background:var(--orange-light); color:var(--orange); }
+.cc-body { flex:1; min-width:0; }
+.cc-body h4 { font-size:14.5px; font-weight:800; color:var(--text-main); line-height:1.3; margin-bottom:4px; }
+.cc-meta-row { display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:10.5px; color:var(--text-muted); font-weight:700; }
+.cc-meta-row .dot { opacity:.5; }
+.cc-fav { background:none; border:none; font-size:17px; cursor:pointer; color:#cbd5e1; transition:var(--transition); flex-shrink:0; padding:2px; }
+.cc-fav.active { color: var(--orange); transform: scale(1.15); }
+.cc-badges { display:flex; flex-wrap:wrap; gap:6px; padding: 2px 20px 12px 20px; }
+.cc-progress-wrap { padding: 0 20px 12px; }
+.cc-progress-track { height:6px; border-radius:10px; background:#eef1f5; overflow:hidden; }
+.cc-progress-fill { height:100%; border-radius:10px; background: var(--green-gradient); transition: width .5s cubic-bezier(0.16,1,0.3,1); }
+.content-card.subj-physique .cc-progress-fill { background: var(--orange-gradient); }
+.cc-progress-label { font-size:10px; font-weight:800; color:var(--text-muted); margin-top:5px; }
+.cc-footer { display:flex; align-items:center; gap:8px; padding: 12px 16px 16px 20px; border-top:1px solid #f1f5f9; }
+.cc-cta { flex:1; text-align:center; padding:10px 14px; border-radius:12px; border:none; background: var(--green-gradient); color:white; font-weight:800; font-size:12.5px; cursor:pointer; transition:var(--transition); text-decoration:none; }
+.content-card.subj-physique .cc-cta { background: var(--orange-gradient); }
+.cc-cta:hover { filter:brightness(1.06); transform: translateY(-1px); }
+.cc-icon-btn { width:34px; height:34px; border-radius:50%; background:#f1f5f9; border:none; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); color:var(--text-main); flex-shrink:0; }
+.cc-icon-btn:hover { background:var(--text-main); color:white; }
+.skeleton-content-card { height:150px; border-radius:var(--radius-lg); margin-bottom:14px; }
+
 /* PROFIL */
 .dashboard-profile-box { background: var(--green-gradient); color: white; padding: 40px 20px 30px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: var(--shadow-md); }
 .big-avatar { width: 90px; height: 90px; background: white; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 42px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
@@ -376,9 +413,10 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .item-info-titles p.meta-line { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 
 /* AUTH SCREENS */
-.auth-screen { min-height: 100vh; display:flex; align-items:center; justify-content:center; padding: 28px 20px; background: linear-gradient(160deg,#0f172a,#134e2b 55%,#1a9640); position:relative; overflow:hidden; }
-.auth-screen::before { content:''; position:absolute; top:-80px; left:-60px; width:220px; height:220px; background:var(--orange); opacity:.25; filter:blur(60px); border-radius:50%; animation: floatBlob 8s ease-in-out infinite; }
-.auth-screen::after { content:''; position:absolute; bottom:-100px; right:-60px; width:260px; height:260px; background:#4ade80; opacity:.2; filter:blur(70px); border-radius:50%; animation: floatBlob 9s ease-in-out infinite reverse; }
+.auth-screen { min-height: 100vh; padding: 0; background: #ffffff; }
+.landing-hero { background: linear-gradient(160deg,#0f172a,#134e2b 55%,#1a9640); position: relative; overflow: hidden; border-radius: 0 0 32px 32px; padding-bottom: 46px; }
+.landing-hero::before { content:''; position:absolute; top:-80px; left:-60px; width:220px; height:220px; background:var(--orange); opacity:.25; filter:blur(60px); border-radius:50%; animation: floatBlob 8s ease-in-out infinite; z-index:0; }
+.landing-hero::after { content:''; position:absolute; bottom:-100px; right:-60px; width:260px; height:260px; background:#4ade80; opacity:.2; filter:blur(70px); border-radius:50%; animation: floatBlob 9s ease-in-out infinite reverse; z-index:0; }
 .auth-card { position:relative; z-index:1; width:100%; max-width:380px; background:white; border-radius: 26px; padding: 30px 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.35); animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
 .auth-logo { width:64px; height:64px; border-radius:50%; background: var(--green-gradient); display:flex; align-items:center; justify-content:center; font-size:28px; margin: 0 auto 14px; box-shadow: 0 10px 24px rgba(26,150,64,0.35); }
 .auth-card h2 { font-family:'Poppins',sans-serif; text-align:center; font-size:20px; font-weight:800; margin-bottom:4px; }
@@ -446,7 +484,6 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
   .ai-fab { right: calc(50% - 240px + 18px); }
   .modal-overlay, .ai-chat-overlay { max-width: none; }
   .modal-sheet, .ai-chat-panel { max-width: 480px; margin: 0 auto; }
-  .auth-screen { background: linear-gradient(160deg,#0f172a,#134e2b 55%,#1a9640); }
 }
 @media (min-width: 1024px) {
   body { display:flex; justify-content:center; align-items:flex-start; padding: 32px 0; min-height:100vh; }
@@ -467,7 +504,8 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 /* --- Effet ripple (boutons) --- */
 .btn-action, .subject-tab, .sub-tab, .dock-item, .quiz-option, .forum-post-btn,
 .settings-row, .btn-download-trigger, .btn-dismiss, .quiz-next-btn, .subject-box,
-.gam-tab, .reward-pick-btn, .action-circle-btn, .fav-btn, .forum-action-btn, .btn-mini {
+.gam-tab, .reward-pick-btn, .action-circle-btn, .fav-btn, .forum-action-btn, .btn-mini,
+.cc-cta, .cc-icon-btn, .filter-chip {
   position: relative; overflow: hidden;
 }
 .ripple-effect {
@@ -532,6 +570,9 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 /* --- Citation du jour --- */
 .gam-quote-card { margin: 12px 20px 0; background: var(--orange-gradient); color: #fff; border-radius: var(--radius-md); padding: 14px 18px; font-size: 13px; font-weight: 600; display: flex; gap: 10px; align-items: flex-start; box-shadow: var(--shadow-sm); }
 .gam-quote-card .quote-mark { font-size: 22px; font-family: 'Poppins', sans-serif; opacity: .8; line-height: 1; }
+.gam-quote-card .quote-text-wrap { flex: 1; min-width: 0; }
+.gam-quote-card .quote-text-wrap p { margin: 0; }
+.gam-quote-card .quote-author { display: block; margin-top: 6px; font-size: 11.5px; font-weight: 700; opacity: .85; }
 
 /* --- Défis quotidiens --- */
 .daily-challenges-list { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; }
@@ -617,13 +658,297 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 @keyframes likeBounce { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .gam-streak .flame, .levelup-emoji { animation: none !important; }
+  .gam-streak .flame, .levelup-emoji, .landing-particles span, .landing-halo, .landing-illustration { animation: none !important; }
+}
+
+/* ============================================================
+   PAGE D'ACCUEIL PUBLIQUE (avant connexion)
+   ============================================================ */
+.auth-screen { display: flex; flex-direction: column; align-items: stretch; }
+.landing-wrap { width: 100%; color: #fff; }
+.landing-section { padding: 44px 22px; }
+.landing-fade { animation: landingFadeUp .7s cubic-bezier(0.4,0,0.2,1) both; }
+@keyframes landingFadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+.landing-hero { text-align: center; padding: 30px 20px 10px; position: relative; overflow: hidden; }
+.landing-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.10) 1.5px, transparent 1.5px);
+  background-size: 22px 22px; opacity: .5; pointer-events: none;
+}
+.landing-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.landing-particles span { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.55); animation: particleFloat 7s ease-in-out infinite; }
+.landing-particles span:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+.landing-particles span:nth-child(2) { top: 30%; left: 80%; animation-delay: 1.2s; background: rgba(74,222,128,0.6); }
+.landing-particles span:nth-child(3) { top: 60%; left: 20%; animation-delay: 2.4s; }
+.landing-particles span:nth-child(4) { top: 75%; left: 65%; animation-delay: 3.6s; background: rgba(244,123,32,0.5); }
+.landing-particles span:nth-child(5) { top: 45%; left: 45%; animation-delay: 0.8s; }
+.landing-particles span:nth-child(6) { top: 20%; left: 55%; animation-delay: 2s; background: rgba(74,222,128,0.5); }
+@keyframes particleFloat { 0%,100% { transform: translateY(0) translateX(0); opacity: .5; } 50% { transform: translateY(-18px) translateX(6px); opacity: 1; } }
+.landing-badge-pill { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-size: 11.5px; font-weight: 700; padding: 6px 14px; border-radius: 30px; margin-bottom: 16px; }
+.landing-hero h1 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 26px; line-height: 1.25; margin-bottom: 12px; }
+.landing-hero h1 span { color: #4ade80; }
+.landing-hero p { font-size: 14px; color: rgba(255,255,255,0.85); max-width: 380px; margin: 0 auto 22px; line-height: 1.5; }
+.landing-cta-row { display: flex; flex-direction: column; gap: 10px; max-width: 300px; margin: 0 auto; }
+.landing-btn-primary, .landing-btn-secondary { border: none; border-radius: 16px; padding: 14px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Poppins', sans-serif; }
+.landing-btn-primary { background: var(--orange-gradient); color: #fff; box-shadow: 0 10px 24px rgba(244,123,32,0.35); }
+.landing-btn-secondary { background: rgba(255,255,255,0.12); color: #fff; border: 1.5px solid rgba(255,255,255,0.3); }
+
+.landing-illustration { max-width: 300px; margin: 26px auto 6px; animation: floatSlow 4s ease-in-out infinite; position: relative; z-index: 1; }
+@keyframes floatSlow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.landing-hero-grid { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.landing-hero-visual { position: relative; width: 100%; display: flex; justify-content: center; }
+.landing-halo {
+  position: absolute; width: 260px; height: 260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,222,128,0.35), transparent 70%);
+  top: 20px; left: 50%; transform: translateX(-50%); filter: blur(10px);
+  animation: haloPulse 5s ease-in-out infinite;
+}
+@keyframes haloPulse { 0%,100% { opacity: .6; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.08); } }
+@media (min-width: 860px) {
+  .landing-hero-grid { flex-direction: row; align-items: center; text-align: left; gap: 40px; max-width: 960px; margin: 0 auto; }
+  .landing-hero-text { flex: 1; }
+  .landing-hero-text p { margin: 0 0 22px; }
+  .landing-cta-row { flex-direction: row; margin: 0; max-width: none; }
+  .landing-hero-visual { flex: 1; }
+}
+
+.landing-stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.landing-stat-card { background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px 12px; text-align: center; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; }
+.landing-stat-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(15,23,42,0.1); }
+.landing-stat-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 18px; margin: 0 auto 10px; }
+.landing-stat-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 24px; color: var(--green-dark); display: block; }
+.landing-stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+
+.landing-section.light { background: #f8fafc; color: var(--text-main); background-image: radial-gradient(rgba(26,150,64,0.06) 1.5px, transparent 1.5px); background-size: 24px 24px; }
+.landing-section-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 19px; text-align: center; margin-bottom: 4px; }
+.landing-section-sub { font-size: 12.5px; color: var(--text-muted); text-align: center; margin-bottom: 22px; }
+.landing-why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.landing-why-card { background: #fff; border-radius: var(--radius-md); padding: 16px 12px; text-align: center; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; }
+.landing-why-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(15,23,42,0.12); }
+.landing-why-icon { width: 46px; height: 46px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 10px; }
+.landing-why-card h4 { font-size: 12.5px; font-weight: 800; margin-bottom: 4px; }
+.landing-why-card p { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+
+.landing-subjects-row { display: flex; flex-direction: column; gap: 12px; }
+.landing-subject-card { border-radius: var(--radius-lg); padding: 20px; color: #fff; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm); }
+.landing-subject-card.maths { background: linear-gradient(135deg,#1a9640,#0f7a30); }
+.landing-subject-card.physique { background: linear-gradient(135deg,#3b82f6,#1d4ed8); }
+.landing-subject-icon { font-size: 34px; }
+.landing-subject-info { flex: 1; }
+.landing-subject-info h4 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 15px; }
+.landing-subject-info p { font-size: 11px; opacity: .9; margin: 3px 0 10px; }
+.landing-subject-info button { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; font-size: 11.5px; font-weight: 700; padding: 7px 14px; border-radius: 20px; cursor: pointer; }
+
+.landing-testimonial-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+.landing-testimonial-track::-webkit-scrollbar { display: none; }
+.landing-testimonial-card { scroll-snap-align: center; flex: 0 0 82%; background: #fff; border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm); }
+.landing-testimonial-stars { color: #f59e0b; font-size: 13px; margin-bottom: 8px; }
+.landing-testimonial-text { font-size: 12.5px; color: var(--text-main); line-height: 1.5; margin-bottom: 12px; }
+.landing-testimonial-person { display: flex; align-items: center; gap: 10px; }
+.landing-testimonial-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.landing-testimonial-name { font-size: 12px; font-weight: 800; }
+.landing-testimonial-school { font-size: 10.5px; color: var(--text-muted); }
+.landing-testimonial-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+.landing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-color); transition: all .3s ease; }
+.landing-dot.active { background: var(--green); width: 18px; border-radius: 4px; }
+
+.landing-final-cta { text-align: center; background: linear-gradient(135deg,#0f172a,#134e2b 60%,#1a9640); border-radius: 28px; margin: 0 22px 30px; padding: 34px 22px; }
+.landing-final-cta h3 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 19px; color: #fff; margin-bottom: 8px; }
+.landing-final-cta p { font-size: 12.5px; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
+
+.auth-card-section { padding: 6px 20px 34px; }
+
+/* ============================================================
+   FORUM v2 — profils enrichis, réactions, recherche, sidebar
+   ============================================================ */
+.forum-toolbar { display: flex; gap: 8px; padding: 0 0 10px; align-items: center; }
+.forum-search-input { flex: 1; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 10px 14px; font-size: 13px; }
+.forum-notif-btn { position: relative; background: #fff; border: 1.5px solid var(--border-color); border-radius: 14px; width: 42px; height: 42px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+.forum-notif-dot { position: absolute; top: -3px; right: -3px; background: #ef4444; color: #fff; font-size: 9px; font-weight: 800; min-width: 16px; height: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
+.forum-notif-dropdown { position: absolute; right: 20px; margin-top: 6px; background: #fff; border-radius: 16px; box-shadow: 0 20px 40px rgba(15,23,42,0.18); width: min(320px, 86vw); max-height: 360px; overflow-y: auto; z-index: 500; display: none; }
+.forum-notif-dropdown.open { display: block; }
+.forum-notif-item { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 12px; }
+.forum-notif-item:last-child { border-bottom: none; }
+.forum-notif-item.unread { background: var(--green-light); }
+.forum-notif-empty { padding: 20px; text-align: center; font-size: 12px; color: var(--text-muted); }
+
+.forum-filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; }
+.forum-filter-chip { flex-shrink: 0; padding: 7px 13px; border-radius: 18px; border: 1.5px solid var(--border-color); background: #fff; font-size: 11.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+.forum-filter-chip.active { background: var(--green-gradient); color: #fff; border-color: transparent; }
+
+.forum-side-panel { background: #fff; border-radius: var(--radius-md); padding: 14px; box-shadow: var(--shadow-sm); margin-bottom: 12px; }
+.forum-side-panel h4 { font-size: 12.5px; font-weight: 800; margin-bottom: 10px; }
+.forum-contrib-row, .forum-popular-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 11.5px; }
+.forum-contrib-avatar { font-size: 16px; }
+.forum-contrib-name { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.forum-contrib-xp { font-size: 10.5px; color: var(--green-dark); font-weight: 800; }
+.forum-popular-row .rank { font-weight: 800; color: var(--text-muted); width: 16px; }
+.forum-popular-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.forum-composer-toolbar { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+.forum-tool-btn { background: #f1f5f9; border: none; border-radius: 8px; width: 30px; height: 30px; font-size: 13px; cursor: pointer; }
+.forum-tool-btn.active { background: var(--green-light); color: var(--green-dark); }
+.forum-preview-box { background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 12px; padding: 12px; font-size: 12.5px; margin-bottom: 8px; }
+.forum-preview-box img { max-width: 100%; border-radius: 8px; margin: 6px 0; }
+.forum-preview-box code { background: #e2e8f0; padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+.forum-preview-box pre { background: #0f172a; color: #e2e8f0; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 11px; }
+.forum-composer-classe { margin-top: 6px; }
+
+.forum-post-card { position: relative; }
+.forum-avatar-lg { width: 38px; height: 38px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.forum-post-meta .author-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.forum-level-chip { font-size: 9.5px; font-weight: 800; color: var(--green-dark); background: var(--green-light); padding: 1px 6px; border-radius: 8px; }
+.forum-badge-chip { font-size: 12px; }
+.forum-classe-chip { font-size: 9.5px; color: var(--text-muted); }
+.forum-post-text img { max-width: 100%; border-radius: 10px; margin: 8px 0; }
+.forum-post-text pre { background: #0f172a; color: #e2e8f0; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 11.5px; margin: 8px 0; }
+.forum-post-text code { background: #eef1f5; padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+.forum-pdf-chip { display: inline-flex; align-items: center; gap: 5px; background: #fee2e2; color: #b91c1c; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 10px; margin-top: 6px; text-decoration: none; }
+
+.forum-reactions-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.forum-reaction-btn { font-size: 12px; padding: 5px 9px; border-radius: 14px; border: 1.5px solid var(--border-color); background: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.forum-reaction-btn.active { background: var(--green-light); border-color: var(--green); }
+.forum-reaction-btn.reaction-pop { animation: likeBounce .4s ease; }
+
+.forum-reply { position: relative; }
+.forum-reply.is-nested { margin-left: 30px; }
+.forum-reply-nested-tag { font-size: 10px; color: var(--green-dark); font-weight: 700; margin-bottom: 2px; }
+.forum-accept-btn { font-size: 10px; background: none; border: 1px solid var(--border-color); border-radius: 10px; padding: 3px 8px; cursor: pointer; color: var(--text-muted); }
+.forum-accept-btn.accepted { background: var(--green-light); border-color: var(--green); color: var(--green-dark); }
+.forum-reply-mention-btn { font-size: 10px; color: var(--text-muted); background: none; border: none; cursor: pointer; }
+.forum-reply.is-accepted .forum-reply-bubble { background: var(--green-light); border: 1.5px solid var(--green); box-shadow: 0 6px 16px rgba(26,150,64,0.12); }
+/* ============ FOOTER ============ */
+.site-footer { margin-top: 28px; background: #0f172a; color: #cbd5e1; padding: 32px 20px 20px; display: flex; flex-wrap: wrap; gap: 26px; }
+.footer-col { flex: 1 1 200px; min-width: 0; }
+.footer-col h4 { color: #fff; font-size: 13.5px; font-weight: 800; margin-bottom: 10px; }
+.footer-brand { font-size: 15px !important; }
+.footer-col p { font-size: 12px; line-height: 1.6; color: #94a3b8; margin: 0 0 6px; word-break: break-word; }
+.footer-link { display: block; background: none; border: none; text-align: left; padding: 0; margin-bottom: 9px; font-size: 12px; font-weight: 600; color: #cbd5e1; cursor: pointer; transition: var(--transition); }
+.footer-link:hover { color: #fff; text-decoration: underline; }
+.footer-socials { display: flex; gap: 10px; flex-wrap: wrap; }
+.footer-socials a { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none; transition: var(--transition); }
+.footer-socials a:hover { background: var(--green-gradient); transform: translateY(-2px); }
+.footer-bottom { flex-basis: 100%; text-align: center; font-size: 11px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 4px; }
+@media (max-width: 380px) {
+  .site-footer { padding: 26px 16px 16px; gap: 20px; }
+}
+
+/* ============ FILETS DE SÉCURITÉ RESPONSIVE ============ */
+img, svg, video, iframe { max-width: 100%; height: auto; }
+table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+button, input, select, textarea { font-family: inherit; max-width: 100%; }
+@media (min-width: 860px) {
+  .site-footer { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
 }
 </style>
 </head>
 <body>
 
 <div class="auth-screen" id="auth-screen">
+  <div class="landing-wrap">
+    <div class="landing-section landing-hero">
+      <div class="landing-particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="landing-hero-grid">
+        <div class="landing-hero-text">
+          <span class="landing-badge-pill landing-fade">🇨🇮 Conçu pour les élèves ivoiriens</span>
+          <h1 class="landing-fade">Réussissez votre parcours scolaire avec <span>School Online</span></h1>
+          <p class="landing-fade">Cours, exercices corrigés et quiz interactifs en Mathématiques et Physique-Chimie, avec suivi de progression et communauté d'entraide.</p>
+          <div class="landing-cta-row landing-fade">
+            <button class="landing-btn-primary" onclick="scrollToAuthCard('signup')">🚀 Commencer gratuitement</button>
+            <button class="landing-btn-secondary" onclick="scrollToAuthCard('login')">Explorer les cours</button>
+          </div>
+        </div>
+        <div class="landing-hero-visual">
+          <div class="landing-halo" aria-hidden="true"></div>
+          <svg class="landing-illustration landing-fade" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration d'élèves utilisant un ordinateur, une tablette et un smartphone">
+            <ellipse cx="160" cy="205" rx="120" ry="10" fill="rgba(0,0,0,0.15)"/>
+            <rect x="70" y="120" width="130" height="82" rx="10" fill="#0f7a30"/>
+            <rect x="80" y="130" width="110" height="62" rx="4" fill="#e7f7ec"/>
+            <rect x="92" y="140" width="86" height="8" rx="3" fill="#1a9640"/>
+            <rect x="92" y="154" width="60" height="6" rx="3" fill="#94d9ac"/>
+            <rect x="92" y="166" width="70" height="6" rx="3" fill="#94d9ac"/>
+            <circle cx="150" cy="66" r="26" fill="#F47B20"/>
+            <circle cx="150" cy="58" r="11" fill="#2d1a10"/>
+            <path d="M126 100c0-16 10-26 24-26s24 10 24 26" fill="#134e2b"/>
+            <rect x="205" y="150" width="46" height="60" rx="8" fill="#3b82f6"/>
+            <rect x="211" y="158" width="34" height="42" rx="3" fill="#dbeafe"/>
+            <rect x="222" y="204" width="12" height="4" rx="2" fill="#1d4ed8"/>
+            <rect x="46" y="160" width="34" height="52" rx="7" fill="#1a9640"/>
+            <rect x="51" y="167" width="24" height="34" rx="3" fill="#e7f7ec"/>
+            <circle cx="250" cy="60" r="4" fill="#4ade80"/>
+            <circle cx="60" cy="90" r="3" fill="#facc15"/>
+            <circle cx="270" cy="120" r="3" fill="#facc15"/>
+            <path d="M40 60l4 8 8 4-8 4-4 8-4-8-8-4 8-4z" fill="#facc15"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="landing-section light" style="padding-top:34px;">
+      <div class="landing-section-title">Matières populaires</div>
+      <div class="landing-section-sub">Choisis ta matière et commence dès maintenant.</div>
+      <div class="landing-subjects-row">
+        <div class="landing-subject-card maths">
+          <span class="landing-subject-icon">🧮</span>
+          <div class="landing-subject-info">
+            <h4>Mathématiques</h4>
+            <p id="landing-maths-count">Chargement des cours...</p>
+            <button onclick="scrollToAuthCard('signup')">Commencer →</button>
+          </div>
+        </div>
+        <div class="landing-subject-card physique">
+          <span class="landing-subject-icon">⚗️</span>
+          <div class="landing-subject-info">
+            <h4>Physique-Chimie</h4>
+            <p id="landing-physique-count">Chargement des cours...</p>
+            <button onclick="scrollToAuthCard('signup')">Commencer →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="landing-section" style="padding-top:34px;">
+      <div class="landing-section-title">School Online en chiffres</div>
+      <div class="landing-section-sub">Une communauté d'élèves ivoiriens qui grandit chaque jour.</div>
+      <div class="landing-stats-row landing-fade" id="landing-stats-row">
+        <div class="landing-stat-card"><div class="landing-stat-icon">🧑🏾‍🎓</div><span class="landing-stat-num" data-target="3200">0</span><span class="landing-stat-label">Élèves inscrits</span></div>
+        <div class="landing-stat-card"><div class="landing-stat-icon">📘</div><span class="landing-stat-num" data-target="240">0</span><span class="landing-stat-label">Cours disponibles</span></div>
+        <div class="landing-stat-card"><div class="landing-stat-icon">✅</div><span class="landing-stat-num" data-target="1500">0</span><span class="landing-stat-label">Quiz réalisés</span></div>
+        <div class="landing-stat-card"><div class="landing-stat-icon">🏆</div><span class="landing-stat-num" data-target="87" data-suffix="%">0</span><span class="landing-stat-label">Taux de réussite</span></div>
+      </div>
+    </div>
+
+    <div class="landing-section light">
+      <div class="landing-section-title">Pourquoi choisir School Online ?</div>
+      <div class="landing-section-sub">Tout ce qu'il te faut pour progresser, au même endroit.</div>
+      <div class="landing-why-grid">
+        <div class="landing-why-card"><div class="landing-why-icon">📘</div><h4>Cours de qualité</h4><p>Fiches claires alignées sur le programme ivoirien.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon">✅</div><h4>Quiz interactifs</h4><p>Corrigés immédiats et suivi de ta progression.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon">📝</div><h4>Exercices corrigés</h4><p>Des TD complets pour t'entraîner sans limite.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon">📈</div><h4>Suivi des progrès</h4><p>Niveaux, XP et statistiques pour rester motivé.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon">💬</div><h4>Communauté d'entraide</h4><p>Pose tes questions, un camarade te répond vite.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon">📱</div><h4>Sur mobile & PC</h4><p>Continue de réviser partout, à ton rythme.</p></div>
+      </div>
+    </div>
+
+    <div class="landing-section" style="padding-top:0;">
+      <div class="landing-section-title">Ils en parlent</div>
+      <div class="landing-section-sub">Élèves et enseignants témoignent.</div>
+      <div class="landing-testimonial-track" id="landing-testimonial-track"></div>
+      <div class="landing-testimonial-dots" id="landing-testimonial-dots"></div>
+    </div>
+
+    <div class="landing-final-cta">
+      <h3>Prêt à booster tes résultats ?</h3>
+      <p>Rejoins des milliers d'élèves ivoiriens qui progressent chaque jour avec School Online.</p>
+      <button class="landing-btn-primary" onclick="scrollToAuthCard('signup')">🚀 Commencer gratuitement</button>
+    </div>
+  </div>
+
+  <div class="auth-card-section" id="auth-card-section">
   <div class="auth-card">
     <div class="auth-logo">🎓</div>
     <h2 id="auth-title">Content de te revoir</h2>
@@ -672,6 +997,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 
     <button class="auth-guest" onclick="continueAsGuest()">Continuer sans compte ›</button>
   </div>
+  </div>
 </div>
 
 <div id="app-shell" style="display:none;">
@@ -705,7 +1031,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
       <button class="btn-action" onclick="switchPage('cours')">🚀 Découvrir les chapitres</button>
     </div>
 
-    <div class="gam-topbar" onclick="switchPage('gamification')">
+    <div class="gam-topbar" role="button" tabindex="0" aria-label="Voir ma progression et mes récompenses" onclick="switchPage('gamification')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchPage('gamification');}">
       <div class="gam-level-badge">
         <span class="gam-avatar" id="gam-avatar-emoji">🎓</span>
         <div class="gam-level-info">
@@ -754,6 +1080,37 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
       <button class="link" onclick="switchPage('cours')">Voir tout</button>
     </div>
     <div class="horizontal-cards-scroller" id="reco-scroller"></div>
+
+    <footer class="site-footer">
+      <div class="footer-col">
+        <h4 class="footer-brand">📘 School Online</h4>
+        <p>La plateforme éducative ivoirienne qui accompagne les élèves de Première et Terminale D en Mathématiques et Physique-Chimie, avec fiches de cours, TD, exercices corrigés et suivi de progression.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Ressources</h4>
+        <button class="footer-link" onclick="showToast('📄 FAQ bientôt disponible')">FAQ</button>
+        <button class="footer-link" onclick="showToast('📄 Conditions d\'utilisation bientôt disponibles')">Conditions d'utilisation</button>
+        <button class="footer-link" onclick="showToast('📄 Politique de confidentialité bientôt disponible')">Politique de confidentialité</button>
+        <button class="footer-link" onclick="showToast('✉️ Contact : contact@schoolonline.ci')">Contact</button>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p>✉️ contact@schoolonline.ci</p>
+        <p>📞 +225 07 00 00 00 00</p>
+        <p>📍 Abidjan, Côte d'Ivoire</p>
+      </div>
+      <div class="footer-col">
+        <h4>Suis-nous</h4>
+        <div class="footer-socials">
+          <a href="#" onclick="return false;" aria-label="Facebook">📘</a>
+          <a href="#" onclick="return false;" aria-label="Instagram">📸</a>
+          <a href="#" onclick="return false;" aria-label="LinkedIn">💼</a>
+          <a href="#" onclick="return false;" aria-label="TikTok">🎵</a>
+          <a href="#" onclick="return false;" aria-label="YouTube">▶️</a>
+        </div>
+      </div>
+      <div class="footer-bottom">© <span id="footer-year"></span> • School Online • Tous droits réservés.</div>
+    </footer>
   </div>
 
   <div id="page-cours" class="page">
@@ -793,17 +1150,60 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
     </div>
 
     <div id="forum-content-wrap">
-      <div class="subject-tabs">
+      <div class="forum-toolbar" style="padding:0 20px;">
+        <input type="text" class="forum-search-input" id="forum-search-input" placeholder="🔍 Rechercher dans le forum..." oninput="renderForumFeed()">
+        <button class="forum-notif-btn" aria-label="Notifications du forum" onclick="toggleNotifDropdown()">🔔<span class="forum-notif-dot" id="forum-notif-dot" style="display:none;">0</span></button>
+      </div>
+      <div class="forum-notif-dropdown" id="forum-notif-dropdown"></div>
+
+      <div class="subject-tabs" style="margin:0 20px 10px;">
         <button class="subject-tab tab-maths active" id="forum-tab-maths" onclick="selectForumTab('maths')">🧮 Mathématiques</button>
         <button class="subject-tab tab-physique" id="forum-tab-physique" onclick="selectForumTab('physique')">⚗️ Physique-Chimie</button>
       </div>
 
-      <div class="forum-composer">
-        <textarea id="forum-input" placeholder="Pose ta question à toute la communauté..." maxlength="500"></textarea>
+      <div class="forum-filters" style="padding:0 20px 6px;">
+        <button class="forum-filter-chip active" data-filter="recent" onclick="setForumFilter('recent')">🕒 Plus récent</button>
+        <button class="forum-filter-chip" data-filter="popular" onclick="setForumFilter('popular')">🔥 Popularité</button>
+        <button class="forum-filter-chip" data-filter="unanswered" onclick="setForumFilter('unanswered')">❔ Sans réponse</button>
+        <select id="forum-classe-filter" class="forum-filter-chip" style="border:1.5px solid var(--border-color);" onchange="renderForumFeed()">
+          <option value="">Toutes classes</option>
+          <option value="Seconde">Seconde</option>
+          <option value="Première">Première</option>
+          <option value="Terminale">Terminale</option>
+        </select>
+      </div>
+
+      <div class="forum-side-panel" style="margin:0 20px 14px;">
+        <h4>🏆 Meilleurs contributeurs</h4>
+        <div id="forum-top-contributors"><div class="skeleton-row" style="height:28px;"></div></div>
+      </div>
+      <div class="forum-side-panel" style="margin:0 20px 14px;">
+        <h4>📈 Populaires cette semaine</h4>
+        <div id="forum-popular-week"><div class="skeleton-row" style="height:28px;"></div></div>
+      </div>
+
+      <div class="forum-composer" style="margin:0 20px;">
+        <div class="forum-composer-toolbar">
+          <button type="button" class="forum-tool-btn" title="Gras" aria-label="Mettre en gras" onclick="forumInsertFormat('**','**')"><b>G</b></button>
+          <button type="button" class="forum-tool-btn" title="Italique" aria-label="Mettre en italique" onclick="forumInsertFormat('*','*')"><i>I</i></button>
+          <button type="button" class="forum-tool-btn" title="Code" aria-label="Insérer du code" onclick="forumInsertFormat('\`','\`')">{ }</button>
+          <button type="button" class="forum-tool-btn" title="Bloc de code" aria-label="Insérer un bloc de code" onclick="forumInsertFormat('\n\`\`\`\n','\n\`\`\`\n')">📄</button>
+          <button type="button" class="forum-tool-btn" title="Insérer une image (URL)" aria-label="Insérer une image" onclick="forumInsertImage()">🖼️</button>
+          <button type="button" class="forum-tool-btn" title="Joindre un PDF (URL)" aria-label="Joindre un PDF" onclick="forumInsertPdf()">📎</button>
+          <button type="button" class="forum-tool-btn" id="forum-preview-toggle" title="Aperçu" aria-label="Afficher l'aperçu" onclick="toggleForumPreview()">👁️</button>
+        </div>
+        <textarea id="forum-input" placeholder="Pose ta question à toute la communauté... (utilise @Nom pour mentionner quelqu'un)" maxlength="800" oninput="updateForumPreview()"></textarea>
+        <div class="forum-preview-box" id="forum-preview-box" style="display:none;"></div>
         <div class="forum-composer-row">
           <select id="forum-theme-select"></select>
           <button class="forum-post-btn" id="forum-post-btn" onclick="postForumMessage()">Publier</button>
         </div>
+        <select id="forum-classe-select" class="forum-filter-chip forum-composer-classe" style="border:1.5px solid var(--border-color); width:100%;">
+          <option value="">Classe non précisée</option>
+          <option value="Seconde">Seconde</option>
+          <option value="Première">Première</option>
+          <option value="Terminale">Terminale</option>
+        </select>
       </div>
 
       <div id="forum-feed" class="forum-feed"></div>
@@ -1356,6 +1756,8 @@ let coursSubject = 'maths';
 let coursSubTab = 'fiche';
 let exoSubject = 'maths';
 let exoSubTab = 'video';
+let coursThemeFilter = 'all';
+let coursTypeFilter = 'all';
 
 /* ============ NAVIGATION SPA ============ */
 function switchPage(pageId){
@@ -1377,6 +1779,8 @@ function switchPage(pageId){
 function selectSubjectTab(scope, subject){
   if(scope==='cours'){
     coursSubject = subject;
+    coursThemeFilter = 'all';
+    coursTypeFilter = 'all';
     document.getElementById('cours-tab-maths').classList.toggle('active', subject==='maths');
     document.getElementById('cours-tab-physique').classList.toggle('active', subject==='physique');
     renderCoursList();
@@ -1395,6 +1799,8 @@ function selectExoSubTab(sub){
 }
 function selectCoursSubTab(sub){
   coursSubTab = sub;
+  coursThemeFilter = 'all';
+  coursTypeFilter = 'all';
   document.getElementById('cours-subtab-fiche').classList.toggle('active', sub==='fiche');
   document.getElementById('cours-subtab-video').classList.toggle('active', sub==='video');
   renderCoursList();
@@ -1404,34 +1810,84 @@ function selectCoursSubTab(sub){
 function courseIcon(matiere){ return matiere==='maths' ? '🧮' : '⚗️'; }
 function indicatorClass(matiere){ return matiere==='maths' ? 'maths-indicator' : 'physique-indicator'; }
 
-function courseListItemHtml(c){
+/* Progression réelle d'un cours, basée sur les données déjà suivies par l'app
+   (ouverture de la fiche, visionnage vidéo, résultat de quiz) — aucune donnée inventée. */
+function getCourseProgress(courseId){
+  if(!GAM) loadGam();
+  const opened = !!(GAM && GAM.openedCourses && GAM.openedCourses.includes(courseId));
+  const watched = !!(GAM && GAM.watchedVideos && GAM.watchedVideos.some(k=>k.endsWith('_'+courseId)));
+  const quiz = getQuizResultsMap()[courseId];
+  if(quiz){ return { pct: 100, label: `🧠 Quiz réussi à ${quiz.pct}%`, cta: 'Revoir le cours' }; }
+  if(opened || watched){ return { pct: 50, label: 'En cours', cta: 'Continuer' }; }
+  return { pct: 0, label: 'Non commencé', cta: 'Commencer' };
+}
+
+function courseCardHtml(c){
   const favs = loadFavs();
   const isFav = favs.includes(c.id);
   const hasFile = c.lien && c.lien !== '#';
   const hasVideo = !!c.videoId;
-  return `<div class="premium-list-item">
-    <div class="item-left-meta">
-      <div class="item-icon-indicator ${indicatorClass(c.matiere)}">${courseIcon(c.matiere)}</div>
-      <div class="item-info-titles">
+  const prog = getCourseProgress(c.id);
+  return `<div class="content-card subj-${c.matiere==='physique'?'physique':'maths'}">
+    <div class="cc-top">
+      <div class="cc-icon">${courseIcon(c.matiere)}</div>
+      <div class="cc-body">
         <h4>${escapeHtml(c.titre)}</h4>
-        <p class="meta-line">${c.matiere==='maths'?'Mathématiques':'Physique-Chimie'}${c.theme? ' • '+escapeHtml(c.theme):''} • ${c.type}
-          <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Fiche PDF disponible':'🕒 Fiche PDF à venir'}</span>
-          ${hasVideo? `<span class="status-badge ready">🎥 Vidéo disponible</span>` : ''}
-        </p>
+        <div class="cc-meta-row">
+          <span>${c.matiere==='maths'?'Mathématiques':'Physique-Chimie'}</span>
+          ${c.theme? `<span class="dot">•</span><span>${escapeHtml(c.theme)}</span>` : ''}
+          <span class="dot">•</span><span>${escapeHtml(c.type||'')}</span>
+          ${c.niveau? `<span class="dot">•</span><span>${escapeHtml(c.niveau)}</span>` : ''}
+        </div>
       </div>
+      <button class="cc-fav ${isFav?'active':''}" aria-label="Mettre en favori" onclick="toggleFav('${c.id}', event)">${isFav?'★':'☆'}</button>
     </div>
-    <div class="item-actions">
-      <button class="fav-btn ${isFav?'active':''}" aria-label="Mettre en favori" onclick="toggleFav('${c.id}', event)">${isFav?'★':'☆'}</button>
-      <button class="action-circle-btn quiz-btn" aria-label="Faire le quiz" onclick="openQuiz('${c.id}')">🧠</button>
-      <button class="action-circle-btn" onclick="openModalById('course','${c.id}')">↓</button>
+    <div class="cc-badges">
+      <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Fiche PDF disponible':'🕒 Fiche PDF à venir'}</span>
+      ${hasVideo? `<span class="status-badge ready">🎥 Vidéo disponible</span>` : ''}
+    </div>
+    <div class="cc-progress-wrap">
+      <div class="cc-progress-track"><div class="cc-progress-fill" style="width:${prog.pct}%"></div></div>
+      <div class="cc-progress-label">${prog.label}</div>
+    </div>
+    <div class="cc-footer">
+      <button class="cc-cta" onclick="openModalById('course','${c.id}')">${prog.cta}</button>
+      <button class="cc-icon-btn" aria-label="Faire le quiz" onclick="openQuiz('${c.id}')">🧠</button>
+      ${hasVideo? `<button class="cc-icon-btn" aria-label="Voir la vidéo" onclick="openVideoPlayer('${c.id}')">▶</button>` : ''}
     </div>
   </div>`;
 }
 
+function coursSkeletons(n){
+  return `<div class="content-card-grid">${Array(n).fill('<div class="skeleton-card skeleton-content-card"></div>').join('')}</div>`;
+}
+
+function renderCoursFilterChips(list){
+  const chipClass = coursSubject==='physique' ? 'chip-physique' : 'chip-maths';
+  let html = '';
+  if(coursSubject==='physique'){
+    const themes = [...new Set(list.map(c=>c.theme||'Autres'))];
+    html += `<div class="filter-chip-row">
+      <button class="filter-chip ${chipClass} ${coursThemeFilter==='all'?'active':''}" onclick="setCoursThemeFilter('all')">Tous les thèmes</button>
+      ${themes.map(t=>`<button class="filter-chip ${chipClass} ${coursThemeFilter===t?'active':''}" onclick="setCoursThemeFilter('${escapeHtml(t).replace(/'/g,"\\'")}')">${escapeHtml(t)}</button>`).join('')}
+    </div>`;
+  }
+  const types = [...new Set(list.map(c=>c.type).filter(Boolean))];
+  if(types.length>1){
+    html += `<div class="filter-chip-row">
+      <button class="filter-chip ${chipClass} ${coursTypeFilter==='all'?'active':''}" onclick="setCoursTypeFilter('all')">Tous les types</button>
+      ${types.map(t=>`<button class="filter-chip ${chipClass} ${coursTypeFilter===t?'active':''}" onclick="setCoursTypeFilter('${escapeHtml(t).replace(/'/g,"\\'")}')">${escapeHtml(t)}</button>`).join('')}
+    </div>`;
+  }
+  return html;
+}
+function setCoursThemeFilter(theme){ coursThemeFilter = theme; renderCoursList(); }
+function setCoursTypeFilter(type){ coursTypeFilter = type; renderCoursList(); }
+
 function renderCoursList(){
   const container = document.getElementById('cours-list-container');
   if(!coursesLoaded){
-    container.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement des cours...</strong></div>`;
+    container.innerHTML = coursSkeletons(4);
     return;
   }
   let list = COURSES.filter(c=>c.matiere===coursSubject && c.titre);
@@ -1446,18 +1902,16 @@ function renderCoursList(){
     container.innerHTML = `<div class="empty-state"><div class="emoji">📭</div><strong>Aucun cours trouvé</strong>Essaie un autre mot-clé ou change de matière.</div>`;
     return;
   }
-  if(coursSubject==='physique'){
-    const themes = [...new Set(list.map(c=>c.theme||'Autres'))];
-    let html = '';
-    themes.forEach(theme=>{
-      html += `<div class="theme-subheader">${escapeHtml(theme)}</div><div class="extended-list-wrapper stagger">`;
-      list.filter(c=>(c.theme||'Autres')===theme).forEach(c=>{ html += courseListItemHtml(c); });
-      html += `</div>`;
-    });
-    container.innerHTML = html;
-  } else {
-    container.innerHTML = `<div class="extended-list-wrapper stagger" style="padding-top:14px;">${list.map(courseListItemHtml).join('')}</div>`;
+
+  const chipsHtml = renderCoursFilterChips(list);
+  if(coursThemeFilter!=='all') list = list.filter(c=>(c.theme||'Autres')===coursThemeFilter);
+  if(coursTypeFilter!=='all') list = list.filter(c=>c.type===coursTypeFilter);
+
+  if(list.length===0){
+    container.innerHTML = chipsHtml + `<div class="empty-state"><div class="emoji">🔍</div><strong>Aucun résultat pour ces filtres</strong>Essaie un autre thème ou type de cours.</div>`;
+    return;
   }
+  container.innerHTML = chipsHtml + `<div class="content-card-grid stagger">${list.map(courseCardHtml).join('')}</div>`;
 }
 
 function renderCoursVideoGrid(container, list){
@@ -1502,27 +1956,38 @@ function closeVideoPlayer(){
 function closeOnOverlayVideo(e){ if(e.target===document.getElementById('video-overlay')) closeVideoPlayer(); }
 
 /* ============ RENDU EXERCICES ============ */
-function exoItemHtml(e){
+function exoCardHtml(e){
   const isVideo = e.sous==='video';
   const hasFile = e.lien && e.lien !== '#';
   const label = isVideo ? (hasFile?'✅ Vidéo disponible':'🕒 Vidéo à venir') : (hasFile?'✅ Fiche PDF disponible':'🕒 Fiche PDF à venir');
-  return `<div class="premium-list-item">
-    <div class="item-left-meta">
-      <div class="item-icon-indicator ${indicatorClass(e.matiere)}" style="${isVideo?'background:#fecaca;color:#ef4444;':''}">${isVideo?'▶':'📝'}</div>
-      <div class="item-info-titles">
+  const wasDownloaded = !isVideo && hasFile && loadDownloads().some(d=>d.titre===e.titre);
+  const primaryBtn = isVideo
+      ? (hasFile
+          ? `<a class="cc-cta" href="${e.lien}" target="_blank" rel="noopener" onclick="trackDownload('${escapeHtml(e.titre).replace(/'/g,"\\'")}'); bumpChallenge('terminer_exercices');">▶ Regarder la correction</a>`
+          : `<button class="cc-cta" style="opacity:.6;cursor:default;" onclick="showToast('🕒 Cette vidéo arrive bientôt')">Bientôt disponible</button>`)
+      : `<button class="cc-cta" onclick="openModalById('exo','${e.id}')">${wasDownloaded?'Retélécharger':'Télécharger'}</button>`;
+  return `<div class="content-card subj-${e.matiere==='physique'?'physique':'maths'}">
+    <div class="cc-top">
+      <div class="cc-icon" style="${isVideo?'background:#fee2e2;color:#ef4444;':''}">${isVideo?'▶':'📝'}</div>
+      <div class="cc-body">
         <h4>${escapeHtml(e.titre)}</h4>
-        <p class="meta-line">${e.matiere==='maths'?'Mathématiques':'Physique-Chimie'} • ${e.desc}
-          <span class="status-badge ${hasFile?'ready':'pending'}">${label}</span>
-        </p>
+        <div class="cc-meta-row">
+          <span>${e.matiere==='maths'?'Mathématiques':'Physique-Chimie'}</span>
+          <span class="dot">•</span><span>${escapeHtml(e.desc||'')}</span>
+        </div>
       </div>
     </div>
-    ${isVideo
-      ? (hasFile
-          ? `<a class="action-circle-btn" href="${e.lien}" target="_blank" rel="noopener" onclick="trackDownload('${escapeHtml(e.titre)}')">🡪</a>`
-          : `<button class="action-circle-btn" onclick="showToast('🕒 Cette vidéo arrive bientôt')">🡪</button>`)
-      : `<button class="action-circle-btn" onclick="openModalById('exo','${e.id}')">↓</button>`
-    }
+    <div class="cc-badges">
+      <span class="status-badge ${hasFile?'ready':'pending'}">${label}</span>
+      ${wasDownloaded? `<span class="status-badge ready">📥 Déjà téléchargé</span>` : ''}
+    </div>
+    <div class="cc-footer">
+      ${primaryBtn}
+    </div>
   </div>`;
+}
+function exoSkeletons(n){
+  return `<div class="content-card-grid">${Array(n).fill('<div class="skeleton-card skeleton-content-card"></div>').join('')}</div>`;
 }
 function renderExoList(){
   const container = document.getElementById('exo-list-container');
@@ -1532,7 +1997,7 @@ function renderExoList(){
     container.innerHTML = `<div class="empty-state"><div class="emoji">🎬</div><strong>Rien ici pour l'instant</strong>De nouveaux exercices arrivent bientôt.</div>`;
     return;
   }
-  container.innerHTML = `<div class="extended-list-wrapper stagger" style="padding-top:14px;">${list.map(exoItemHtml).join('')}</div>`;
+  container.innerHTML = `<div class="content-card-grid stagger">${list.map(exoCardHtml).join('')}</div>`;
 }
 
 /* ============ RECHERCHE ============ */
@@ -1618,15 +2083,15 @@ function openModalById(kind, id){
   if(kind==='course'){
     const c = COURSES.find(x=>x.id===id);
     if(!c) return;
-    openModal(c.titre, c.matiere==='maths'?'Mathématiques':'Physique-Chimie', c.type, c.niveau, c.format, c.date, c.lien, c.id);
+    openModal(c.titre, c.matiere==='maths'?'Mathématiques':'Physique-Chimie', c.type, c.niveau, c.format, c.date, c.lien, 'course');
     onChapterOpened(c.id);
   } else if(kind==='exo'){
     const e = EXERCICES.find(x=>x.id===id);
     if(!e) return;
-    openModal(e.titre, e.matiere==='maths'?'Mathématiques':'Physique-Chimie', "Série d'exercices", 'Première / Terminale', 'PDF (.pdf)', '2026', e.lien, e.id);
+    openModal(e.titre, e.matiere==='maths'?'Mathématiques':'Physique-Chimie', "Série d'exercices", 'Première / Terminale', 'PDF (.pdf)', '2026', e.lien, 'exo');
   }
 }
-function openModal(title, matiere, type, niveau, format, date, fileLink, courseId){
+function openModal(title, matiere, type, niveau, format, date, fileLink, kind){
   document.getElementById('modal-title').innerText = title;
   document.getElementById('meta-matiere').innerText = matiere;
   document.getElementById('meta-type').innerText = type;
@@ -1640,6 +2105,7 @@ function openModal(title, matiere, type, niveau, format, date, fileLink, courseI
   downloadBtn.onclick = function(e){
     if(!hasLink){ e.preventDefault(); showToast("Ce fichier n'est pas encore disponible"); return; }
     trackDownload(title);
+    if(kind==='exo') bumpChallenge('terminer_exercices');
     showToast('📥 Téléchargement lancé');
   };
   document.getElementById('modal').classList.add('open');
@@ -1906,6 +2372,10 @@ function escapeHtml(str){
 function updateSubjectCounts(){
   document.getElementById('badge-maths-count').textContent = COURSES.filter(c=>c.matiere==='maths').length + ' cours';
   document.getElementById('badge-physique-count').textContent = COURSES.filter(c=>c.matiere==='physique').length + ' cours';
+  const landingMaths = document.getElementById('landing-maths-count');
+  const landingPhysique = document.getElementById('landing-physique-count');
+  if(landingMaths) landingMaths.textContent = `${COURSES.filter(c=>c.matiere==='maths').length} cours · ${(typeof EXERCICES!=='undefined'?EXERCICES:[]).filter(e=>e.matiere==='maths').length} exercices`;
+  if(landingPhysique) landingPhysique.textContent = `${COURSES.filter(c=>c.matiere==='physique').length} cours · ${(typeof EXERCICES!=='undefined'?EXERCICES:[]).filter(e=>e.matiere==='physique').length} exercices`;
   renderProgression();
 }
 function renderProgression(){
@@ -2032,14 +2502,24 @@ async function handleSignup(evt){
   try {
     const cred = await firebase.auth().createUserWithEmailAndPassword(email, pw);
     await cred.user.updateProfile({ displayName: name });
+    // Migre uniquement les données de CETTE session invité (favoris, téléchargements,
+    // quiz, XP/gamification) — jamais celles d'un autre visiteur, puisqu'elles ne
+    // vivent que dans le sessionStorage/localStorage de ce même navigateur.
+    let guestGam = {};
+    try{ guestGam = JSON.parse(sessionStorage.getItem(GAM_GUEST_SESSION_KEY)) || {}; }catch(e){ guestGam = {}; }
+    let guestQuizResults = {};
+    try{ guestQuizResults = JSON.parse(localStorage.getItem('solci_quiz_results')) || {}; }catch(e){ guestQuizResults = {}; }
     // Crée le profil Firestore partagé entre appareils, en migrant les favoris/téléchargements locaux existants.
     await forumDb.collection('users').doc(cred.user.uid).set({
       name, email,
       favorites: loadLocalFavs(),
       downloads: loadLocalDownloads(),
-      quizResults: {},
+      quizResults: guestQuizResults,
+      gamification: guestGam,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
+    // La session invité est maintenant transférée : on l'efface pour éviter toute confusion future.
+    sessionStorage.removeItem(GAM_GUEST_SESSION_KEY);
     // onAuthStateChanged prend le relais.
   } catch(err){
     console.error(err);
@@ -2054,7 +2534,12 @@ function continueAsGuest(){
     initFirebaseIfNeeded();
     try {
       if(typeof firebase !== 'undefined'){
-        firebase.auth().signInAnonymously().catch(e=>console.error(e));
+        // Persistance "SESSION" : l'identité anonyme de cet invité ne doit
+        // jamais survivre à la fermeture du navigateur, pour qu'un visiteur
+        // suivant sur le même appareil ne récupère rien de cette session.
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+          .catch(e=>console.error('Persistance session impossible', e))
+          .finally(()=> firebase.auth().signInAnonymously().catch(e=>console.error(e)));
       }
     } catch(e){ console.error('Connexion invité Firebase impossible, on continue quand même localement.', e); }
   } else {
@@ -2237,6 +2722,10 @@ let forumDb = null;
 let forumReady = false;
 let forumSubject = 'maths';
 let forumUnsub = null;
+let rawForumPosts = [];
+let forumFilterMode = 'recent';
+let forumGlobalPosts = [];
+let forumPreviewOpen = false;
 
 function isFirebaseConfigured(){
   return FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "COLLE_TA_CLE_ICI";
@@ -2273,8 +2762,12 @@ async function handleAuthStateChange(user){
     }
     // sinon : session anonyme d'arrière-plan (lecture publique), on laisse l'écran de connexion affiché
   } else if(localStorage.getItem('solci_guest_mode')==='1'){
-    // Session perdue mais mode invité choisi précédemment : on en recrée une.
-    try { await firebase.auth().signInAnonymously(); } catch(e){ console.error(e); }
+    // Session perdue mais mode invité choisi précédemment : on en recrée une,
+    // toujours en persistance "SESSION" (jamais transmise à un futur visiteur).
+    try {
+      await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+      await firebase.auth().signInAnonymously();
+    } catch(e){ console.error(e); }
   }
 }
 
@@ -2388,6 +2881,75 @@ function timeAgo(date){
   if(diff < 86400) return Math.floor(diff/3600) + ' h';
   return Math.floor(diff/86400) + ' j';
 }
+const REACTION_TYPES = [
+  { id: 'like', icon: '👍', label: "J'aime" },
+  { id: 'coeur', icon: '❤️', label: "J'adore" },
+  { id: 'bravo', icon: '🎉', label: 'Bravo' },
+  { id: 'idee', icon: '💡', label: 'Idée' },
+  { id: 'applaudir', icon: '👏', label: 'Applaudissements' }
+];
+function forumReactionsOf(p){
+  const base = { like: p.likes||0, coeur: 0, bravo: 0, idee: 0, applaudir: 0 };
+  return Object.assign(base, p.reactions||{});
+}
+function forumReactionsTotal(p){
+  const r = forumReactionsOf(p);
+  return REACTION_TYPES.reduce((sum, rt)=> sum + (r[rt.id]||0), 0);
+}
+
+/* --- Mini-formateur de texte sûr (gras, italique, code, blocs, images, PDF, mentions) --- */
+function forumRenderText(raw){
+  let t = escapeHtml(raw||'');
+  t = t.replace(/```([\s\S]*?)```/g, (m,code)=> `<pre>${code.trim()}</pre>`);
+  t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+  t = t.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+  t = t.replace(/\*([^*]+)\*/g, '<i>$1</i>');
+  t = t.replace(/(https?:\/\/[^\s<]+\.(?:png|jpe?g|gif|webp))/gi, '<img src="$1" loading="lazy" alt="image partagée">');
+  t = t.replace(/@([A-Za-zÀ-ÿ0-9_]+(?:\s[A-Za-zÀ-ÿ0-9_]+)?)/g, '<span class="forum-level-chip">@$1</span>');
+  t = t.replace(/\n/g, '<br>');
+  return t;
+}
+function forumExtractMentions(text){
+  const matches = text.match(/@([A-Za-zÀ-ÿ0-9_]+(?:\s[A-Za-zÀ-ÿ0-9_]+)?)/g) || [];
+  return matches.map(m=> m.slice(1).trim());
+}
+
+/* --- Composeur : mise en forme et pièces jointes --- */
+function forumInsertFormat(before, after){
+  const ta = document.getElementById('forum-input');
+  if(!ta) return;
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.slice(start, end);
+  ta.value = ta.value.slice(0, start) + before + selected + after + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + before.length + selected.length;
+  updateForumPreview();
+}
+function forumInsertImage(){
+  const url = prompt("Colle l'URL de l'image à insérer (https://...)");
+  if(!url) return;
+  forumInsertFormat(url, '');
+}
+function forumInsertPdf(){
+  const url = prompt("Colle l'URL du fichier PDF à joindre (https://...)");
+  if(!url) return;
+  forumInsertFormat(`\n[PDF] ${url}\n`, '');
+}
+function toggleForumPreview(){
+  forumPreviewOpen = !forumPreviewOpen;
+  const box = document.getElementById('forum-preview-box');
+  const btn = document.getElementById('forum-preview-toggle');
+  if(box) box.style.display = forumPreviewOpen ? 'block' : 'none';
+  if(btn) btn.classList.toggle('active', forumPreviewOpen);
+  updateForumPreview();
+}
+function updateForumPreview(){
+  if(!forumPreviewOpen) return;
+  const ta = document.getElementById('forum-input');
+  const box = document.getElementById('forum-preview-box');
+  if(!ta || !box) return;
+  box.innerHTML = forumRenderText(ta.value) || '<span class="empty-hint">Rien à prévisualiser pour l\'instant.</span>';
+}
 
 function selectForumTab(subject){
   forumSubject = subject;
@@ -2400,6 +2962,11 @@ function populateForumThemeSelect(){
   const sel = document.getElementById('forum-theme-select');
   const themes = ['Question générale', ...COURSES.filter(c=>c.matiere===forumSubject).map(c=>c.titre)];
   sel.innerHTML = themes.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+}
+function setForumFilter(mode){
+  forumFilterMode = mode;
+  document.querySelectorAll('.forum-filter-chip[data-filter]').forEach(b=> b.classList.toggle('active', b.dataset.filter===mode));
+  renderForumFeed();
 }
 
 function initForum(){
@@ -2419,6 +2986,7 @@ function initForum(){
   document.querySelector('.forum-composer').style.display = 'block';
   populateForumThemeSelect();
   subscribeForumFeed();
+  loadForumGlobalData();
 }
 
 function subscribeForumFeed(){
@@ -2442,7 +3010,8 @@ function subscribeForumFeed(){
       if(subjectAtCallTime !== forumSubject) return; // l'utilisateur a changé d'onglet entre-temps
       const posts = [];
       snapshot.forEach(doc=> posts.push({id:doc.id, ...doc.data()}));
-      renderForumFeed(posts);
+      rawForumPosts = posts;
+      renderForumFeed();
     }, err=>{
       resolved = true;
       clearTimeout(timeoutId);
@@ -2451,44 +3020,89 @@ function subscribeForumFeed(){
     });
 }
 
-function renderForumFeed(posts){
+function renderForumFeed(){
   const body = document.getElementById('forum-feed');
+  if(!body) return;
+  let posts = rawForumPosts.slice();
+
+  const query = (document.getElementById('forum-search-input')?.value || '').trim().toLowerCase();
+  if(query){
+    posts = posts.filter(p=> (p.text||'').toLowerCase().includes(query) || (p.author||'').toLowerCase().includes(query) || (p.theme||'').toLowerCase().includes(query));
+  }
+  const classe = document.getElementById('forum-classe-filter')?.value || '';
+  if(classe) posts = posts.filter(p=> p.classe===classe);
+  if(forumFilterMode==='popular') posts = posts.slice().sort((a,b)=> (forumReactionsTotal(b)+(b.replies||[]).length) - (forumReactionsTotal(a)+(a.replies||[]).length));
+  if(forumFilterMode==='unanswered') posts = posts.filter(p=> !(p.replies||[]).length);
+
   if(posts.length===0){
     body.innerHTML = `<div class="empty-state"><div class="emoji">💬</div><strong>Aucune question pour l'instant</strong>Sois le premier à lancer une discussion !</div>`;
     return;
   }
-  const favs = loadFavs(); // not used here but keep pattern consistent
-  const likedPosts = JSON.parse(localStorage.getItem('solci_liked_posts')||'[]');
+  const likedPosts = JSON.parse(localStorage.getItem('solci_liked_posts')||'{}');
+  const myName = forumAuthorName();
   body.innerHTML = posts.map(p=>{
     const created = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate() : new Date();
-    const isLiked = likedPosts.includes(p.id);
+    const myReactions = likedPosts[p.id] || [];
     const replies = p.replies || [];
+    const reactions = forumReactionsOf(p);
+    const isOwner = p.author === myName;
+    const acceptedIdx = typeof p.acceptedReplyIndex === 'number' ? p.acceptedReplyIndex : -1;
+    const isTrending = (forumReactionsTotal(p) + replies.length) >= 6;
+    const orderedReplies = replies.map((r,i)=>({ r, i })).sort((a,b)=> (b.i===acceptedIdx?1:0) - (a.i===acceptedIdx?1:0));
     return `<div class="forum-post-card">
       <div class="forum-post-head">
-        <div class="forum-avatar">${escapeHtml(forumInitials(p.author))}</div>
+        <div class="forum-avatar-lg">${p.authorAvatar || forumInitials(p.author)}</div>
         <div class="forum-post-meta">
-          <div class="author">${escapeHtml(p.author)}</div>
-          <div class="time">${timeAgo(created)}</div>
+          <div class="author-row">
+            <span class="author">${escapeHtml(p.author)}</span>
+            ${p.authorLevel ? `<span class="forum-level-chip">Niv. ${p.authorLevel}</span>` : ''}
+            ${typeof p.authorXP === 'number' ? `<span class="forum-level-chip">${p.authorXP} XP</span>` : ''}
+            ${p.authorBadgeIcon ? `<span class="forum-badge-chip" title="Badge">${p.authorBadgeIcon}</span>` : ''}
+          </div>
+          <div class="time">${timeAgo(created)}${p.classe ? ' · <span class="forum-classe-chip">'+escapeHtml(p.classe)+'</span>' : ''}</div>
         </div>
-        <span class="forum-post-tag">${escapeHtml(p.theme||'Question générale')}</span>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+          ${isTrending ? '<span class="forum-classe-chip" style="color:#ef4444;font-weight:800;">🔥 Tendance</span>' : ''}
+          <span class="forum-post-tag">${escapeHtml(p.theme||'Question générale')}</span>
+        </div>
       </div>
-      <div class="forum-post-text">${escapeHtml(p.text)}</div>
+      <div class="forum-post-text">${forumRenderText(p.text)}</div>
+      ${p.pdfUrl ? `<a class="forum-pdf-chip" href="${escapeHtml(p.pdfUrl)}" target="_blank" rel="noopener">📎 Pièce jointe PDF</a>` : ''}
       <div class="forum-post-actions">
-        <button class="forum-action-btn ${isLiked?'liked':''}" onclick="this.classList.add('like-pop'); setTimeout(()=>this.classList.remove('like-pop'),400); toggleForumLike('${p.id}', ${p.likes||0})">👍 ${p.likes||0}</button>
+        <div class="forum-reactions-row">
+          ${REACTION_TYPES.map(rt=>`<button class="forum-reaction-btn ${myReactions.includes(rt.id)?'active':''}" aria-label="${rt.label}" onclick="this.classList.add('reaction-pop'); setTimeout(()=>this.classList.remove('reaction-pop'),400); toggleForumReaction('${p.id}','${rt.id}')">${rt.icon} ${reactions[rt.id]||0}</button>`).join('')}
+        </div>
         <button class="forum-action-btn" onclick="toggleReplyForm('${p.id}')">💬 ${replies.length} réponse${replies.length>1?'s':''}</button>
         ${isAdminAuthed() ? `<button class="forum-action-btn" style="margin-left:auto;color:#ef4444;" onclick="moderateDeletePost('${p.id}')">🗑️ Supprimer</button>` : ''}
       </div>
-      ${replies.length ? `<div class="forum-replies">${replies.map(r=>`
-        <div class="forum-reply">
-          <div class="forum-avatar">${escapeHtml(forumInitials(r.author))}</div>
-          <div class="forum-reply-bubble"><div class="author">${escapeHtml(r.author)}</div><div class="text">${escapeHtml(r.text)}</div></div>
-        </div>`).join('')}</div>` : ''}
+      ${replies.length ? `<div class="forum-replies">${orderedReplies.map(({r,i})=>{
+        const isNested = /^@/.test((r.text||'').trim());
+        const isAccepted = acceptedIdx===i;
+        return `<div class="forum-reply ${isNested?'is-nested':''} ${isAccepted?'is-accepted':''}">
+          <div class="forum-avatar-lg" style="width:30px;height:30px;font-size:14px;">${r.authorAvatar || forumInitials(r.author)}</div>
+          <div class="forum-reply-bubble">
+            ${isAccepted ? `<div class="forum-reply-nested-tag" style="color:var(--green-dark);">⭐ Meilleure réponse</div>` : (isNested ? `<div class="forum-reply-nested-tag">↳ réponse</div>` : '')}
+            <div class="author">${escapeHtml(r.author)} ${r.authorLevel ? `<span class="forum-level-chip">Niv. ${r.authorLevel}</span>` : ''}</div>
+            <div class="text">${forumRenderText(r.text)}</div>
+            <div style="display:flex; gap:10px; align-items:center; margin-top:4px;">
+              <button class="forum-reply-mention-btn" onclick="mentionReply('${p.id}','${escapeHtml(r.author).replace(/'/g,"\\'")}')">Répondre</button>
+              ${isOwner ? `<button class="forum-accept-btn ${isAccepted?'accepted':''}" onclick="forumAcceptReply('${p.id}', ${i})">${isAccepted ? '✔️ Réponse acceptée' : 'Marquer comme réponse acceptée'}</button>` : ''}
+            </div>
+          </div>
+        </div>`;
+      }).join('')}</div>` : ''}
       <div class="forum-reply-form" id="reply-form-${p.id}" style="display:none;">
-        <input type="text" id="reply-input-${p.id}" placeholder="Répondre..." maxlength="300" onkeydown="if(event.key==='Enter') submitForumReply('${p.id}')">
+        <input type="text" id="reply-input-${p.id}" placeholder="Répondre..." maxlength="400" onkeydown="if(event.key==='Enter') submitForumReply('${p.id}')">
         <button onclick="submitForumReply('${p.id}')">➤</button>
       </div>
     </div>`;
   }).join('');
+}
+
+function mentionReply(postId, authorName){
+  toggleReplyForm(postId);
+  const input = document.getElementById('reply-input-'+postId);
+  if(input){ input.value = '@'+authorName+' '; input.focus(); }
 }
 
 function toggleReplyForm(postId){
@@ -2506,18 +3120,31 @@ async function moderateDeletePost(postId){
     showToast("⚠️ Suppression refusée (vérifie les règles Firestore)");
   }
 }
-function toggleForumLike(postId, currentLikes){
+function toggleForumReaction(postId, type){
   if(!forumDb) return;
-  let likedPosts = JSON.parse(localStorage.getItem('solci_liked_posts')||'[]');
+  const post = rawForumPosts.find(p=>p.id===postId);
+  if(!post) return;
+  const reactions = forumReactionsOf(post);
+  const stored = JSON.parse(localStorage.getItem('solci_liked_posts')||'{}');
+  const mine = stored[postId] || [];
   const ref = forumDb.collection('forumPosts').doc(postId);
-  if(likedPosts.includes(postId)){
-    likedPosts = likedPosts.filter(id=>id!==postId);
-    ref.update({ likes: Math.max(0,(currentLikes||1)-1) });
-  } else {
-    likedPosts.push(postId);
-    ref.update({ likes: (currentLikes||0)+1 });
-  }
-  localStorage.setItem('solci_liked_posts', JSON.stringify(likedPosts));
+  const active = mine.includes(type);
+  const newCount = Math.max(0, (reactions[type]||0) + (active ? -1 : 1));
+  const update = {}; update['reactions.'+type] = newCount;
+  if(type==='like') update.likes = newCount; // compat anciens messages
+  ref.set({ reactions }, { merge: true }).then(()=> ref.update(update)).catch(()=> ref.update(update));
+  stored[postId] = active ? mine.filter(t=>t!==type) : mine.concat(type);
+  localStorage.setItem('solci_liked_posts', JSON.stringify(stored));
+}
+async function forumAcceptReply(postId, replyIndex){
+  if(!forumDb) return;
+  const post = rawForumPosts.find(p=>p.id===postId);
+  if(!post || post.author !== forumAuthorName()) return;
+  const alreadyAccepted = post.acceptedReplyIndex === replyIndex;
+  try {
+    await forumDb.collection('forumPosts').doc(postId).update({ acceptedReplyIndex: alreadyAccepted ? -1 : replyIndex });
+    showToast(alreadyAccepted ? 'Réponse acceptée retirée' : '✔️ Réponse marquée comme acceptée');
+  } catch(e){ showToast('⚠️ Action refusée'); }
 }
 /* ============ ANTI-SPAM : délai minimum entre deux publications ============ */
 const FORUM_COOLDOWN_MS = 20000; // 20 secondes entre deux messages/réponses
@@ -2541,6 +3168,17 @@ function startCooldownUI(btn, originalLabel){
   setTimeout(tick, 1000);
 }
 
+function forumAuthorStamp(){
+  const info = GAM ? levelFromTotalXP(GAM.xp||0) : { level: 1 };
+  const bestBadge = GAM && GAM.badges ? Object.keys(GAM.badges).map(id=> BADGE_DEFS.find(b=>b.id===id)).filter(Boolean).sort((a,b)=> BADGE_DEFS.indexOf(b)-BADGE_DEFS.indexOf(a))[0] : null;
+  return {
+    authorLevel: info.level,
+    authorXP: GAM ? (GAM.xp||0) : 0,
+    authorAvatar: GAM ? (GAM.activeAvatar || '🎓') : '🎓',
+    authorBadgeIcon: bestBadge ? bestBadge.icon : ''
+  };
+}
+
 async function submitForumReply(postId){
   const input = document.getElementById('reply-input-'+postId);
   const text = input.value.trim();
@@ -2549,11 +3187,12 @@ async function submitForumReply(postId){
   if(remaining > 0){ showToast(`⏳ Attends encore ${Math.ceil(remaining/1000)}s avant de publier à nouveau`); return; }
   input.value = '';
   try {
+    const stamp = forumAuthorStamp();
     await forumDb.collection('forumPosts').doc(postId).update({
-      replies: firebase.firestore.FieldValue.arrayUnion({ author: forumAuthorName(), text, createdAt: new Date().toISOString() })
+      replies: firebase.firestore.FieldValue.arrayUnion({ author: forumAuthorName(), text, createdAt: new Date().toISOString(), authorLevel: stamp.authorLevel, authorAvatar: stamp.authorAvatar })
     });
     markForumPosted();
-    onForumGamification();
+    onForumGamification(forumSubject);
   } catch(e){ showToast("⚠️ Impossible d'envoyer la réponse"); }
 }
 async function postForumMessage(){
@@ -2569,28 +3208,153 @@ async function postForumMessage(){
     return;
   }
   const theme = document.getElementById('forum-theme-select').value;
+  const classe = document.getElementById('forum-classe-select')?.value || '';
+  const pdfMatch = text.match(/\[PDF\]\s*(\S+)/);
   btn.disabled = true;
   try {
+    const stamp = forumAuthorStamp();
     await forumDb.collection('forumPosts').add({
       matiere: forumSubject,
       theme,
+      classe,
       author: forumAuthorName(),
+      authorLevel: stamp.authorLevel,
+      authorXP: stamp.authorXP,
+      authorAvatar: stamp.authorAvatar,
+      authorBadgeIcon: stamp.authorBadgeIcon,
       text,
+      pdfUrl: pdfMatch ? pdfMatch[1] : '',
       likes: 0,
+      reactions: { like: 0, coeur: 0, bravo: 0, idee: 0, applaudir: 0 },
       replies: [],
+      acceptedReplyIndex: -1,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     input.value = '';
+    forumPreviewOpen = false;
+    const pbox = document.getElementById('forum-preview-box'); if(pbox) pbox.style.display = 'none';
     markForumPosted();
     showToast('✅ Question publiée');
     startCooldownUI(btn, 'Publier');
-    onForumGamification();
+    onForumGamification(forumSubject);
   } catch(e){
     showToast('⚠️ Erreur lors de la publication');
     console.error(e);
     btn.disabled = false;
   }
 }
+
+/* --- Notifications, contributeurs, populaires (dérivés côté client) --- */
+async function loadForumGlobalData(){
+  if(!forumDb) return;
+  try {
+    const snap = await forumDb.collection('forumPosts').orderBy('createdAt','desc').limit(150).get();
+    forumGlobalPosts = snap.docs.map(d=>({ id: d.id, ...d.data() }));
+    renderForumNotifications();
+    renderPopularWeek();
+    checkForumSpecificBadges();
+  } catch(e){ console.error('Chargement des données globales du forum impossible', e); }
+  renderTopContributors();
+}
+function renderTopContributors(){
+  const el = document.getElementById('forum-top-contributors');
+  if(!el) return;
+  if(!isFirebaseConfigured() || !forumDb){ el.innerHTML = '<p class="empty-hint">Indisponible hors connexion.</p>'; return; }
+  forumDb.collection('users').orderBy('gamification.forumActionsCount','desc').limit(5).get().then(snap=>{
+    const rows = snap.docs.map(d=>{
+      const data = d.data();
+      const xp = (data.gamification && data.gamification.xp) || 0;
+      return { name: data.name||'Élève', avatar: (data.gamification && data.gamification.activeAvatar)||'🎓', level: levelFromTotalXP(xp).level, actions: (data.gamification && data.gamification.forumActionsCount)||0 };
+    }).filter(r=>r.actions>0);
+    el.innerHTML = rows.length ? rows.map(r=>`
+      <div class="forum-contrib-row">
+        <span class="forum-contrib-avatar">${r.avatar}</span>
+        <span class="forum-contrib-name">${escapeHtml(r.name)}</span>
+        <span class="forum-level-chip">Niv. ${r.level}</span>
+        <span class="forum-contrib-xp">${r.actions} participations</span>
+      </div>`).join('') : '<p class="empty-hint">Personne n\'a encore participé.</p>';
+  }).catch(()=>{ el.innerHTML = '<p class="empty-hint">Classement indisponible pour le moment.</p>'; });
+}
+function renderPopularWeek(){
+  const el = document.getElementById('forum-popular-week');
+  if(!el) return;
+  const weekAgo = Date.now() - 7*86400000;
+  const rows = forumGlobalPosts.filter(p=>{
+    const created = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate().getTime() : 0;
+    return created >= weekAgo;
+  }).sort((a,b)=> (forumReactionsTotal(b)+(b.replies||[]).length) - (forumReactionsTotal(a)+(a.replies||[]).length)).slice(0,5);
+  el.innerHTML = rows.length ? rows.map((p,i)=>`
+    <div class="forum-popular-row">
+      <span class="rank">#${i+1}</span>
+      <span class="forum-popular-title">${escapeHtml(p.text.slice(0,40))}${p.text.length>40?'…':''}</span>
+      <span class="forum-contrib-xp">${forumReactionsTotal(p)+((p.replies||[]).length)} 🔥</span>
+    </div>`).join('') : '<p class="empty-hint">Rien de populaire cette semaine pour l\'instant.</p>';
+}
+function toggleNotifDropdown(){
+  const el = document.getElementById('forum-notif-dropdown');
+  if(!el) return;
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  if(opening) markNotifsSeen();
+}
+function computeForumNotifications(){
+  const myName = forumAuthorName();
+  const notifs = [];
+  forumGlobalPosts.forEach(p=>{
+    const isMine = p.author === myName;
+    (p.replies||[]).forEach(r=>{
+      if(r.author === myName) return;
+      const created = new Date(r.createdAt).getTime() || 0;
+      if(isMine){
+        notifs.push({ type: 'reply', text: `${r.author} a répondu à ta publication`, time: created });
+      }
+      if(forumExtractMentions(r.text||'').some(m=> myName.toLowerCase().includes(m.toLowerCase()) || m.toLowerCase().includes(myName.split(' ')[0].toLowerCase()))){
+        notifs.push({ type: 'mention', text: `${r.author} t'a mentionné dans une réponse`, time: created });
+      }
+    });
+    if(isMine && forumReactionsTotal(p) > 0){
+      const created = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate().getTime() : 0;
+      notifs.push({ type: 'reaction', text: `Ta publication a reçu ${forumReactionsTotal(p)} réaction(s)`, time: created });
+    }
+  });
+  return notifs.sort((a,b)=> b.time - a.time).slice(0,20);
+}
+function renderForumNotifications(){
+  const notifs = computeForumNotifications();
+  const lastSeen = Number(localStorage.getItem('solci_forum_notif_seen')||0);
+  const unread = notifs.filter(n=> n.time > lastSeen).length;
+  const dot = document.getElementById('forum-notif-dot');
+  if(dot){ dot.style.display = unread>0 ? 'flex' : 'none'; dot.textContent = unread>9?'9+':unread; }
+  const dropdown = document.getElementById('forum-notif-dropdown');
+  if(dropdown){
+    dropdown.innerHTML = notifs.length
+      ? notifs.map(n=>`<div class="forum-notif-item ${n.time>lastSeen?'unread':''}">${escapeHtml(n.text)}</div>`).join('')
+      : '<div class="forum-notif-empty">Aucune notification pour le moment.</div>';
+  }
+}
+function markNotifsSeen(){
+  localStorage.setItem('solci_forum_notif_seen', String(Date.now()));
+  document.querySelectorAll('.forum-notif-item').forEach(el=> el.classList.remove('unread'));
+  const dot = document.getElementById('forum-notif-dot');
+  if(dot) dot.style.display = 'none';
+}
+function checkForumSpecificBadges(){
+  if(!GAM) return;
+  const myName = forumAuthorName();
+  let reactionsReceived = 0, acceptedFound = false;
+  forumGlobalPosts.forEach(p=>{
+    if(p.author===myName) reactionsReceived += forumReactionsTotal(p);
+    if(typeof p.acceptedReplyIndex==='number' && p.acceptedReplyIndex>=0){
+      const r = (p.replies||[])[p.acceptedReplyIndex];
+      if(r && r.author===myName) acceptedFound = true;
+    }
+  });
+  GAM.reactionsReceived = reactionsReceived;
+  GAM.hasAcceptedReply = acceptedFound;
+  persistGam();
+  checkBadges();
+}
+
 
 /* ============ QUIZ AUTO-CORRIGÉ (généré par IA, mis en cache) ============ */
 let quizCache = {}; // en mémoire pour la session en cours
@@ -2842,25 +3606,44 @@ function exitLegalPage(){
 }
 
 /* ============ GAMIFICATION (XP, niveaux, badges, séries, défis, classement) ============ */
-const GAM_LOCAL_KEY = 'solci_gam_v1';
+/* --- Audit isolation des XP (invités) ---
+   Un compte réel (connecté) a son XP dans son document Firestore
+   (users/{uid}.gamification), jamais partagé avec quiconque.
+   Un invité (non connecté) n'a JAMAIS d'écriture Firestore pour son XP
+   (voir persistGam() et saveUserProfileField, qui vérifie isRealAccount()).
+   Son XP vit UNIQUEMENT dans sessionStorage de cet onglet précis :
+   - sessionStorage n'est jamais partagé entre deux visiteurs, deux onglets
+     indépendants, ou deux ordinateurs.
+   - il est automatiquement vidé par le navigateur à la fermeture de l'onglet
+     ou du navigateur : un nouveau visiteur sur le même appareil démarre donc
+     toujours à 0, jamais avec l'XP du visiteur précédent.
+   - un simple rechargement de page garde le même onglet/session : la
+     progression n'est pas perdue, mais elle n'est jamais dupliquée non plus,
+     grâce aux garde-fous déjà en place (handleDailyLogin, openedCourses,
+     watchedVideos, challenges[].done). */
+const GAM_GUEST_SESSION_KEY = 'solci_gam_guest_session_v1';
 let GAM = null;
 
 function defaultGam(){
   return {
     xp: 0, streak: 0, lastActiveDate: null, activeDates: [],
     badges: {}, challenges: {}, school: '', city: '', friends: [],
-    forumActionsCount: 0, openedCourses: [], watchedVideos: [],
+    forumActionsCount: 0, forumActionsBySubject: { maths: 0, physique: 0 },
+    reactionsReceived: 0, hasAcceptedReply: false,
+    openedCourses: [], watchedVideos: [],
     totalStudySeconds: 0, weekStudy: {},
     unlockedRewards: [], activeAvatar: '🎓', activeTitle: '', soundEnabled: true
   };
 }
 function loadGam(){
   if(isRealAccount() && userProfile){
+    // Compte connecté : XP individuel, chargé depuis son propre profil Firestore.
     GAM = Object.assign(defaultGam(), userProfile.gamification || {});
     if(userProfile.school) GAM.school = userProfile.school;
     if(userProfile.city) GAM.city = userProfile.city;
   } else {
-    try{ GAM = Object.assign(defaultGam(), JSON.parse(localStorage.getItem(GAM_LOCAL_KEY)) || {}); }
+    // Invité : XP strictement local à CET onglet, jamais persistant au-delà.
+    try{ GAM = Object.assign(defaultGam(), JSON.parse(sessionStorage.getItem(GAM_GUEST_SESSION_KEY)) || {}); }
     catch(e){ GAM = defaultGam(); }
   }
   return GAM;
@@ -2870,7 +3653,9 @@ function persistGam(){
   if(isRealAccount()){
     saveUserProfileField('gamification', GAM);
   } else {
-    localStorage.setItem(GAM_LOCAL_KEY, JSON.stringify(GAM));
+    // Jamais de localStorage ni de Firestore pour un invité : sessionStorage
+    // uniquement, isolé à cet onglet et remis à zéro à la fermeture.
+    sessionStorage.setItem(GAM_GUEST_SESSION_KEY, JSON.stringify(GAM));
   }
 }
 function getQuizResultsMap(){
@@ -2930,6 +3715,9 @@ function activeFrameClass(){
 }
 
 function addXP(amount, reason){
+  // Un invité peut gagner de l'XP (motivant avant de créer un compte), mais
+  // celui-ci est écrit uniquement dans sessionStorage isolé (voir persistGam) —
+  // jamais dans une variable globale ni un stockage partagé entre visiteurs.
   if(!GAM) loadGam();
   const before = levelFromTotalXP(GAM.xp || 0).level;
   GAM.xp = (GAM.xp || 0) + amount;
@@ -3002,7 +3790,12 @@ const BADGE_DEFS = [
   { id: 'expert_maths', icon: '🧮', name: 'Expert en Mathématiques', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de maths.' },
   { id: 'roi_forum', icon: '👑', name: 'Roi du Forum', desc: 'Participer 20 fois au forum.' },
   { id: 'champion_sciences', icon: '⚗️', name: 'Champion des Sciences', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de physique-chimie.' },
-  { id: 'bac_ready', icon: '🎓', name: 'Bac Ready', desc: 'Atteindre le niveau 10.' }
+  { id: 'bac_ready', icon: '🎓', name: 'Bac Ready', desc: 'Atteindre le niveau 10.' },
+  { id: 'forum_expert_maths', icon: '➗', name: 'Expert Maths (forum)', desc: 'Participer 10 fois au forum de Mathématiques.' },
+  { id: 'mentor', icon: '🧑‍🏫', name: 'Mentor', desc: 'Répondre à 15 questions sur le forum.' },
+  { id: 'aide_precieuse', icon: '💎', name: 'Aide Précieuse', desc: 'Recevoir 15 réactions sur tes publications.' },
+  { id: 'meilleur_contributeur', icon: '🏅', name: 'Meilleur Contributeur', desc: 'Participer 30 fois au forum.' },
+  { id: 'reponse_acceptee', icon: '✔️', name: 'Réponse Acceptée', desc: "Voir une de tes réponses marquée comme acceptée." }
 ];
 function checkBadges(){
   if(!GAM) return;
@@ -3024,6 +3817,11 @@ function checkBadges(){
   if((GAM.forumActionsCount||0)>=20) toAward.push('roi_forum');
   if(physCount>=5 && (physSum/physCount)>=85) toAward.push('champion_sciences');
   if(lvl>=10) toAward.push('bac_ready');
+  if(((GAM.forumActionsBySubject||{}).maths||0)>=10) toAward.push('forum_expert_maths');
+  if((GAM.forumActionsCount||0)>=15) toAward.push('mentor');
+  if((GAM.reactionsReceived||0)>=15) toAward.push('aide_precieuse');
+  if((GAM.forumActionsCount||0)>=30) toAward.push('meilleur_contributeur');
+  if(GAM.hasAcceptedReply) toAward.push('reponse_acceptee');
   let changed = false;
   toAward.forEach(id=>{
     if(!GAM.badges[id]){ GAM.badges[id] = { date: new Date().toISOString() }; changed = true; announceBadge(id); }
@@ -3051,11 +3849,13 @@ function renderBadgesGrid(){
 
 /* --- Défis quotidiens --- */
 const CHALLENGE_POOL = [
-  { id: 'lire_chapitre', label: 'Lire un chapitre', icon: '📖', target: 1 },
+  { id: 'lire_chapitre', label: 'Terminer un cours', icon: '📖', target: 1 },
   { id: 'deux_quiz', label: 'Réussir deux quiz', icon: '✅', target: 2 },
-  { id: 'obtenir80', label: 'Obtenir 80% à un quiz', icon: '🎯', target: 1 },
+  { id: 'obtenir80', label: 'Obtenir au moins 80% à un quiz', icon: '🎯', target: 1 },
   { id: 'repondre_forum', label: 'Répondre à une question sur le forum', icon: '💬', target: 1 },
-  { id: 'regarder_video', label: 'Regarder une vidéo jusqu\'à la fin', icon: '🎥', target: 1 }
+  { id: 'regarder_video', label: 'Regarder une vidéo jusqu\'à la fin', icon: '🎥', target: 1 },
+  { id: 'etudier_temps', label: 'Étudier pendant 15 minutes', icon: '⏱️', target: 15 },
+  { id: 'terminer_exercices', label: 'Terminer deux exercices', icon: '📝', target: 2 }
 ];
 function seededShuffle(dateStr, arr){
   let seed = 0;
@@ -3116,7 +3916,7 @@ function renderDailyChallenges(){
         <span class="challenge-label">${def ? escapeHtml(def.label) : id}</span>
         <div class="challenge-bar"><div class="challenge-fill" style="width:${pct}%"></div></div>
       </div>
-      <span class="challenge-status">${c.done ? '✔️' : c.progress + '/' + c.target}</span>
+      <span class="challenge-status">${c.done ? '✔️' : Math.round(c.progress) + '/' + c.target}</span>
     </div>`;
   }).join('');
   ['daily-challenges-list', 'daily-challenges-list-page'].forEach(id=>{
@@ -3146,9 +3946,13 @@ function onQuizGamification(courseId, pct){
   if(pct>=80) bumpChallenge('obtenir80');
   if(pct===100) fireConfetti(150);
 }
-function onForumGamification(){
+function onForumGamification(subject){
   if(!GAM) loadGam();
   GAM.forumActionsCount = (GAM.forumActionsCount||0) + 1;
+  GAM.forumActionsBySubject = GAM.forumActionsBySubject || { maths: 0, physique: 0 };
+  if(subject==='maths' || subject==='physique'){
+    GAM.forumActionsBySubject[subject] = (GAM.forumActionsBySubject[subject]||0) + 1;
+  }
   persistGam();
   addXP(10, 'Participation au forum');
   bumpChallenge('repondre_forum');
@@ -3227,7 +4031,7 @@ function fireConfetti(count){
 
 /* --- Ripple sur les boutons --- */
 function initRippleEffect(){
-  const selector = '.btn-action, .subject-tab, .sub-tab, .dock-item, .quiz-option, .forum-post-btn, .settings-row, .btn-download-trigger, .btn-dismiss, .quiz-next-btn, .subject-box, .gam-tab, .reward-pick-btn, .btn-mini';
+  const selector = '.btn-action, .subject-tab, .sub-tab, .dock-item, .quiz-option, .forum-post-btn, .settings-row, .btn-download-trigger, .btn-dismiss, .quiz-next-btn, .subject-box, .gam-tab, .reward-pick-btn, .btn-mini, .cc-cta, .cc-icon-btn, .filter-chip';
   document.addEventListener('pointerdown', function(e){
     const el = e.target.closest(selector);
     if(!el) return;
@@ -3263,6 +4067,7 @@ function flushStudyTime(){
   GAM.weekStudy = GAM.weekStudy || {};
   GAM.weekStudy[wk] = (GAM.weekStudy[wk]||0) + elapsed;
   persistGam();
+  bumpChallenge('etudier_temps', elapsed/60);
   renderStudyStats();
 }
 function renderStudyStats(){
@@ -3289,28 +4094,126 @@ function renderActivityCalendar(){
 
 /* --- Citation motivante du jour --- */
 const MOTIVATIONAL_QUOTES = [
-  "Chaque exercice résolu te rapproche un peu plus de la réussite au Bac.",
-  "La régularité bat le talent quand le talent ne travaille pas régulièrement.",
-  "Un petit effort chaque jour vaut mieux qu'un grand effort une fois par mois.",
-  "Tu ne rates jamais vraiment : tu apprends, ou tu réussis.",
-  "Les maths et la physique se dominent une formule à la fois.",
-  "Ton futur toi te remerciera pour les révisions d'aujourd'hui.",
-  "La confiance vient de la préparation, pas de la chance.",
-  "Un chapitre relu vaut mieux qu'un chapitre deviné le jour de l'examen.",
-  "Continue : chaque XP gagné est une preuve de ton sérieux.",
-  "Le Bac se prépare un exercice à la fois, pas en une nuit.",
-  "Tu progresses même les jours où tu n'en as pas l'impression.",
-  "La discipline d'aujourd'hui construit les résultats de demain.",
-  "Comprendre vaut mieux que mémoriser : prends le temps qu'il faut.",
-  "Chaque quiz est une occasion de mesurer, pas de juger, tes progrès.",
-  "Reste curieux : la meilleure question est souvent celle qu'on ose poser."
+  { t: "Chaque exercice résolu te rapproche un peu plus de la réussite au Bac.", a: "" },
+  { t: "La régularité bat le talent quand le talent ne travaille pas régulièrement.", a: "" },
+  { t: "Un petit effort chaque jour vaut mieux qu'un grand effort une fois par mois.", a: "" },
+  { t: "Tu ne rates jamais vraiment : tu apprends, ou tu réussis.", a: "" },
+  { t: "Les maths et la physique se dominent une formule à la fois.", a: "" },
+  { t: "Ton futur toi te remerciera pour les révisions d'aujourd'hui.", a: "" },
+  { t: "La confiance vient de la préparation, pas de la chance.", a: "" },
+  { t: "Un chapitre relu vaut mieux qu'un chapitre deviné le jour de l'examen.", a: "" },
+  { t: "Continue : chaque XP gagné est une preuve de ton sérieux.", a: "" },
+  { t: "Le Bac se prépare un exercice à la fois, pas en une nuit.", a: "" },
+  { t: "Tu progresses même les jours où tu n'en as pas l'impression.", a: "" },
+  { t: "La discipline d'aujourd'hui construit les résultats de demain.", a: "" },
+  { t: "Comprendre vaut mieux que mémoriser : prends le temps qu'il faut.", a: "" },
+  { t: "Chaque quiz est une occasion de mesurer, pas de juger, tes progrès.", a: "" },
+  { t: "Reste curieux : la meilleure question est souvent celle qu'on ose poser.", a: "" },
+  { t: "L'éducation est l'arme la plus puissante pour changer le monde.", a: "Nelson Mandela" },
+  { t: "L'éducation est le passeport pour l'avenir, car demain appartient à ceux qui s'y préparent aujourd'hui.", a: "Malcolm X" },
+  { t: "Apprendre sans réfléchir est vain ; réfléchir sans apprendre est dangereux.", a: "Confucius" },
+  { t: "Le succès, c'est se déplacer d'échec en échec sans perdre son enthousiasme.", a: "Winston Churchill" },
+  { t: "Je n'ai pas échoué. J'ai simplement trouvé 10 000 façons qui ne fonctionnent pas.", a: "Thomas Edison" },
+  { t: "La racine de l'éducation est amère, mais son fruit est doux.", a: "Aristote" },
+  { t: "Ce que l'on conçoit bien s'énonce clairement.", a: "Nicolas Boileau" },
+  { t: "Le seul endroit où le succès précède le travail, c'est dans le dictionnaire.", a: "Vidal Sassoon" },
+  { t: "Il est impossible de vivre sans échouer à quelque chose, à moins de vivre si prudemment que c'est comme ne pas vivre du tout.", a: "J.K. Rowling" },
+  { t: "La persévérance est la clé de tout accomplissement durable.", a: "" },
+  { t: "Vise la lune. Même en cas d'échec, tu atterriras parmi les étoiles.", a: "Oscar Wilde" },
+  { t: "Le génie commence par des grandes choses et achève par des petites.", a: "Victor Hugo" },
+  { t: "On ne construit rien sur la pierre, tout sur le sable, mais notre devoir est de bâtir comme si le sable était pierre.", a: "Jorge Luis Borges" },
+  { t: "Le savoir est la seule richesse qu'on ne peut pas te voler.", a: "" },
+  { t: "L'homme qui déplace une montagne commence par déplacer de petites pierres.", a: "Confucius" },
+  { t: "La chance sourit à l'esprit préparé.", a: "Louis Pasteur" },
+  { t: "Il n'y a pas d'ascenseur vers la réussite, il faut prendre l'escalier.", a: "" },
+  { t: "Le doute est le commencement de la sagesse.", a: "Aristote" },
+  { t: "L'échec est une opportunité de recommencer plus intelligemment.", a: "Henry Ford" },
+  { t: "Que tes aliments soient ta seule médecine, et que la connaissance soit ta seule richesse.", a: "" },
+  { t: "Ce n'est pas parce que les choses sont difficiles que nous n'osons pas, c'est parce que nous n'osons pas qu'elles sont difficiles.", a: "Sénèque" },
+  { t: "L'avenir appartient à ceux qui croient à la beauté de leurs rêves.", a: "Eleanor Roosevelt" },
+  { t: "Un seul livre peut changer le monde, car il peut changer la vision d'un enfant.", a: "Malala Yousafzai" },
+  { t: "Le succès n'est pas final, l'échec n'est pas fatal : c'est le courage de continuer qui compte.", a: "Winston Churchill" },
+  { t: "L'instruction est un ornement dans la prospérité et un refuge dans l'adversité.", a: "Aristote" },
+  { t: "Il faut savoir ce que l'on veut, avoir le courage de le proclamer, et l'énergie de l'accomplir.", a: "Léon Gambetta" },
+  { t: "Rien n'est plus dangereux qu'une idée quand on n'a que celle-là ; sauf peut-être n'en avoir aucune.", a: "Alain" },
+  { t: "L'école, c'est apprendre à apprendre.", a: "" },
+  { t: "Une personne qui n'a jamais commis d'erreur n'a jamais tenté d'innover.", a: "Albert Einstein" },
+  { t: "La logique te mènera d'un point A à un point B. L'imagination t'emmènera partout.", a: "Albert Einstein" },
+  { t: "Il ne suffit pas de savoir, il faut aussi appliquer ; il ne suffit pas de vouloir, il faut aussi agir.", a: "Johann Wolfgang von Goethe" },
+  { t: "L'important n'est pas de savoir, mais de comprendre.", a: "Albert Einstein" },
+  { t: "Nous sommes ce que nous répétons chaque jour. L'excellence n'est donc pas un acte mais une habitude.", a: "Aristote" },
+  { t: "Le plus grand danger pour la plupart d'entre nous n'est pas de viser trop haut et de ne pas l'atteindre, mais de viser trop bas et de l'atteindre.", a: "Michel-Ange" },
+  { t: "Fixe-toi des buts, franchis des obstacles.", a: "" },
+  { t: "Le travail éloigne de nous trois grands maux : l'ennui, le vice et le besoin.", a: "Voltaire" },
+  { t: "On ne va nulle part si l'on ne croit pas que l'on peut y arriver.", a: "" },
+  { t: "Éduquer un enfant, c'est éclairer une génération.", a: "Proverbe africain" },
+  { t: "Un seul bracelet ne fait pas de bruit.", a: "Proverbe africain" },
+  { t: "Si tu veux aller vite, marche seul. Si tu veux aller loin, marche avec les autres.", a: "Proverbe africain" },
+  { t: "L'union fait la force.", a: "Proverbe africain" },
+  { t: "Ce n'est pas parce que tu n'as pas encore réussi que tu as échoué.", a: "" },
+  { t: "La patience est un arbre dont la racine est amère et les fruits très doux.", a: "Proverbe persan" },
+  { t: "L'ignorance coûte toujours plus cher que l'instruction.", a: "" },
+  { t: "Ce que tu apprends aujourd'hui te libère demain.", a: "" },
+  { t: "Les grandes réussites sont souvent la somme de petits efforts répétés jour après jour.", a: "Robert Collier" },
+  { t: "Toute réussite commence par la décision d'essayer.", a: "" },
+  { t: "Le courage, ce n'est pas l'absence de peur, mais la capacité de la vaincre.", a: "Nelson Mandela" },
+  { t: "Tout paraît impossible jusqu'à ce que ce soit fait.", a: "Nelson Mandela" },
+  { t: "Un enfant, un enseignant, un livre et un stylo peuvent changer le monde.", a: "Malala Yousafzai" },
+  { t: "L'excellence n'est pas une compétence, c'est une attitude.", a: "" },
+  { t: "Ceux qui ne trouvent pas le temps pour l'exercice devront tôt ou tard trouver le temps pour la maladie.", a: "Edward Stanley" },
+  { t: "Le savoir que l'on n'utilise pas est comme un trésor enterré.", a: "" },
+  { t: "L'expérience, c'est le nom que chacun donne à ses erreurs.", a: "Oscar Wilde" },
+  { t: "Chaque grand progrès commence par une question simple.", a: "" },
+  { t: "Ne compte pas les jours, fais que les jours comptent.", a: "" },
+  { t: "Le meilleur moment pour planter un arbre était il y a vingt ans. Le second meilleur moment, c'est maintenant.", a: "Proverbe chinois" },
+  { t: "Un bon élève n'est pas celui qui ne se trompe jamais, mais celui qui apprend de ses erreurs.", a: "" },
+  { t: "La connaissance parle, mais la sagesse écoute.", a: "Jimi Hendrix" },
+  { t: "Il vaut mieux allumer une bougie que de maudire l'obscurité.", a: "Confucius" },
+  { t: "L'homme qui a une éducation ne meurt jamais pauvre.", a: "" },
+  { t: "Le succès est la somme de petits efforts répétés jour après jour.", a: "" },
+  { t: "Dans le doute, révise.", a: "" },
+  { t: "Le travail paie toujours, un jour ou l'autre.", a: "" },
+  { t: "Ta seule limite, c'est celle que ton esprit s'impose.", a: "" },
+  { t: "Étudier, c'est se donner les moyens de choisir sa vie.", a: "" },
+  { t: "Ce que tu fais aujourd'hui peut améliorer tous tes lendemains.", a: "Ralph Marston" },
+  { t: "L'éducation est ce qui reste quand on a oublié tout ce qu'on a appris à l'école.", a: "Albert Einstein" },
+  { t: "Ne remets jamais à demain ce que tu peux réviser aujourd'hui.", a: "" },
+  { t: "Une heure de travail bien faite vaut mieux que trois heures dispersées.", a: "" },
+  { t: "La réussite, c'est 1% d'inspiration et 99% de transpiration.", a: "Thomas Edison" },
+  { t: "Le seul échec véritable, c'est de ne pas essayer.", a: "" },
+  { t: "Ceux qui pensent ne pas avoir le temps d'étudier trouveront le temps d'être ignorants.", a: "" },
+  { t: "La motivation te fait démarrer. L'habitude te fait continuer.", a: "Jim Ryun" },
+  { t: "L'instruction ouvre des portes que même la fortune ne peut ouvrir.", a: "" },
+  { t: "Tu n'as pas besoin d'être extraordinaire pour commencer, mais tu dois commencer pour devenir extraordinaire.", a: "Zig Ziglar" },
+  { t: "Le plus difficile n'est pas d'apprendre, c'est de ne pas abandonner.", a: "" },
+  { t: "Il n'y a pas de raccourci vers un endroit qui en vaut la peine.", a: "Beverly Sills" },
+  { t: "Apprends comme si tu devais vivre toujours ; vis comme si tu devais mourir demain.", a: "Mahatma Gandhi" },
+  { t: "Sois le changement que tu veux voir dans le monde.", a: "Mahatma Gandhi" },
+  { t: "Un examen ne mesure pas ta valeur, seulement ta préparation ce jour-là.", a: "" },
+  { t: "Le succès est rarement immédiat, mais il est toujours mérité.", a: "" },
+  { t: "L'école forme des cerveaux ; la persévérance forme des caractères.", a: "" },
+  { t: "Tomber sept fois, se relever huit.", a: "Proverbe japonais" },
+  { t: "Il n'existe pas de grande réussite sans une longue patience.", a: "Buffon" },
+  { t: "Le seul lieu où le mot « réussite » vient avant « travail », c'est dans le dictionnaire.", a: "" },
+  { t: "Ce que l'esprit peut concevoir et croire, il peut l'accomplir.", a: "Napoleon Hill" },
+  { t: "Un jour à la fois, un cours à la fois, un pas de plus vers ton Bac.", a: "" },
+  { t: "Sème la discipline, récolte le succès.", a: "" }
 ];
+let quoteRotationCache = null;
+function getQuoteRotation(){
+  const year = new Date().getFullYear();
+  if(quoteRotationCache && quoteRotationCache.year === year) return quoteRotationCache.order;
+  const order = seededShuffle(String(year), MOTIVATIONAL_QUOTES.map((_,i)=>i));
+  quoteRotationCache = { year, order };
+  return order;
+}
 function renderQuoteOfDay(){
   const el = document.getElementById('gam-quote-card');
   if(!el) return;
   const dayIndex = Math.floor(Date.now() / 86400000);
-  const quote = MOTIVATIONAL_QUOTES[dayIndex % MOTIVATIONAL_QUOTES.length];
-  el.innerHTML = `<span class="quote-mark">❝</span><p>${escapeHtml(quote)}</p>`;
+  const order = getQuoteRotation();
+  const quote = MOTIVATIONAL_QUOTES[order[dayIndex % order.length]];
+  el.innerHTML = `<span class="quote-mark">❝</span><div class="quote-text-wrap"><p>${escapeHtml(quote.t)}</p>${quote.a ? `<span class="quote-author">— ${escapeHtml(quote.a)}</span>` : ''}</div>`;
 }
 
 /* --- Performances : matières fortes/faibles, historique, recommandations --- */
@@ -3481,6 +4384,8 @@ function initGamification(){
   renderDailyChallenges();
   renderBadgesGrid();
   startStudyTimer();
+  const yearEl = document.getElementById('footer-year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
 }
 function renderGamificationPage(){
   if(!GAM) loadGam();
@@ -3501,6 +4406,77 @@ function renderGamificationPage(){
   selectLeaderboardTab(leaderboardTab || 'general');
 }
 
+/* ============ PAGE D'ACCUEIL PUBLIQUE ============ */
+function scrollToAuthCard(tab){
+  switchAuthTab(tab);
+  const el = document.getElementById('auth-card-section');
+  if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function initLandingCounters(){
+  const nums = document.querySelectorAll('.landing-stat-num');
+  if(!nums.length || !('IntersectionObserver' in window)) return;
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      const el = entry.target;
+      if(el.dataset.counted) return;
+      el.dataset.counted = '1';
+      const target = parseInt(el.dataset.target, 10) || 0;
+      const suffix = el.dataset.suffix || '';
+      const duration = 1200;
+      const start = performance.now();
+      (function step(now){
+        const p = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if(p < 1) requestAnimationFrame(step);
+      })(start);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  nums.forEach(n=> obs.observe(n));
+}
+
+const TESTIMONIALS = [
+  { name: 'Aïcha K.', school: "Lycée Moderne d'Abidjan", role: 'Élève, Terminale D', avatar: '👩🏾‍🎓', stars: 5, text: "Les quiz corrigés m'ont vraiment aidée à combler mes lacunes en maths avant le Bac." },
+  { name: 'Yao B.', school: 'Lycée Municipal de Cocody', role: 'Élève, Première D', avatar: '🧑🏾‍🎓', stars: 5, text: "Le forum est génial : je pose une question le soir et j'ai déjà une réponse le lendemain matin." },
+  { name: 'M. Kouadio', school: "Enseignant, Lycée d'Excellence", role: 'Professeur de Physique-Chimie', avatar: '👨🏾‍🏫', stars: 5, text: "Je recommande cette plateforme à mes élèves : les fiches suivent bien le programme ivoirien." },
+  { name: 'Fatou D.', school: 'Lycée Sainte-Marie', role: 'Élève, Seconde', avatar: '👩🏾‍🎓', stars: 4, text: "Le système de niveaux et de badges me motive à me connecter tous les jours." }
+];
+let landingTestimonialIndex = 0;
+let landingTestimonialTimer = null;
+function renderLandingTestimonials(){
+  const track = document.getElementById('landing-testimonial-track');
+  const dots = document.getElementById('landing-testimonial-dots');
+  if(!track || !dots) return;
+  track.innerHTML = TESTIMONIALS.map(t=>`
+    <div class="landing-testimonial-card">
+      <div class="landing-testimonial-stars">${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</div>
+      <p class="landing-testimonial-text">« ${escapeHtml(t.text)} »</p>
+      <div class="landing-testimonial-person">
+        <div class="landing-testimonial-avatar">${t.avatar}</div>
+        <div>
+          <div class="landing-testimonial-name">${escapeHtml(t.name)}</div>
+          <div class="landing-testimonial-school">${escapeHtml(t.role)} · ${escapeHtml(t.school)}</div>
+        </div>
+      </div>
+    </div>`).join('');
+  dots.innerHTML = TESTIMONIALS.map((_,i)=>`<span class="landing-dot ${i===0?'active':''}"></span>`).join('');
+  track.addEventListener('scroll', ()=>{
+    const idx = Math.round(track.scrollLeft / track.clientWidth);
+    landingTestimonialIndex = idx;
+    dots.querySelectorAll('.landing-dot').forEach((d,i)=> d.classList.toggle('active', i===idx));
+  });
+  landingTestimonialTimer = setInterval(()=>{
+    landingTestimonialIndex = (landingTestimonialIndex + 1) % TESTIMONIALS.length;
+    track.scrollTo({ left: landingTestimonialIndex * track.clientWidth, behavior: 'smooth' });
+  }, 5000);
+}
+function initLandingPage(){
+  renderLandingTestimonials();
+  initLandingCounters();
+}
+
 /* ============ INIT ============ */
 document.querySelectorAll('.bottom-nav-dock .dock-item[data-page]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -3512,6 +4488,7 @@ renderReco();
 updateSubjectCounts();
 initCoursesData();
 initRippleEffect();
+initLandingPage();
 if(isFirebaseConfigured()){
   // L'écran (connexion vs app) est décidé par handleAuthStateChange une fois la session Firebase résolue.
   initFirebaseIfNeeded();
