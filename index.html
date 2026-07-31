@@ -244,8 +244,8 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 
 /* TOAST */
 .toast-stack { position: fixed; bottom: 86px; left: 50%; transform: translateX(-50%); z-index: 1200; display:flex; flex-direction:column; gap:8px; align-items:center; width:100%; padding:0 20px; pointer-events:none; }
-.toast { background: var(--text-main); color:white; font-size:13px; font-weight:700; padding:12px 18px; border-radius:30px; box-shadow:0 8px 20px rgba(0,0,0,0.25); animation: toastIn 0.3s ease, toastOut 0.3s ease 2.4s forwards; max-width:340px; text-align:center; }
-@keyframes toastIn { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+.toast { background: var(--text-main); color:white; font-size:13px; font-weight:700; padding:12px 18px; border-radius:30px; box-shadow:0 8px 20px rgba(0,0,0,0.25); animation: toastIn .35s cubic-bezier(0.4,0,0.2,1), toastOut .3s ease 2.45s forwards; max-width:340px; text-align:center; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes toastOut { to{opacity:0; transform:translateY(-8px);} }
 
 /* ADMIN */
@@ -539,9 +539,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 @keyframes correctPulse { 0% { transform: scale(1); } 40% { transform: scale(1.03); } 100% { transform: scale(1); } }
 @keyframes shakeX { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
 
-/* --- Toasts --- */
-.toast { animation: toastIn .35s cubic-bezier(0.4,0,0.2,1); }
-@keyframes toastIn { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+/* --- Toasts : voir règle .toast consolidée plus haut (fusion, ancien doublon supprimé) --- */
 
 /* --- Toast XP flottant --- */
 .xp-float-toast {
@@ -652,6 +650,26 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 @keyframes levelUpSpin { from { transform: rotate(-15deg) scale(0.8); } to { transform: rotate(0) scale(1); } }
 .levelup-card h2 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; margin: 8px 0 6px; }
 .levelup-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+
+/* --- Déblocage de badge --- */
+.badge-unlock-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); display: none; align-items: center; justify-content: center; z-index: 2100; padding: 20px; }
+.badge-unlock-overlay.open { display: flex; }
+.badge-unlock-card { background: #fff; border-radius: 24px; padding: 32px 26px; text-align: center; max-width: 320px; width: 100%; animation: levelUpPop .5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
+.badge-unlock-ring { width: 96px; height: 96px; margin: 0 auto 12px; border-radius: 50%; display:flex; align-items:center; justify-content:center; background: conic-gradient(from 0deg, #fde68a, #f59e0b, #fde68a); animation: badgeRingSpin 2.5s linear infinite; box-shadow: 0 8px 24px rgba(245,158,11,0.35); }
+.badge-unlock-emoji { font-size: 46px; background:#fff; width: 80px; height: 80px; border-radius: 50%; display:flex; align-items:center; justify-content:center; animation: levelUpSpin .8s ease; }
+@keyframes badgeRingSpin { to { transform: rotate(360deg); } }
+.badge-unlock-tag { display:inline-block; background: var(--orange-light); color: var(--orange-dark); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; letter-spacing:.03em; text-transform:uppercase; }
+.badge-unlock-card h2 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 19px; margin: 4px 0 6px; }
+.badge-unlock-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+
+/* --- Transition de connexion --- */
+@keyframes authFadeOut { to { opacity: 0; transform: scale(.97); } }
+@keyframes appFadeIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.auth-screen.leaving { animation: authFadeOut .35s ease forwards; pointer-events: none; }
+#app-shell.entering { animation: appFadeIn .45s cubic-bezier(0.16,1,0.3,1) both; }
+.welcome-burst { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index: 2050; pointer-events:none; }
+.welcome-burst span { font-size: 15px; font-weight: 800; color: #fff; background: var(--green-gradient); padding: 10px 22px; border-radius: 30px; box-shadow: 0 14px 30px rgba(15,23,42,0.25); animation: welcomePop .9s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes welcomePop { 0% { opacity:0; transform: scale(.6) translateY(10px); } 30% { opacity:1; transform: scale(1.05) translateY(0); } 75% { opacity:1; transform: scale(1) translateY(0); } 100% { opacity:0; transform: scale(1) translateY(-14px); } }
 
 /* --- Forum : rebond du like --- */
 .forum-action-btn.like-pop { animation: likeBounce .4s ease; }
@@ -1583,6 +1601,16 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     <h2>Niveau <span id="levelup-num">2</span> débloqué !</h2>
     <p id="levelup-reward-text">Continue comme ça, tu progresses vite !</p>
     <button class="btn-action" onclick="closeLevelUp()">Super, merci !</button>
+  </div>
+</div>
+
+<div class="badge-unlock-overlay" id="badge-unlock-overlay">
+  <div class="badge-unlock-card">
+    <div class="badge-unlock-ring"><span class="badge-unlock-emoji" id="badge-unlock-emoji">🏆</span></div>
+    <span class="badge-unlock-tag">Badge débloqué</span>
+    <h2 id="badge-unlock-name">Nom du badge</h2>
+    <p id="badge-unlock-desc">Description du badge</p>
+    <button class="btn-action" onclick="closeBadgeUnlock()">Génial !</button>
   </div>
 </div>
 
@@ -2549,10 +2577,27 @@ function continueAsGuest(){
   showToast('Tu navigues en mode invité (non synchronisé entre appareils)');
 }
 function enterApp(){
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('app-shell').style.display = 'block';
-  renderProfil();
-  initGamification();
+  const authEl = document.getElementById('auth-screen');
+  const shellEl = document.getElementById('app-shell');
+  const displayNameForWelcome = (userProfile && userProfile.name) ? userProfile.name.split(' ')[0] : '';
+  authEl.classList.add('leaving');
+  setTimeout(()=>{
+    authEl.style.display = 'none';
+    authEl.classList.remove('leaving');
+    shellEl.style.display = 'block';
+    shellEl.classList.add('entering');
+    renderProfil();
+    initGamification();
+    if(displayNameForWelcome) showWelcomeBurst(`👋 Content de te revoir, ${displayNameForWelcome} !`);
+    setTimeout(()=> shellEl.classList.remove('entering'), 500);
+  }, 320);
+}
+function showWelcomeBurst(text){
+  const wrap = document.createElement('div');
+  wrap.className = 'welcome-burst';
+  wrap.innerHTML = `<span>${escapeHtml(text)}</span>`;
+  document.body.appendChild(wrap);
+  setTimeout(()=> wrap.remove(), 950);
 }
 function showAuthScreen(){
   document.getElementById('app-shell').style.display = 'none';
@@ -3828,11 +3873,30 @@ function checkBadges(){
   });
   if(changed){ persistGam(); renderBadgesGrid(); }
 }
+let badgeUnlockQueue = [];
 function announceBadge(id){
   const b = BADGE_DEFS.find(x=>x.id===id);
   if(!b) return;
-  fireConfetti(60);
-  showToast(`🏆 Badge débloqué : ${b.name}`);
+  badgeUnlockQueue.push(b);
+  if(badgeUnlockQueue.length===1) showNextBadgeUnlock();
+}
+function showNextBadgeUnlock(){
+  const b = badgeUnlockQueue[0];
+  if(!b) return;
+  fireConfetti(70);
+  playLevelSound();
+  const emojiEl = document.getElementById('badge-unlock-emoji'); if(emojiEl) emojiEl.textContent = b.icon;
+  const nameEl = document.getElementById('badge-unlock-name'); if(nameEl) nameEl.textContent = b.name;
+  const descEl = document.getElementById('badge-unlock-desc'); if(descEl) descEl.textContent = b.desc;
+  const overlay = document.getElementById('badge-unlock-overlay');
+  if(overlay){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+}
+function closeBadgeUnlock(){
+  const overlay = document.getElementById('badge-unlock-overlay');
+  if(overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  badgeUnlockQueue.shift();
+  if(badgeUnlockQueue.length>0) setTimeout(showNextBadgeUnlock, 250);
 }
 function renderBadgesGrid(){
   const el = document.getElementById('gam-badges-grid');
