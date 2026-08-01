@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <script src="https://js.puter.com/v2/"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -200,6 +201,12 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .cc-icon-btn { width:34px; height:34px; border-radius:50%; background:#f1f5f9; border:none; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); color:var(--text-main); flex-shrink:0; }
 .cc-icon-btn:hover { background:var(--text-main); color:white; }
 .skeleton-content-card { height:150px; border-radius:var(--radius-lg); margin-bottom:14px; }
+
+/* ============ DEVOIRS & INTERROGATIONS ============ */
+.submission-meta { font-size: 12px; color: var(--text-muted); font-weight: 700; }
+.submission-answer-box { background:#f8fafc; border:1px solid var(--border-color); border-radius:12px; padding:14px; font-size:13px; white-space:pre-wrap; color:var(--text-main); margin-bottom:12px; }
+.grading-row { border:1px solid var(--border-color); border-radius:14px; padding:14px; margin-bottom:12px; }
+.grading-row-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
 
 /* PROFIL */
 .dashboard-profile-box { background: var(--green-gradient); color: white; padding: 40px 20px 30px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: var(--shadow-md); }
@@ -859,6 +866,10 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 @media (min-width: 860px) {
   .site-footer { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
 }
+/* ============ ICÔNES (Lucide) ============ */
+.lucide-icon { width: 1.15em; height: 1.15em; stroke-width: 2.1; vertical-align: -0.22em; flex-shrink: 0; }
+.lucide-icon.filled { fill: currentColor; }
+button .lucide-icon, a .lucide-icon { pointer-events: none; }
 </style>
 </head>
 <body>
@@ -871,11 +882,11 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       </div>
       <div class="landing-hero-grid">
         <div class="landing-hero-text">
-          <span class="landing-badge-pill landing-fade">🇨🇮 Conçu pour les élèves ivoiriens</span>
+          <span class="landing-badge-pill landing-fade"><i data-lucide="flag" class="lucide-icon"></i> Conçu pour les élèves ivoiriens</span>
           <h1 class="landing-fade">Réussissez votre parcours scolaire avec <span>School Online</span></h1>
           <p class="landing-fade">Cours, exercices corrigés et quiz interactifs en Mathématiques et Physique-Chimie, avec suivi de progression et communauté d'entraide.</p>
           <div class="landing-cta-row landing-fade">
-            <button class="landing-btn-primary" onclick="scrollToAuthCard('signup')">🚀 Commencer gratuitement</button>
+            <button class="landing-btn-primary" onclick="scrollToAuthCard('signup')"><i data-lucide="rocket" class="lucide-icon"></i> Commencer gratuitement</button>
             <button class="landing-btn-secondary" onclick="scrollToAuthCard('login')">Explorer les cours</button>
           </div>
         </div>
@@ -910,19 +921,19 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       <div class="landing-section-sub">Choisis ta matière et commence dès maintenant.</div>
       <div class="landing-subjects-row">
         <div class="landing-subject-card maths">
-          <span class="landing-subject-icon">🧮</span>
+          <span class="landing-subject-icon"><i data-lucide="calculator" class="lucide-icon"></i></span>
           <div class="landing-subject-info">
             <h4>Mathématiques</h4>
             <p id="landing-maths-count">Chargement des cours...</p>
-            <button onclick="scrollToAuthCard('signup')">Commencer →</button>
+            <button onclick="scrollToAuthCard('signup')">Commencer <i data-lucide="arrow-right" class="lucide-icon"></i></button>
           </div>
         </div>
         <div class="landing-subject-card physique">
-          <span class="landing-subject-icon">⚗️</span>
+          <span class="landing-subject-icon"><i data-lucide="flask-conical" class="lucide-icon"></i></span>
           <div class="landing-subject-info">
             <h4>Physique-Chimie</h4>
             <p id="landing-physique-count">Chargement des cours...</p>
-            <button onclick="scrollToAuthCard('signup')">Commencer →</button>
+            <button onclick="scrollToAuthCard('signup')">Commencer <i data-lucide="arrow-right" class="lucide-icon"></i></button>
           </div>
         </div>
       </div>
@@ -932,10 +943,10 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       <div class="landing-section-title">School Online en chiffres</div>
       <div class="landing-section-sub">Une communauté d'élèves ivoiriens qui grandit chaque jour.</div>
       <div class="landing-stats-row landing-fade" id="landing-stats-row">
-        <div class="landing-stat-card"><div class="landing-stat-icon">🧑🏾‍🎓</div><span class="landing-stat-num" data-target="3200">0</span><span class="landing-stat-label">Élèves inscrits</span></div>
-        <div class="landing-stat-card"><div class="landing-stat-icon">📘</div><span class="landing-stat-num" data-target="240">0</span><span class="landing-stat-label">Cours disponibles</span></div>
-        <div class="landing-stat-card"><div class="landing-stat-icon">✅</div><span class="landing-stat-num" data-target="1500">0</span><span class="landing-stat-label">Quiz réalisés</span></div>
-        <div class="landing-stat-card"><div class="landing-stat-icon">🏆</div><span class="landing-stat-num" data-target="87" data-suffix="%">0</span><span class="landing-stat-label">Taux de réussite</span></div>
+        <div class="landing-stat-card"><div class="landing-stat-icon"><i data-lucide="graduation-cap" class="lucide-icon"></i></div><span class="landing-stat-num" data-target="3200">0</span><span class="landing-stat-label">Élèves inscrits</span></div>
+        <div class="landing-stat-card"><div class="landing-stat-icon"><i data-lucide="book" class="lucide-icon"></i></div><span class="landing-stat-num" data-target="240">0</span><span class="landing-stat-label">Cours disponibles</span></div>
+        <div class="landing-stat-card"><div class="landing-stat-icon"><i data-lucide="circle-check-big" class="lucide-icon"></i></div><span class="landing-stat-num" data-target="1500">0</span><span class="landing-stat-label">Quiz réalisés</span></div>
+        <div class="landing-stat-card"><div class="landing-stat-icon"><i data-lucide="trophy" class="lucide-icon"></i></div><span class="landing-stat-num" data-target="87" data-suffix="%">0</span><span class="landing-stat-label">Taux de réussite</span></div>
       </div>
     </div>
 
@@ -943,12 +954,12 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       <div class="landing-section-title">Pourquoi choisir School Online ?</div>
       <div class="landing-section-sub">Tout ce qu'il te faut pour progresser, au même endroit.</div>
       <div class="landing-why-grid">
-        <div class="landing-why-card"><div class="landing-why-icon">📘</div><h4>Cours de qualité</h4><p>Fiches claires alignées sur le programme ivoirien.</p></div>
-        <div class="landing-why-card"><div class="landing-why-icon">✅</div><h4>Quiz interactifs</h4><p>Corrigés immédiats et suivi de ta progression.</p></div>
-        <div class="landing-why-card"><div class="landing-why-icon">📝</div><h4>Exercices corrigés</h4><p>Des TD complets pour t'entraîner sans limite.</p></div>
-        <div class="landing-why-card"><div class="landing-why-icon">📈</div><h4>Suivi des progrès</h4><p>Niveaux, XP et statistiques pour rester motivé.</p></div>
-        <div class="landing-why-card"><div class="landing-why-icon">💬</div><h4>Communauté d'entraide</h4><p>Pose tes questions, un camarade te répond vite.</p></div>
-        <div class="landing-why-card"><div class="landing-why-icon">📱</div><h4>Sur mobile & PC</h4><p>Continue de réviser partout, à ton rythme.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon"><i data-lucide="book" class="lucide-icon"></i></div><h4>Cours de qualité</h4><p>Fiches claires alignées sur le programme ivoirien.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon"><i data-lucide="circle-check-big" class="lucide-icon"></i></div><h4>Quiz interactifs</h4><p>Corrigés immédiats et suivi de ta progression.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon"><i data-lucide="pencil" class="lucide-icon"></i></div><h4>Exercices corrigés</h4><p>Des TD complets pour t'entraîner sans limite.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon"><i data-lucide="trending-up" class="lucide-icon"></i></div><h4>Suivi des progrès</h4><p>Niveaux, XP et statistiques pour rester motivé.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon"><i data-lucide="message-circle" class="lucide-icon"></i></div><h4>Communauté d'entraide</h4><p>Pose tes questions, un camarade te répond vite.</p></div>
+        <div class="landing-why-card"><div class="landing-why-icon"><i data-lucide="smartphone" class="lucide-icon"></i></div><h4>Sur mobile & PC</h4><p>Continue de réviser partout, à ton rythme.</p></div>
       </div>
     </div>
 
@@ -962,13 +973,13 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     <div class="landing-final-cta">
       <h3>Prêt à booster tes résultats ?</h3>
       <p>Rejoins des milliers d'élèves ivoiriens qui progressent chaque jour avec School Online.</p>
-      <button class="landing-btn-primary" onclick="scrollToAuthCard('signup')">🚀 Commencer gratuitement</button>
+      <button class="landing-btn-primary" onclick="scrollToAuthCard('signup')"><i data-lucide="rocket" class="lucide-icon"></i> Commencer gratuitement</button>
     </div>
   </div>
 
   <div class="auth-card-section" id="auth-card-section">
   <div class="auth-card">
-    <div class="auth-logo">🎓</div>
+    <div class="auth-logo"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
     <h2 id="auth-title">Content de te revoir</h2>
     <p class="auth-sub" id="auth-sub">Connecte-toi pour accéder à tes cours</p>
     <div class="auth-tabs">
@@ -985,7 +996,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       <div class="auth-field">
         <label>Mot de passe</label>
         <input type="password" id="login-password" placeholder="••••••••" required>
-        <button type="button" class="auth-toggle-pw" onclick="togglePw('login-password')">👁️</button>
+        <button type="button" class="auth-toggle-pw" onclick="togglePw('login-password')"><i data-lucide="eye" class="lucide-icon"></i></button>
       </div>
       <button type="submit" class="auth-submit">Se connecter</button>
       <button type="button" class="auth-forgot" onclick="showToast('Fonctionnalité à venir — contacte l\'administrateur pour réinitialiser ton mot de passe')">Mot de passe oublié ?</button>
@@ -1003,7 +1014,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       <div class="auth-field">
         <label>Mot de passe</label>
         <input type="password" id="signup-password" placeholder="6 caractères minimum" required>
-        <button type="button" class="auth-toggle-pw" onclick="togglePw('signup-password')">👁️</button>
+        <button type="button" class="auth-toggle-pw" onclick="togglePw('signup-password')"><i data-lucide="eye" class="lucide-icon"></i></button>
       </div>
       <div class="auth-field">
         <label>Confirmer le mot de passe</label>
@@ -1027,14 +1038,14 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     </div>
     <span class="brand-title">Schoolonline.ci</span>
   </div>
-  <div class="profile-trigger" onclick="switchPage('profil')" role="button" tabindex="0" aria-label="Ouvrir mon profil">🎓</div>
+  <div class="profile-trigger" onclick="switchPage('profil')" role="button" tabindex="0" aria-label="Ouvrir mon profil"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
 </nav>
 
 <div class="search-wrapper">
   <div class="search-bar">
-    <span aria-hidden="true">🔍</span>
+    <span aria-hidden="true"><i data-lucide="search" class="lucide-icon"></i></span>
     <input id="global-search" type="text" placeholder="Rechercher un cours, un TD, un chapitre..." oninput="handleSearch(this.value)">
-    <button class="clear-btn" id="search-clear" onclick="clearSearch()" aria-label="Effacer la recherche">✕</button>
+    <button class="clear-btn" id="search-clear" onclick="clearSearch()" aria-label="Effacer la recherche"><i data-lucide="x" class="lucide-icon"></i></button>
   </div>
 </div>
 <div class="search-results-banner" id="search-banner"></div>
@@ -1046,23 +1057,23 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       <div class="hero-badge">Filière Scientifique • Série D</div>
       <h1>Optimise tes révisions<br>en ligne</h1>
       <p>Accède instantanément aux fiches de cours, TD et exercices corrigés de Maths et Physique-Chimie.</p>
-      <button class="btn-action" onclick="switchPage('cours')">🚀 Découvrir les chapitres</button>
+      <button class="btn-action" onclick="switchPage('cours')"><i data-lucide="rocket" class="lucide-icon"></i> Découvrir les chapitres</button>
     </div>
 
     <div class="gam-topbar" role="button" tabindex="0" aria-label="Voir ma progression et mes récompenses" onclick="switchPage('gamification')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchPage('gamification');}">
       <div class="gam-level-badge">
-        <span class="gam-avatar" id="gam-avatar-emoji">🎓</span>
+        <span class="gam-avatar" id="gam-avatar-emoji"><i data-lucide="graduation-cap" class="lucide-icon"></i></span>
         <div class="gam-level-info">
           <span class="gam-level-num" id="gam-level-num">Niveau 1</span>
           <div class="gam-xp-bar"><div class="gam-xp-fill" id="gam-xp-fill" style="width:0%"></div></div>
           <span class="gam-xp-label" id="gam-xp-label">0 / 100 XP</span>
         </div>
       </div>
-      <div class="gam-streak" id="gam-streak-box"><span class="flame">🔥</span><span id="gam-streak-num">0</span></div>
+      <div class="gam-streak" id="gam-streak-box"><span class="flame"><i data-lucide="flame" class="lucide-icon"></i></span><span id="gam-streak-num">0</span></div>
     </div>
     <div class="gam-quote-card" id="gam-quote-card"></div>
 
-    <div class="section-headline"><h3>🎯 Défis du jour</h3><button class="link" onclick="switchPage('gamification')">Voir tout</button></div>
+    <div class="section-headline"><h3><i data-lucide="target" class="lucide-icon"></i> Défis du jour</h3><button class="link" onclick="switchPage('gamification')">Voir tout</button></div>
     <div class="daily-challenges-list" id="daily-challenges-list"></div>
 
     <div class="section-headline" style="padding-top:10px;"><h3>Mon parcours de progression</h3></div>
@@ -1081,13 +1092,13 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     <div class="dual-subjects-grid">
       <div class="subject-box maths-style" onclick="switchPage('cours'); selectSubjectTab('cours','maths')">
         <span class="count-badge" id="badge-maths-count">12 cours</span>
-        <div class="box-icon">🧮</div>
+        <div class="box-icon"><i data-lucide="calculator" class="lucide-icon"></i></div>
         <h4>Mathématiques</h4>
         <span class="indicator">Accéder aux TD ›</span>
       </div>
       <div class="subject-box physique-style" onclick="switchPage('cours'); selectSubjectTab('cours','physique')">
         <span class="count-badge" id="badge-physique-count">27 cours</span>
-        <div class="box-icon">⚗️</div>
+        <div class="box-icon"><i data-lucide="flask-conical" class="lucide-icon"></i></div>
         <h4>Physique-Chimie</h4>
         <span class="indicator">Accéder aux TD ›</span>
       </div>
@@ -1101,7 +1112,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 
     <footer class="site-footer">
       <div class="footer-col">
-        <h4 class="footer-brand">📘 School Online</h4>
+        <h4 class="footer-brand"><i data-lucide="book" class="lucide-icon"></i> School Online</h4>
         <p>La plateforme éducative ivoirienne qui accompagne les élèves de Première et Terminale D en Mathématiques et Physique-Chimie, avec fiches de cours, TD, exercices corrigés et suivi de progression.</p>
       </div>
       <div class="footer-col">
@@ -1113,18 +1124,18 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
-        <p>✉️ contact@schoolonline.ci</p>
-        <p>📞 +225 07 00 00 00 00</p>
-        <p>📍 Abidjan, Côte d'Ivoire</p>
+        <p><i data-lucide="mail" class="lucide-icon"></i> contact@schoolonline.ci</p>
+        <p><i data-lucide="phone" class="lucide-icon"></i> +225 07 00 00 00 00</p>
+        <p><i data-lucide="map-pin" class="lucide-icon"></i> Abidjan, Côte d'Ivoire</p>
       </div>
       <div class="footer-col">
         <h4>Suis-nous</h4>
         <div class="footer-socials">
-          <a href="#" onclick="return false;" aria-label="Facebook">📘</a>
-          <a href="#" onclick="return false;" aria-label="Instagram">📸</a>
-          <a href="#" onclick="return false;" aria-label="LinkedIn">💼</a>
-          <a href="#" onclick="return false;" aria-label="TikTok">🎵</a>
-          <a href="#" onclick="return false;" aria-label="YouTube">▶️</a>
+          <a href="#" onclick="return false;" aria-label="Facebook"><i data-lucide="book" class="lucide-icon"></i></a>
+          <a href="#" onclick="return false;" aria-label="Instagram"><i data-lucide="camera" class="lucide-icon"></i></a>
+          <a href="#" onclick="return false;" aria-label="LinkedIn"><i data-lucide="briefcase" class="lucide-icon"></i></a>
+          <a href="#" onclick="return false;" aria-label="TikTok"><i data-lucide="music" class="lucide-icon"></i></a>
+          <a href="#" onclick="return false;" aria-label="YouTube"><i data-lucide="play" class="lucide-icon"></i></a>
         </div>
       </div>
       <div class="footer-bottom">© <span id="footer-year"></span> • School Online • Tous droits réservés.</div>
@@ -1134,12 +1145,12 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
   <div id="page-cours" class="page">
     <div class="section-headline"><h3>Tous les Cours & Fiches</h3></div>
     <div class="subject-tabs">
-      <button class="subject-tab tab-maths active" id="cours-tab-maths" onclick="selectSubjectTab('cours','maths')">🧮 Mathématiques</button>
-      <button class="subject-tab tab-physique" id="cours-tab-physique" onclick="selectSubjectTab('cours','physique')">⚗️ Physique-Chimie</button>
+      <button class="subject-tab tab-maths active" id="cours-tab-maths" onclick="selectSubjectTab('cours','maths')"><i data-lucide="calculator" class="lucide-icon"></i> Mathématiques</button>
+      <button class="subject-tab tab-physique" id="cours-tab-physique" onclick="selectSubjectTab('cours','physique')"><i data-lucide="flask-conical" class="lucide-icon"></i> Physique-Chimie</button>
     </div>
     <div class="sub-tabs">
-      <button class="sub-tab active" id="cours-subtab-fiche" onclick="selectCoursSubTab('fiche')">📄 Fiches & TD</button>
-      <button class="sub-tab" id="cours-subtab-video" onclick="selectCoursSubTab('video')">🎥 Cours vidéo</button>
+      <button class="sub-tab active" id="cours-subtab-fiche" onclick="selectCoursSubTab('fiche')"><i data-lucide="file-text" class="lucide-icon"></i> Fiches & TD</button>
+      <button class="sub-tab" id="cours-subtab-video" onclick="selectCoursSubTab('video')"><i data-lucide="video" class="lucide-icon"></i> Cours vidéo</button>
     </div>
     <div id="cours-list-container"></div>
   </div>
@@ -1147,42 +1158,53 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
   <div id="page-exercices" class="page">
     <div class="section-headline"><h3>Exercices & Corrections</h3></div>
     <div class="subject-tabs">
-      <button class="subject-tab tab-maths active" id="exo-tab-maths" onclick="selectSubjectTab('exo','maths')">🧮 Mathématiques</button>
-      <button class="subject-tab tab-physique" id="exo-tab-physique" onclick="selectSubjectTab('exo','physique')">⚗️ Physique-Chimie</button>
+      <button class="subject-tab tab-maths active" id="exo-tab-maths" onclick="selectSubjectTab('exo','maths')"><i data-lucide="calculator" class="lucide-icon"></i> Mathématiques</button>
+      <button class="subject-tab tab-physique" id="exo-tab-physique" onclick="selectSubjectTab('exo','physique')"><i data-lucide="flask-conical" class="lucide-icon"></i> Physique-Chimie</button>
     </div>
     <div class="sub-tabs">
-      <button class="sub-tab active" id="exo-subtab-video" onclick="selectExoSubTab('video')">🎥 Corrections vidéo</button>
-      <button class="sub-tab" id="exo-subtab-fiche" onclick="selectExoSubTab('fiche')">📝 Fiches d'exercices</button>
+      <button class="sub-tab active" id="exo-subtab-video" onclick="selectExoSubTab('video')"><i data-lucide="video" class="lucide-icon"></i> Corrections vidéo</button>
+      <button class="sub-tab" id="exo-subtab-fiche" onclick="selectExoSubTab('fiche')"><i data-lucide="pencil" class="lucide-icon"></i> Fiches d'exercices</button>
     </div>
     <div id="exo-list-container"></div>
   </div>
 
+  <div id="page-devoirs" class="page">
+    <div class="section-headline"><h3><i data-lucide="clipboard-check" class="lucide-icon"></i> Devoirs & Interrogations</h3></div>
+    <div class="filter-chip-row">
+      <button class="filter-chip chip-maths active" id="devoirs-filter-tous" onclick="setDevoirsFilter('tous')">Tous</button>
+      <button class="filter-chip chip-maths" id="devoirs-filter-afaire" onclick="setDevoirsFilter('afaire')">À faire</button>
+      <button class="filter-chip chip-maths" id="devoirs-filter-rendu" onclick="setDevoirsFilter('rendu')">Rendu</button>
+      <button class="filter-chip chip-maths" id="devoirs-filter-note" onclick="setDevoirsFilter('note')">Noté</button>
+    </div>
+    <div id="devoirs-list-container"></div>
+  </div>
+
   <div id="page-forum" class="page">
-    <div class="section-headline"><h3>💬 Forum entre élèves</h3></div>
+    <div class="section-headline"><h3><i data-lucide="message-circle" class="lucide-icon"></i> Forum entre élèves</h3></div>
 
     <div id="forum-locked" class="admin-gate" style="display:none;">
-      <div class="emoji">🔒</div>
+      <div class="emoji"><i data-lucide="lock" class="lucide-icon"></i></div>
       <h2>Connecte-toi pour accéder au forum</h2>
       <p>Le forum est réservé aux élèves avec un compte, pour que les échanges restent fiables et modérables. Crée un compte gratuit en 30 secondes, ou connecte-toi si tu en as déjà un.</p>
-      <button class="btn-action" onclick="logoutUser()">🔑 Se connecter / Créer un compte</button>
+      <button class="btn-action" onclick="logoutUser()"><i data-lucide="key" class="lucide-icon"></i> Se connecter / Créer un compte</button>
     </div>
 
     <div id="forum-content-wrap">
       <div class="forum-toolbar" style="padding:0 20px;">
-        <input type="text" class="forum-search-input" id="forum-search-input" placeholder="🔍 Rechercher dans le forum..." oninput="renderForumFeed()">
-        <button class="forum-notif-btn" aria-label="Notifications du forum" onclick="toggleNotifDropdown()">🔔<span class="forum-notif-dot" id="forum-notif-dot" style="display:none;">0</span></button>
+        <input type="text" class="forum-search-input" id="forum-search-input" placeholder="Rechercher dans le forum..." oninput="renderForumFeed()">
+        <button class="forum-notif-btn" aria-label="Notifications du forum" onclick="toggleNotifDropdown()"><i data-lucide="bell" class="lucide-icon"></i><span class="forum-notif-dot" id="forum-notif-dot" style="display:none;">0</span></button>
       </div>
       <div class="forum-notif-dropdown" id="forum-notif-dropdown"></div>
 
       <div class="subject-tabs" style="margin:0 20px 10px;">
-        <button class="subject-tab tab-maths active" id="forum-tab-maths" onclick="selectForumTab('maths')">🧮 Mathématiques</button>
-        <button class="subject-tab tab-physique" id="forum-tab-physique" onclick="selectForumTab('physique')">⚗️ Physique-Chimie</button>
+        <button class="subject-tab tab-maths active" id="forum-tab-maths" onclick="selectForumTab('maths')"><i data-lucide="calculator" class="lucide-icon"></i> Mathématiques</button>
+        <button class="subject-tab tab-physique" id="forum-tab-physique" onclick="selectForumTab('physique')"><i data-lucide="flask-conical" class="lucide-icon"></i> Physique-Chimie</button>
       </div>
 
       <div class="forum-filters" style="padding:0 20px 6px;">
-        <button class="forum-filter-chip active" data-filter="recent" onclick="setForumFilter('recent')">🕒 Plus récent</button>
-        <button class="forum-filter-chip" data-filter="popular" onclick="setForumFilter('popular')">🔥 Popularité</button>
-        <button class="forum-filter-chip" data-filter="unanswered" onclick="setForumFilter('unanswered')">❔ Sans réponse</button>
+        <button class="forum-filter-chip active" data-filter="recent" onclick="setForumFilter('recent')"><i data-lucide="clock" class="lucide-icon"></i> Plus récent</button>
+        <button class="forum-filter-chip" data-filter="popular" onclick="setForumFilter('popular')"><i data-lucide="flame" class="lucide-icon"></i> Popularité</button>
+        <button class="forum-filter-chip" data-filter="unanswered" onclick="setForumFilter('unanswered')"><i data-lucide="circle-help" class="lucide-icon"></i> Sans réponse</button>
         <select id="forum-classe-filter" class="forum-filter-chip" style="border:1.5px solid var(--border-color);" onchange="renderForumFeed()">
           <option value="">Toutes classes</option>
           <option value="Seconde">Seconde</option>
@@ -1192,11 +1214,11 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       </div>
 
       <div class="forum-side-panel" style="margin:0 20px 14px;">
-        <h4>🏆 Meilleurs contributeurs</h4>
+        <h4><i data-lucide="trophy" class="lucide-icon"></i> Meilleurs contributeurs</h4>
         <div id="forum-top-contributors"><div class="skeleton-row" style="height:28px;"></div></div>
       </div>
       <div class="forum-side-panel" style="margin:0 20px 14px;">
-        <h4>📈 Populaires cette semaine</h4>
+        <h4><i data-lucide="trending-up" class="lucide-icon"></i> Populaires cette semaine</h4>
         <div id="forum-popular-week"><div class="skeleton-row" style="height:28px;"></div></div>
       </div>
 
@@ -1205,10 +1227,10 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
           <button type="button" class="forum-tool-btn" title="Gras" aria-label="Mettre en gras" onclick="forumInsertFormat('**','**')"><b>G</b></button>
           <button type="button" class="forum-tool-btn" title="Italique" aria-label="Mettre en italique" onclick="forumInsertFormat('*','*')"><i>I</i></button>
           <button type="button" class="forum-tool-btn" title="Code" aria-label="Insérer du code" onclick="forumInsertFormat('\`','\`')">{ }</button>
-          <button type="button" class="forum-tool-btn" title="Bloc de code" aria-label="Insérer un bloc de code" onclick="forumInsertFormat('\n\`\`\`\n','\n\`\`\`\n')">📄</button>
-          <button type="button" class="forum-tool-btn" title="Insérer une image (URL)" aria-label="Insérer une image" onclick="forumInsertImage()">🖼️</button>
-          <button type="button" class="forum-tool-btn" title="Joindre un PDF (URL)" aria-label="Joindre un PDF" onclick="forumInsertPdf()">📎</button>
-          <button type="button" class="forum-tool-btn" id="forum-preview-toggle" title="Aperçu" aria-label="Afficher l'aperçu" onclick="toggleForumPreview()">👁️</button>
+          <button type="button" class="forum-tool-btn" title="Bloc de code" aria-label="Insérer un bloc de code" onclick="forumInsertFormat('\n\`\`\`\n','\n\`\`\`\n')"><i data-lucide="file-text" class="lucide-icon"></i></button>
+          <button type="button" class="forum-tool-btn" title="Insérer une image (URL)" aria-label="Insérer une image" onclick="forumInsertImage()"><i data-lucide="image" class="lucide-icon"></i></button>
+          <button type="button" class="forum-tool-btn" title="Joindre un PDF (URL)" aria-label="Joindre un PDF" onclick="forumInsertPdf()"><i data-lucide="paperclip" class="lucide-icon"></i></button>
+          <button type="button" class="forum-tool-btn" id="forum-preview-toggle" title="Aperçu" aria-label="Afficher l'aperçu" onclick="toggleForumPreview()"><i data-lucide="eye" class="lucide-icon"></i></button>
         </div>
         <textarea id="forum-input" placeholder="Pose ta question à toute la communauté... (utilise @Nom pour mentionner quelqu'un)" maxlength="800" oninput="updateForumPreview()"></textarea>
         <div class="forum-preview-box" id="forum-preview-box" style="display:none;"></div>
@@ -1230,49 +1252,49 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 
   <div id="page-profil" class="page">
     <div class="dashboard-profile-box">
-      <div class="big-avatar">🎓</div>
+      <div class="big-avatar"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
       <div class="big-avatar-label" id="profil-name">Espace Élève Scientifique</div>
       <div class="big-avatar-sub" id="profil-sub">Lycée Connecté • Côte d'Ivoire</div>
     </div>
     <div class="settings-group">
       <button class="settings-row" onclick="switchPage('gamification')">
-        <div class="settings-label-side">🏆 <span>Ma progression & récompenses</span></div>
+        <div class="settings-label-side"><i data-lucide="trophy" class="lucide-icon"></i> <span>Ma progression & récompenses</span></div>
         <span class="chev">›</span>
       </button>
       <button class="settings-row" onclick="toggleMiniList('dl-list')">
-        <div class="settings-label-side">💾 <span>Mes téléchargements récents</span></div>
+        <div class="settings-label-side"><i data-lucide="save" class="lucide-icon"></i> <span>Mes téléchargements récents</span></div>
         <span class="chev">›</span>
       </button>
       <div class="mini-sub-list" id="dl-list" style="display:none;"></div>
       <button class="settings-row" onclick="toggleMiniList('fav-list')">
-        <div class="settings-label-side">⭐ <span>Chapitres mis en favoris</span></div>
+        <div class="settings-label-side"><i data-lucide="star" class="lucide-icon"></i> <span>Chapitres mis en favoris</span></div>
         <span class="chev">›</span>
       </button>
       <div class="mini-sub-list" id="fav-list" style="display:none;"></div>
       <button class="settings-row" onclick="showToast('🔔 Notifications activées pour les nouveaux TD')">
-        <div class="settings-label-side">🔔 <span>Notifications de nouveaux TD</span></div>
+        <div class="settings-label-side"><i data-lucide="bell" class="lucide-icon"></i> <span>Notifications de nouveaux TD</span></div>
         <span class="chev">›</span>
       </button>
     </div>
     <div class="settings-group">
       <button class="settings-row" onclick="switchPage('legal')">
-        <div class="settings-label-side">📜 <span>Confidentialité & CGU</span></div>
+        <div class="settings-label-side"><i data-lucide="scroll-text" class="lucide-icon"></i> <span>Confidentialité & CGU</span></div>
         <span class="chev">›</span>
       </button>
       <button class="settings-row" id="admin-menu-entry" onclick="switchPage('admin')" style="display:none;">
-        <div class="settings-label-side">🛠️ <span>Espace administrateur</span></div>
+        <div class="settings-label-side"><i data-lucide="wrench" class="lucide-icon"></i> <span>Espace administrateur</span></div>
         <span class="chev">›</span>
       </button>
       <button class="settings-row" onclick="switchPage('legal'); selectLegalTab('privacy');">
-        <div class="settings-label-side">🔒 <span>Politique de confidentialité</span></div>
+        <div class="settings-label-side"><i data-lucide="lock" class="lucide-icon"></i> <span>Politique de confidentialité</span></div>
         <span class="chev">›</span>
       </button>
       <button class="settings-row" onclick="switchPage('legal'); selectLegalTab('terms');">
-        <div class="settings-label-side">📜 <span>Conditions d'utilisation</span></div>
+        <div class="settings-label-side"><i data-lucide="scroll-text" class="lucide-icon"></i> <span>Conditions d'utilisation</span></div>
         <span class="chev">›</span>
       </button>
       <button class="settings-row" onclick="logoutUser()">
-        <div class="settings-label-side">🚪 <span>Se déconnecter</span></div>
+        <div class="settings-label-side"><i data-lucide="log-out" class="lucide-icon"></i> <span>Se déconnecter</span></div>
         <span class="chev">›</span>
       </button>
     </div>
@@ -1281,11 +1303,11 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 
   <div id="page-gamification" class="page">
     <div class="section-headline" style="padding-top:10px;">
-      <button class="link" onclick="switchPage('accueil')">← Retour</button>
+      <button class="link" onclick="switchPage('accueil')"><i data-lucide="arrow-left" class="lucide-icon"></i> Retour</button>
     </div>
 
     <div class="gam-hero">
-      <div class="gam-big-avatar" id="gam-page-avatar">🎓</div>
+      <div class="gam-big-avatar" id="gam-page-avatar"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
       <div class="gam-hero-title" id="gam-page-title">Élève Scientifique</div>
       <div class="gam-hero-sub" id="gam-page-sub">Niveau <span id="gam-page-level-num">1</span></div>
       <div class="gam-ring" id="gam-big-ring" style="--p:0%">
@@ -1294,53 +1316,53 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     </div>
 
     <div class="gam-stat-row">
-      <div class="gam-stat-box"><span class="num" id="gam-streak-detail">0 🔥</span><span class="lbl">Série de jours</span></div>
+      <div class="gam-stat-box"><span class="num" id="gam-streak-detail">0 <i data-lucide="flame" class="lucide-icon"></i></span><span class="lbl">Série de jours</span></div>
       <div class="gam-stat-box"><span class="num" id="gam-total-time">0 min</span><span class="lbl">Temps total</span></div>
       <div class="gam-stat-box"><span class="num" id="gam-week-time">0 min</span><span class="lbl">Cette semaine</span></div>
     </div>
 
-    <div class="section-headline"><h3>📅 Activité (35 derniers jours)</h3></div>
+    <div class="section-headline"><h3><i data-lucide="calendar" class="lucide-icon"></i> Activité (35 derniers jours)</h3></div>
     <div class="gam-activity-calendar" id="gam-activity-calendar"></div>
 
-    <div class="section-headline"><h3>🎯 Défis du jour</h3></div>
+    <div class="section-headline"><h3><i data-lucide="target" class="lucide-icon"></i> Défis du jour</h3></div>
     <div class="daily-challenges-list" id="daily-challenges-list-page"></div>
 
-    <div class="section-headline"><h3>🏅 Badges</h3></div>
+    <div class="section-headline"><h3><i data-lucide="medal" class="lucide-icon"></i> Badges</h3></div>
     <div class="gam-badges-grid" id="gam-badges-grid"></div>
 
-    <div class="section-headline"><h3>🎨 Personnalisation</h3></div>
+    <div class="section-headline"><h3><i data-lucide="palette" class="lucide-icon"></i> Personnalisation</h3></div>
     <div class="gam-settings-block" id="gam-rewards-picker"></div>
 
-    <div class="section-headline"><h3>📊 Mes performances</h3></div>
+    <div class="section-headline"><h3><i data-lucide="bar-chart-3" class="lucide-icon"></i> Mes performances</h3></div>
     <div class="gam-stat-row">
       <div class="gam-stat-box"><span class="num" id="gam-strong-subject">—</span><span class="lbl">Matière forte</span></div>
       <div class="gam-stat-box"><span class="num" id="gam-weak-subject">—</span><span class="lbl">À améliorer</span></div>
     </div>
     <div id="gam-history-list" style="margin-top:12px;"></div>
 
-    <div class="section-headline"><h3>✨ Recommandé pour toi</h3></div>
+    <div class="section-headline"><h3><i data-lucide="sparkles" class="lucide-icon"></i> Recommandé pour toi</h3></div>
     <div id="gam-recommendations"></div>
 
-    <div class="section-headline"><h3>🏆 Classement</h3></div>
+    <div class="section-headline"><h3><i data-lucide="trophy" class="lucide-icon"></i> Classement</h3></div>
     <div class="gam-tabs">
-      <button class="gam-tab active" data-tab="general" onclick="selectLeaderboardTab('general')">🌍 National</button>
-      <button class="gam-tab" data-tab="school" onclick="selectLeaderboardTab('school')">🏫 Établissement</button>
-      <button class="gam-tab" data-tab="city" onclick="selectLeaderboardTab('city')">🏙️ Ville</button>
-      <button class="gam-tab" data-tab="friends" onclick="selectLeaderboardTab('friends')">👥 Amis</button>
+      <button class="gam-tab active" data-tab="general" onclick="selectLeaderboardTab('general')"><i data-lucide="globe" class="lucide-icon"></i> National</button>
+      <button class="gam-tab" data-tab="school" onclick="selectLeaderboardTab('school')"><i data-lucide="school" class="lucide-icon"></i> Établissement</button>
+      <button class="gam-tab" data-tab="city" onclick="selectLeaderboardTab('city')"><i data-lucide="building-2" class="lucide-icon"></i> Ville</button>
+      <button class="gam-tab" data-tab="friends" onclick="selectLeaderboardTab('friends')"><i data-lucide="users" class="lucide-icon"></i> Amis</button>
     </div>
     <div id="gam-leaderboard-list" style="margin-top:10px;"></div>
 
-    <div class="section-headline"><h3>⚙️ Réglages du classement</h3></div>
+    <div class="section-headline"><h3><i data-lucide="settings" class="lucide-icon"></i> Réglages du classement</h3></div>
     <div class="gam-settings-block">
-      <label style="font-size:12px;font-weight:700;">🏫 Établissement</label>
+      <label style="font-size:12px;font-weight:700;"><i data-lucide="school" class="lucide-icon"></i> Établissement</label>
       <input id="gam-school-input" type="text" maxlength="60" placeholder="Ex : Lycée Moderne d'Abidjan">
-      <label style="font-size:12px;font-weight:700;">🏙️ Ville</label>
+      <label style="font-size:12px;font-weight:700;"><i data-lucide="building-2" class="lucide-icon"></i> Ville</label>
       <input id="gam-city-input" type="text" maxlength="40" placeholder="Ex : Abidjan">
-      <button class="btn-mini" style="align-self:flex-start;" onclick="saveSchoolCity()">💾 Enregistrer</button>
-      <label style="font-size:12px;font-weight:700;margin-top:6px;">👥 Ajouter un ami (par email)</label>
+      <button class="btn-mini" style="align-self:flex-start;" onclick="saveSchoolCity()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
+      <label style="font-size:12px;font-weight:700;margin-top:6px;"><i data-lucide="users" class="lucide-icon"></i> Ajouter un ami (par email)</label>
       <div class="gam-inline-form"><input id="gam-friend-input" type="email" placeholder="email@exemple.com"><button class="btn-mini" onclick="addFriend()">Ajouter</button></div>
       <div class="gam-friends-list" id="gam-friends-list"></div>
-      <label class="gam-toggle-row" style="margin-top:10px;"><input type="checkbox" id="gam-sound-toggle" checked onchange="toggleSound(this.checked)"> 🔈 Sons de progression</label>
+      <label class="gam-toggle-row" style="margin-top:10px;"><input type="checkbox" id="gam-sound-toggle" checked onchange="toggleSound(this.checked)"> <i data-lucide="volume-2" class="lucide-icon"></i> Sons de progression</label>
     </div>
     <div style="height:20px;"></div>
   </div>
@@ -1348,11 +1370,11 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
   <div id="page-legal" class="page">
     <div class="section-headline">
       <h3>Confidentialité & CGU</h3>
-      <button class="link" id="legal-back-btn" onclick="exitLegalPage()" style="display:none;">← Retour</button>
+      <button class="link" id="legal-back-btn" onclick="exitLegalPage()" style="display:none;"><i data-lucide="arrow-left" class="lucide-icon"></i> Retour</button>
     </div>
     <div class="subject-tabs">
-      <button class="subject-tab tab-maths active" id="legal-tab-privacy" onclick="selectLegalTab('privacy')">🔒 Confidentialité</button>
-      <button class="subject-tab tab-physique" id="legal-tab-terms" onclick="selectLegalTab('terms')">📜 CGU</button>
+      <button class="subject-tab tab-maths active" id="legal-tab-privacy" onclick="selectLegalTab('privacy')"><i data-lucide="lock" class="lucide-icon"></i> Confidentialité</button>
+      <button class="subject-tab tab-physique" id="legal-tab-terms" onclick="selectLegalTab('terms')"><i data-lucide="scroll-text" class="lucide-icon"></i> CGU</button>
     </div>
     <p class="legal-updated">Dernière mise à jour : juillet 2026</p>
 
@@ -1398,7 +1420,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 
   <div id="page-admin" class="page">
     <div id="admin-gate" class="admin-gate">
-      <div class="emoji">🔐</div>
+      <div class="emoji"><i data-lucide="lock-keyhole" class="lucide-icon"></i></div>
       <h2>Accès administrateur</h2>
       <p>Connecte-toi avec ton compte administrateur pour gérer les cours du site.</p>
       <input type="email" id="admin-email" placeholder="Email administrateur" autocomplete="username">
@@ -1409,7 +1431,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     </div>
     <div id="admin-dashboard" style="display:none;">
       <div class="admin-header">
-        <h2>👋 Bonjour, Administrateur</h2>
+        <h2><i data-lucide="hand" class="lucide-icon"></i> Bonjour, Administrateur</h2>
         <p>Gère les cours de Maths et Physique-Chimie affichés sur le site.</p>
       </div>
       <div class="admin-stats">
@@ -1417,20 +1439,26 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
         <div class="admin-stat-card"><div class="num" id="admin-stat-physique">0</div><div class="lbl">Cours Phys-Chim</div></div>
         <div class="admin-stat-card"><div class="num" id="admin-stat-exo">0</div><div class="lbl">Exercices</div></div>
       </div>
-      <button class="admin-add-btn" onclick="openCourseForm()">➕ Ajouter un cours</button>
-      <button class="admin-add-btn" style="background:var(--green-gradient); box-shadow:0 6px 18px rgba(26,150,64,0.3);" onclick="resyncCourseVideos()">🎥 Resynchroniser les vidéos de cours</button>
+      <button class="admin-add-btn" onclick="openCourseForm()"><i data-lucide="plus" class="lucide-icon"></i> Ajouter un cours</button>
+      <button class="admin-add-btn" style="background:var(--green-gradient); box-shadow:0 6px 18px rgba(26,150,64,0.3);" onclick="resyncCourseVideos()"><i data-lucide="video" class="lucide-icon"></i> Resynchroniser les vidéos de cours</button>
       <div class="section-headline" style="padding-top:6px;"><h3>Tous les cours</h3></div>
       <div class="extended-list-wrapper" id="admin-course-list"></div>
 
+      <div class="section-headline" style="padding-top:6px;">
+        <h3><i data-lucide="clipboard-check" class="lucide-icon"></i> Devoirs & Interrogations</h3>
+      </div>
+      <button class="admin-add-btn" onclick="openAssignmentForm()"><i data-lucide="plus" class="lucide-icon"></i> Créer un devoir / une interrogation</button>
+      <div class="extended-list-wrapper" id="admin-assignments-list"></div>
+
       <div class="section-headline">
-        <h3>🐞 Journal d'erreurs <span id="admin-error-count" class="status-badge pending" style="margin-left:6px;">0</span></h3>
+        <h3><i data-lucide="bug" class="lucide-icon"></i> Journal d'erreurs <span id="admin-error-count" class="status-badge pending" style="margin-left:6px;">0</span></h3>
         <button class="link" onclick="loadAdminErrorLogs()">Actualiser</button>
       </div>
       <p style="padding:0 20px 10px;font-size:12px;color:var(--text-muted);">Erreurs rencontrées automatiquement par les élèves sur le site (silencieuses pour eux, visibles ici pour toi).</p>
       <div class="extended-list-wrapper" id="admin-error-list"></div>
 
       <button class="settings-row" style="margin:20px; width:calc(100% - 40px); background:white; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);" onclick="adminLogout()">
-        <div class="settings-label-side">🚪 <span>Se déconnecter</span></div>
+        <div class="settings-label-side"><i data-lucide="log-out" class="lucide-icon"></i> <span>Se déconnecter</span></div>
       </button>
       <p style="text-align:center; font-size:11px; color:var(--text-muted); padding:0 20px 30px;">Version du code : <strong id="build-version-tag"></strong></p>
     </div>
@@ -1451,6 +1479,10 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
     <span>Exercices</span>
   </button>
+  <button class="dock-item" data-page="devoirs" onclick="switchPage('devoirs')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <span>Devoirs</span>
+  </button>
   <button class="dock-item" data-page="forum" onclick="switchPage('forum')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
     <span>Forum</span>
@@ -1465,7 +1497,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 <div class="modal-overlay" id="modal" onclick="closeOnOverlay(event)">
   <div class="modal-sheet">
     <div class="modal-drag-handle"></div>
-    <div class="modal-main-icon">📄</div>
+    <div class="modal-main-icon"><i data-lucide="file-text" class="lucide-icon"></i></div>
     <h3 id="modal-title">Titre du document</h3>
     <p class="modal-desc-text" id="modal-desc">Télécharge ce support de révision officiel préparé pour l'évaluation continue.</p>
     <div class="meta-table-box">
@@ -1475,7 +1507,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       <div class="meta-table-row"><span>Extension</span><span id="meta-format">-</span></div>
       <div class="meta-table-row"><span>Mise en ligne</span><span id="meta-date">-</span></div>
     </div>
-    <a class="btn-download-trigger" id="modal-download-btn" href="#" target="_blank" rel="noopener">⬇️ Lancer le téléchargement</a>
+    <a class="btn-download-trigger" id="modal-download-btn" href="#" target="_blank" rel="noopener"><i data-lucide="arrow-down-to-line" class="lucide-icon"></i> Lancer le téléchargement</a>
     <button class="btn-dismiss" onclick="closeModal()">Fermer la fenêtre</button>
   </div>
 </div>
@@ -1530,25 +1562,96 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
         <label>ID vidéo YouTube (optionnel)</label>
         <input id="f-videoid" placeholder="Ex : ACuKml7PXDg (dans l'URL après v=)">
       </div>
-      <button class="btn-save-form" onclick="saveCourseForm()">💾 Enregistrer</button>
+      <button class="btn-save-form" onclick="saveCourseForm()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
       <button class="btn-cancel-form" onclick="closeFormModal()">Annuler</button>
     </div>
   </div>
 </div>
 
+<!-- Formulaire enseignant : créer / modifier un devoir ou une interrogation -->
+<div class="modal-overlay" id="assignment-form-modal" onclick="if(event.target===this) closeAssignmentForm()">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <h3 id="assignment-form-title">Créer un devoir</h3>
+    <div style="margin-top:18px;">
+      <div class="form-row-2">
+        <div class="form-sheet-field">
+          <label>Type</label>
+          <select id="af-type">
+            <option value="devoir">Devoir</option>
+            <option value="interro">Interrogation</option>
+          </select>
+        </div>
+        <div class="form-sheet-field">
+          <label>Matière</label>
+          <select id="af-matiere">
+            <option value="maths">Mathématiques</option>
+            <option value="physique">Physique-Chimie</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-sheet-field">
+        <label>Titre</label>
+        <input id="af-titre" placeholder="Ex : DM n°3 — Suites numériques">
+      </div>
+      <div class="form-sheet-field">
+        <label>Niveau</label>
+        <input id="af-niveau" placeholder="Ex : Terminale D">
+      </div>
+      <div class="form-sheet-field">
+        <label>Date limite</label>
+        <input id="af-datelimite" type="date">
+      </div>
+      <div class="form-sheet-field">
+        <label>Consignes</label>
+        <textarea id="af-instructions" rows="4" placeholder="Ce que l'élève doit faire, comment rendre son travail..."></textarea>
+      </div>
+      <label class="settings-row" style="padding:10px 0;">
+        <span class="settings-label-side">Visible par les élèves (publié)</span>
+        <input type="checkbox" id="af-published" checked>
+      </label>
+      <button class="btn-save-form" onclick="saveAssignmentForm()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
+      <button class="btn-cancel-form" onclick="closeAssignmentForm()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- Vue élève : consulter les consignes et rendre son travail -->
+<div class="modal-overlay" id="submission-modal" onclick="if(event.target===this) closeSubmissionModal()">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <h3 id="submission-modal-title">Titre du devoir</h3>
+    <p class="submission-meta" id="submission-modal-meta"></p>
+    <div id="submission-modal-body" style="margin-top:14px;"></div>
+  </div>
+</div>
+
+<!-- Vue enseignant : corriger les copies rendues -->
+<div class="modal-overlay" id="grading-modal" onclick="if(event.target===this) closeGradingModal()">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <h3 id="grading-modal-title">Copies rendues</h3>
+    <div style="display:flex; align-items:center; justify-content:space-between; margin:8px 0 4px;">
+      <span class="submission-meta" id="grading-modal-meta"></span>
+      <button class="admin-add-btn" style="margin:0; padding:8px 14px; font-size:12px;" onclick="publishAssignmentResults()"><i data-lucide="megaphone" class="lucide-icon"></i> Publier les résultats</button>
+    </div>
+    <div id="grading-modal-body" style="margin-top:10px;"></div>
+  </div>
+</div>
+
 <button class="ai-fab" onclick="openAIChat()" aria-label="Ouvrir l'assistant IA">
-  🤖<span class="pulse-dot"></span>
+  <i data-lucide="bot" class="lucide-icon"></i><span class="pulse-dot"></span>
 </button>
 
 <div class="ai-chat-overlay" id="ai-chat-overlay" onclick="closeOnOverlayChat(event)">
   <div class="ai-chat-panel">
     <div class="ai-chat-header">
-      <div class="ai-chat-avatar">🤖</div>
+      <div class="ai-chat-avatar"><i data-lucide="bot" class="lucide-icon"></i></div>
       <div class="grow">
         <h4>Assistant Maths & Physique-Chimie</h4>
         <p>En ligne</p>
       </div>
-      <button class="ai-chat-close" onclick="closeAIChat()" aria-label="Fermer">✕</button>
+      <button class="ai-chat-close" onclick="closeAIChat()" aria-label="Fermer"><i data-lucide="x" class="lucide-icon"></i></button>
     </div>
     <div class="ai-chat-body" id="ai-chat-body"></div>
     <div class="ai-chat-footer">
@@ -1560,7 +1663,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
       </div>
       <div class="ai-input-row">
         <input id="ai-input" type="text" placeholder="Pose ta question de cours..." onkeydown="if(event.key==='Enter') sendAIMessage()">
-        <button class="ai-send-btn" id="ai-send-btn" onclick="sendAIMessage()" aria-label="Envoyer">➤</button>
+        <button class="ai-send-btn" id="ai-send-btn" onclick="sendAIMessage()" aria-label="Envoyer"><i data-lucide="chevron-right" class="lucide-icon"></i></button>
       </div>
       <p class="ai-disclaimer">L'IA peut se tromper. Vérifie les points importants avec ton professeur.</p>
     </div>
@@ -1570,7 +1673,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 <div class="video-overlay" id="video-overlay" onclick="closeOnOverlayVideo(event)">
   <div class="video-overlay-header">
     <h4 id="video-overlay-title">Cours vidéo</h4>
-    <button class="video-overlay-close" onclick="closeVideoPlayer()" aria-label="Fermer">✕</button>
+    <button class="video-overlay-close" onclick="closeVideoPlayer()" aria-label="Fermer"><i data-lucide="x" class="lucide-icon"></i></button>
   </div>
   <div class="video-overlay-frame-wrap" onclick="event.stopPropagation()">
     <iframe id="video-overlay-iframe" src="" title="Lecteur vidéo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -1582,7 +1685,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
     <div class="quiz-header">
       <div class="quiz-header-top">
         <h4 id="quiz-title">Quiz</h4>
-        <button class="quiz-close" onclick="closeQuiz()" aria-label="Fermer">✕</button>
+        <button class="quiz-close" onclick="closeQuiz()" aria-label="Fermer"><i data-lucide="x" class="lucide-icon"></i></button>
       </div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
     </div>
@@ -1597,7 +1700,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 
 <div class="levelup-overlay" id="levelup-overlay">
   <div class="levelup-card">
-    <div class="levelup-emoji" id="levelup-emoji">🎉</div>
+    <div class="levelup-emoji" id="levelup-emoji"><i data-lucide="party-popper" class="lucide-icon"></i></div>
     <h2>Niveau <span id="levelup-num">2</span> débloqué !</h2>
     <p id="levelup-reward-text">Continue comme ça, tu progresses vite !</p>
     <button class="btn-action" onclick="closeLevelUp()">Super, merci !</button>
@@ -1606,7 +1709,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 
 <div class="badge-unlock-overlay" id="badge-unlock-overlay">
   <div class="badge-unlock-card">
-    <div class="badge-unlock-ring"><span class="badge-unlock-emoji" id="badge-unlock-emoji">🏆</span></div>
+    <div class="badge-unlock-ring"><span class="badge-unlock-emoji" id="badge-unlock-emoji"><i data-lucide="trophy" class="lucide-icon"></i></span></div>
     <span class="badge-unlock-tag">Badge débloqué</span>
     <h2 id="badge-unlock-name">Nom du badge</h2>
     <p id="badge-unlock-desc">Description du badge</p>
@@ -1798,6 +1901,7 @@ function switchPage(pageId){
   window.scrollTo({top:0, behavior:'smooth'});
   if(pageId==='cours') renderCoursList();
   if(pageId==='exercices') renderExoList();
+  if(pageId==='devoirs') renderDevoirsPage();
   if(pageId==='profil') renderProfil();
   if(pageId==='admin') renderAdminIfLogged();
   if(pageId==='forum') initForum();
@@ -1835,7 +1939,7 @@ function selectCoursSubTab(sub){
 }
 
 /* ============ RENDU COURS ============ */
-function courseIcon(matiere){ return matiere==='maths' ? '🧮' : '⚗️'; }
+function courseIcon(matiere){ return matiere==='maths' ? '<i data-lucide="calculator" class="lucide-icon"></i>' : '<i data-lucide="flask-conical" class="lucide-icon"></i>'; }
 function indicatorClass(matiere){ return matiere==='maths' ? 'maths-indicator' : 'physique-indicator'; }
 
 /* Progression réelle d'un cours, basée sur les données déjà suivies par l'app
@@ -1845,7 +1949,7 @@ function getCourseProgress(courseId){
   const opened = !!(GAM && GAM.openedCourses && GAM.openedCourses.includes(courseId));
   const watched = !!(GAM && GAM.watchedVideos && GAM.watchedVideos.some(k=>k.endsWith('_'+courseId)));
   const quiz = getQuizResultsMap()[courseId];
-  if(quiz){ return { pct: 100, label: `🧠 Quiz réussi à ${quiz.pct}%`, cta: 'Revoir le cours' }; }
+  if(quiz){ return { pct: 100, label: `<i data-lucide="brain" class="lucide-icon"></i> Quiz réussi à ${quiz.pct}%`, cta: 'Revoir le cours' }; }
   if(opened || watched){ return { pct: 50, label: 'En cours', cta: 'Continuer' }; }
   return { pct: 0, label: 'Non commencé', cta: 'Commencer' };
 }
@@ -1868,11 +1972,11 @@ function courseCardHtml(c){
           ${c.niveau? `<span class="dot">•</span><span>${escapeHtml(c.niveau)}</span>` : ''}
         </div>
       </div>
-      <button class="cc-fav ${isFav?'active':''}" aria-label="Mettre en favori" onclick="toggleFav('${c.id}', event)">${isFav?'★':'☆'}</button>
+      <button class="cc-fav ${isFav?'active':''}" aria-label="Mettre en favori" onclick="toggleFav('${c.id}', event)">${isFav?'<i data-lucide="star" class="lucide-icon filled"></i>':'<i data-lucide="star" class="lucide-icon"></i>'}</button>
     </div>
     <div class="cc-badges">
-      <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'✅ Fiche PDF disponible':'🕒 Fiche PDF à venir'}</span>
-      ${hasVideo? `<span class="status-badge ready">🎥 Vidéo disponible</span>` : ''}
+      <span class="status-badge ${hasFile?'ready':'pending'}">${hasFile?'<i data-lucide="circle-check-big" class="lucide-icon"></i> Fiche PDF disponible':'<i data-lucide="clock" class="lucide-icon"></i> Fiche PDF à venir'}</span>
+      ${hasVideo? `<span class="status-badge ready"><i data-lucide="video" class="lucide-icon"></i> Vidéo disponible</span>` : ''}
     </div>
     <div class="cc-progress-wrap">
       <div class="cc-progress-track"><div class="cc-progress-fill" style="width:${prog.pct}%"></div></div>
@@ -1880,8 +1984,8 @@ function courseCardHtml(c){
     </div>
     <div class="cc-footer">
       <button class="cc-cta" onclick="openModalById('course','${c.id}')">${prog.cta}</button>
-      <button class="cc-icon-btn" aria-label="Faire le quiz" onclick="openQuiz('${c.id}')">🧠</button>
-      ${hasVideo? `<button class="cc-icon-btn" aria-label="Voir la vidéo" onclick="openVideoPlayer('${c.id}')">▶</button>` : ''}
+      <button class="cc-icon-btn" aria-label="Faire le quiz" onclick="openQuiz('${c.id}')"><i data-lucide="brain" class="lucide-icon"></i></button>
+      ${hasVideo? `<button class="cc-icon-btn" aria-label="Voir la vidéo" onclick="openVideoPlayer('${c.id}')"><i data-lucide="play" class="lucide-icon"></i></button>` : ''}
     </div>
   </div>`;
 }
@@ -1927,7 +2031,7 @@ function renderCoursList(){
   }
 
   if(list.length===0){
-    container.innerHTML = `<div class="empty-state"><div class="emoji">📭</div><strong>Aucun cours trouvé</strong>Essaie un autre mot-clé ou change de matière.</div>`;
+    container.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="inbox" class="lucide-icon"></i></div><strong>Aucun cours trouvé</strong>Essaie un autre mot-clé ou change de matière.</div>`;
     return;
   }
 
@@ -1936,7 +2040,7 @@ function renderCoursList(){
   if(coursTypeFilter!=='all') list = list.filter(c=>c.type===coursTypeFilter);
 
   if(list.length===0){
-    container.innerHTML = chipsHtml + `<div class="empty-state"><div class="emoji">🔍</div><strong>Aucun résultat pour ces filtres</strong>Essaie un autre thème ou type de cours.</div>`;
+    container.innerHTML = chipsHtml + `<div class="empty-state"><div class="emoji"><i data-lucide="search" class="lucide-icon"></i></div><strong>Aucun résultat pour ces filtres</strong>Essaie un autre thème ou type de cours.</div>`;
     return;
   }
   container.innerHTML = chipsHtml + `<div class="content-card-grid stagger">${list.map(courseCardHtml).join('')}</div>`;
@@ -1944,7 +2048,7 @@ function renderCoursList(){
 
 function renderCoursVideoGrid(container, list){
   if(list.length===0){
-    container.innerHTML = `<div class="empty-state"><div class="emoji">🎬</div><strong>Cours vidéo bientôt disponibles</strong>Pour cette matière, les vidéos de cours arrivent bientôt.</div>`;
+    container.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="clapperboard" class="lucide-icon"></i></div><strong>Cours vidéo bientôt disponibles</strong>Pour cette matière, les vidéos de cours arrivent bientôt.</div>`;
     return;
   }
   container.innerHTML = `<div class="dual-subjects-grid" style="grid-template-columns:1fr 1fr; padding:14px 20px;">
@@ -1952,7 +2056,7 @@ function renderCoursVideoGrid(container, list){
       <div class="video-course-card" onclick="openVideoPlayer('${c.id}')">
         <div class="video-thumb-wrap">
           <img src="https://img.youtube.com/vi/${c.videoId}/mqdefault.jpg" alt="" loading="lazy">
-          <div class="video-play-badge"><div class="circle">▶</div></div>
+          <div class="video-play-badge"><div class="circle"><i data-lucide="play" class="lucide-icon"></i></div></div>
         </div>
         <div class="video-course-info">
           <h4>${escapeHtml(c.titre)}</h4>
@@ -1984,19 +2088,34 @@ function closeVideoPlayer(){
 function closeOnOverlayVideo(e){ if(e.target===document.getElementById('video-overlay')) closeVideoPlayer(); }
 
 /* ============ RENDU EXERCICES ============ */
+/* Une vidéo de correction s'ouvre dans un nouvel onglet : impossible d'y suivre
+   le temps de lecture directement. On considère l'exercice réellement traité
+   seulement si l'élève revient sur School Online après un délai plausible de
+   visionnage (même logique de vigilance que pour les vidéos de cours). */
+let pendingExoVideoWatch = null;
+function onExerciseVideoOpened(titre){
+  trackDownload(titre);
+  pendingExoVideoWatch = { titre, ts: Date.now() };
+}
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState !== 'visible' || !pendingExoVideoWatch) return;
+  const elapsed = Date.now() - pendingExoVideoWatch.ts;
+  pendingExoVideoWatch = null;
+  if(elapsed >= 20000){ bumpChallenge('terminer_exercices'); }
+});
 function exoCardHtml(e){
   const isVideo = e.sous==='video';
   const hasFile = e.lien && e.lien !== '#';
-  const label = isVideo ? (hasFile?'✅ Vidéo disponible':'🕒 Vidéo à venir') : (hasFile?'✅ Fiche PDF disponible':'🕒 Fiche PDF à venir');
+  const label = isVideo ? (hasFile?'<i data-lucide="circle-check-big" class="lucide-icon"></i> Vidéo disponible':'<i data-lucide="clock" class="lucide-icon"></i> Vidéo à venir') : (hasFile?'<i data-lucide="circle-check-big" class="lucide-icon"></i> Fiche PDF disponible':'<i data-lucide="clock" class="lucide-icon"></i> Fiche PDF à venir');
   const wasDownloaded = !isVideo && hasFile && loadDownloads().some(d=>d.titre===e.titre);
   const primaryBtn = isVideo
       ? (hasFile
-          ? `<a class="cc-cta" href="${e.lien}" target="_blank" rel="noopener" onclick="trackDownload('${escapeHtml(e.titre).replace(/'/g,"\\'")}'); bumpChallenge('terminer_exercices');">▶ Regarder la correction</a>`
+          ? `<a class="cc-cta" href="${e.lien}" target="_blank" rel="noopener" onclick="onExerciseVideoOpened('${escapeHtml(e.titre).replace(/'/g,"\\'")}')"><i data-lucide="play" class="lucide-icon"></i> Regarder la correction</a>`
           : `<button class="cc-cta" style="opacity:.6;cursor:default;" onclick="showToast('🕒 Cette vidéo arrive bientôt')">Bientôt disponible</button>`)
       : `<button class="cc-cta" onclick="openModalById('exo','${e.id}')">${wasDownloaded?'Retélécharger':'Télécharger'}</button>`;
   return `<div class="content-card subj-${e.matiere==='physique'?'physique':'maths'}">
     <div class="cc-top">
-      <div class="cc-icon" style="${isVideo?'background:#fee2e2;color:#ef4444;':''}">${isVideo?'▶':'📝'}</div>
+      <div class="cc-icon" style="${isVideo?'background:#fee2e2;color:#ef4444;':''}">${isVideo?'<i data-lucide="play" class="lucide-icon"></i>':'<i data-lucide="pencil" class="lucide-icon"></i>'}</div>
       <div class="cc-body">
         <h4>${escapeHtml(e.titre)}</h4>
         <div class="cc-meta-row">
@@ -2007,7 +2126,7 @@ function exoCardHtml(e){
     </div>
     <div class="cc-badges">
       <span class="status-badge ${hasFile?'ready':'pending'}">${label}</span>
-      ${wasDownloaded? `<span class="status-badge ready">📥 Déjà téléchargé</span>` : ''}
+      ${wasDownloaded? `<span class="status-badge ready"><i data-lucide="inbox" class="lucide-icon"></i> Déjà téléchargé</span>` : ''}
     </div>
     <div class="cc-footer">
       ${primaryBtn}
@@ -2022,7 +2141,7 @@ function renderExoList(){
   let list = EXERCICES.filter(e=>e.matiere===exoSubject && e.sous===exoSubTab);
   if(currentSearch){ list = list.filter(e=>(e.titre||'').toLowerCase().includes(currentSearch)); }
   if(list.length===0){
-    container.innerHTML = `<div class="empty-state"><div class="emoji">🎬</div><strong>Rien ici pour l'instant</strong>De nouveaux exercices arrivent bientôt.</div>`;
+    container.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="clapperboard" class="lucide-icon"></i></div><strong>Rien ici pour l'instant</strong>De nouveaux exercices arrivent bientôt.</div>`;
     return;
   }
   container.innerHTML = `<div class="content-card-grid stagger">${list.map(exoCardHtml).join('')}</div>`;
@@ -2102,7 +2221,7 @@ function renderProfil(){
   const favs = loadFavs();
   const favCourses = COURSES.filter(c=>favs.includes(c.id));
   document.getElementById('fav-list').innerHTML = favCourses.length
-    ? favCourses.map(c=>`<div class="mini-sub-item"><span>${escapeHtml(c.titre)}</span><span>${c.matiere==='maths'?'🧮':'⚗️'}</span></div>`).join('')
+    ? favCourses.map(c=>`<div class="mini-sub-item"><span>${escapeHtml(c.titre)}</span><span>${c.matiere==='maths'?'<i data-lucide="calculator" class="lucide-icon"></i>':'<i data-lucide="flask-conical" class="lucide-icon"></i>'}</span></div>`).join('')
     : `<div class="mini-sub-item">Aucun favori pour le moment</div>`;
 }
 
@@ -2129,7 +2248,7 @@ function openModal(title, matiere, type, niveau, format, date, fileLink, kind){
   const downloadBtn = document.getElementById('modal-download-btn');
   const hasLink = fileLink && fileLink !== '#';
   downloadBtn.href = hasLink ? fileLink : '#';
-  downloadBtn.innerText = hasLink ? '⬇️ Lancer le téléchargement' : '⏳ Fichier bientôt disponible';
+  downloadBtn.innerText = hasLink ? '<i data-lucide="arrow-down-to-line" class="lucide-icon"></i> Lancer le téléchargement' : '<i data-lucide="hourglass" class="lucide-icon"></i> Fichier bientôt disponible';
   downloadBtn.onclick = function(e){
     if(!hasLink){ e.preventDefault(); showToast("Ce fichier n'est pas encore disponible"); return; }
     trackDownload(title);
@@ -2143,11 +2262,23 @@ function closeModal(){ document.getElementById('modal').classList.remove('open')
 function closeOnOverlay(e){ if(e.target===document.getElementById('modal')) closeModal(); }
 
 /* ============ TOAST ============ */
+/* Les messages toast gardent un émoji "sémantique" en tête de chaîne (ex.
+   "⚠️ Erreur...") : on le détecte ici et on le convertit en icône pro,
+   sans avoir à modifier chacun des appels showToast() dans le code. */
+const TOAST_ICON_MAP = {
+  '📄':'file-text', '✉️':'mail', '🔔':'bell', '🕒':'clock', '⭐':'star',
+  '⚠️':'triangle-alert', '✅':'circle-check-big', '❌':'circle-x', '🧹':'sparkles',
+  '👋':'hand', '🎉':'party-popper', '🌱':'sprout', '🎥':'video', '🗑️':'trash-2',
+  '✔️':'check', '⏳':'hourglass', '🔥':'flame', '🏅':'medal', '🌟':'sparkles',
+  '👥':'users', '📥':'inbox'
+};
 function showToast(msg){
   const stack = document.getElementById('toast-stack');
   const t = document.createElement('div');
   t.className = 'toast';
-  t.textContent = msg;
+  const m = msg.match(/^(\S+)\s+([\s\S]*)$/);
+  const iconName = m && TOAST_ICON_MAP[m[1]];
+  t.innerHTML = (iconName ? `<i data-lucide="${iconName}" class="lucide-icon"></i> ` : '') + `<span>${escapeHtml(iconName ? m[2] : msg)}</span>`;
   stack.appendChild(t);
   setTimeout(()=>t.remove(), 2800);
 }
@@ -2180,7 +2311,7 @@ async function tryAdminLogin(){
     showToast('✅ Connecté en tant qu\'administrateur');
   } catch(err){
     console.error(err);
-    let msg = "❌ Connexion impossible";
+    let msg = '❌ Connexion impossible';
     if(err.code==='auth/invalid-credential' || err.code==='auth/wrong-password' || err.code==='auth/user-not-found'){
       msg = '❌ Email ou mot de passe incorrect';
     } else if(err.code==='auth/too-many-requests'){
@@ -2222,20 +2353,21 @@ function renderAdminDashboard(){
   document.getElementById('admin-stat-maths').textContent = nbMaths;
   document.getElementById('admin-stat-physique').textContent = nbPhysique;
   document.getElementById('admin-stat-exo').textContent = EXERCICES.length;
+  renderAdminAssignmentsList();
   loadAdminErrorLogs();
   const list = document.getElementById('admin-course-list');
   if(COURSES.length===0 && isFirebaseConfigured()){
-    list.innerHTML = `<div class="empty-state"><div class="emoji">🌱</div><strong>Base de cours vide</strong>Importe les cours de démarrage (Maths + Physique-Chimie) pour que les élèves voient du contenu.</div>
-      <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreCoursesOnce()">🌱 Importer les cours de démarrage</button>`;
+    list.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="sprout" class="lucide-icon"></i></div><strong>Base de cours vide</strong>Importe les cours de démarrage (Maths + Physique-Chimie) pour que les élèves voient du contenu.</div>
+      <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreCoursesOnce()"><i data-lucide="sprout" class="lucide-icon"></i> Importer les cours de démarrage</button>`;
     return;
   }
   const corrupted = COURSES.filter(c=>!c.titre);
   let html = '';
   if(corrupted.length > 0 && isFirebaseConfigured()){
     html += `<div class="empty-state" style="background:#fee2e2;border-radius:14px;margin-bottom:12px;">
-      <div class="emoji">⚠️</div><strong>${corrupted.length} cours sans titre détecté(s)</strong>
+      <div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>${corrupted.length} cours sans titre détecté(s)</strong>
       Ça arrive si un import a été interrompu. Tu peux tout réinitialiser proprement (les vrais fichiers/liens PDF déjà ajoutés seront perdus, mais ils étaient déjà à "bientôt disponible").
-      <br><br><button class="admin-add-btn" style="background:#dc2626; box-shadow:none;" onclick="resetAndReseedCourses()">🧹 Réinitialiser complètement les cours</button>
+      <br><br><button class="admin-add-btn" style="background:#dc2626; box-shadow:none;" onclick="resetAndReseedCourses()"><i data-lucide="sparkles" class="lucide-icon"></i> Réinitialiser complètement les cours</button>
     </div>`;
   }
   html += COURSES.map(c=>`
@@ -2243,18 +2375,18 @@ function renderAdminDashboard(){
       <div class="grow">
         <h5>${escapeHtml(c.titre || 'Cours sans titre (donnée corrompue)')}</h5>
         <div class="tags">
-          <span>${c.matiere==='maths'?'🧮 Maths':(c.matiere==='physique'?'⚗️ Phys-Chimie':'❓ '+escapeHtml(String(c.matiere||'?')))}</span>
+          <span>${c.matiere==='maths'?'<i data-lucide="calculator" class="lucide-icon"></i> Maths':(c.matiere==='physique'?'<i data-lucide="flask-conical" class="lucide-icon"></i> Phys-Chimie':'<i data-lucide="circle-help" class="lucide-icon"></i> '+escapeHtml(String(c.matiere||'?')))}</span>
           ${c.theme? `<span>${escapeHtml(c.theme)}</span>`:''}
           <span>${escapeHtml(c.type || '?')}</span>
         </div>
       </div>
-      <button class="admin-icon-btn edit" aria-label="Modifier" onclick="openCourseForm('${c.id}')">✏️</button>
-      <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteCourse('${c.id}')">🗑️</button>
+      <button class="admin-icon-btn edit" aria-label="Modifier" onclick="openCourseForm('${c.id}')"><i data-lucide="pencil" class="lucide-icon"></i></button>
+      <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteCourse('${c.id}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
     </div>`).join('');
   list.innerHTML = html;
 }
 async function resetAndReseedCourses(){
-  if(!confirm("⚠️ Ceci va SUPPRIMER tous les cours actuels et les remplacer par la liste de démarrage propre. Les liens PDF ajoutés manuellement seront perdus. Continuer ?")) return;
+  if(!confirm("Ceci va SUPPRIMER tous les cours actuels et les remplacer par la liste de démarrage propre. Les liens PDF ajoutés manuellement seront perdus. Continuer ?")) return;
   try {
     const snap = await forumDb.collection('courses').get();
     const delBatch = forumDb.batch();
@@ -2278,15 +2410,15 @@ async function loadAdminErrorLogs(){
   const listEl = document.getElementById('admin-error-list');
   const countEl = document.getElementById('admin-error-count');
   if(!isFirebaseConfigured() || !forumDb){
-    listEl.innerHTML = `<div class="empty-state"><div class="emoji">🐞</div><strong>Suivi d'erreurs indisponible</strong>Connecte Firebase pour l'activer.</div>`;
+    listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="bug" class="lucide-icon"></i></div><strong>Suivi d'erreurs indisponible</strong>Connecte Firebase pour l'activer.</div>`;
     return;
   }
-  listEl.innerHTML = `<div class="empty-state"><div class="emoji">⏳</div><strong>Chargement...</strong></div>`;
+  listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="hourglass" class="lucide-icon"></i></div><strong>Chargement...</strong></div>`;
   try {
     const snap = await forumDb.collection('errorLogs').orderBy('createdAt','desc').limit(20).get();
     countEl.textContent = snap.size;
     if(snap.empty){
-      listEl.innerHTML = `<div class="empty-state"><div class="emoji">✅</div><strong>Aucune erreur récente</strong>Tout va bien !</div>`;
+      listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="circle-check-big" class="lucide-icon"></i></div><strong>Aucune erreur récente</strong>Tout va bien !</div>`;
       return;
     }
     listEl.innerHTML = snap.docs.map(doc=>{
@@ -2296,16 +2428,16 @@ async function loadAdminErrorLogs(){
         <div class="grow">
           <h5 style="white-space:normal;">${escapeHtml(e.message||'Erreur inconnue')}</h5>
           <div class="tags">
-            <span>📄 ${escapeHtml(e.page||'?')}</span>
-            <span>👤 ${escapeHtml(e.userEmail||'anonyme')}</span>
-            <span>🕒 ${date}</span>
+            <span><i data-lucide="file-text" class="lucide-icon"></i> ${escapeHtml(e.page||'?')}</span>
+            <span><i data-lucide="user" class="lucide-icon"></i> ${escapeHtml(e.userEmail||'anonyme')}</span>
+            <span><i data-lucide="clock" class="lucide-icon"></i> ${date}</span>
           </div>
         </div>
-        <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteErrorLog('${doc.id}')">🗑️</button>
+        <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteErrorLog('${doc.id}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
       </div>`;
     }).join('');
   } catch(e){
-    listEl.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de charger le journal</strong>Vérifie les règles Firestore pour "errorLogs".</div>`;
+    listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>Impossible de charger le journal</strong>Vérifie les règles Firestore pour "errorLogs".</div>`;
     console.error(e);
   }
 }
@@ -2576,9 +2708,18 @@ function continueAsGuest(){
   enterApp();
   showToast('Tu navigues en mode invité (non synchronisé entre appareils)');
 }
+let appAlreadyEntered = false;
 function enterApp(){
   const authEl = document.getElementById('auth-screen');
   const shellEl = document.getElementById('app-shell');
+  if(appAlreadyEntered && shellEl.style.display === 'block'){
+    // Correctif : l'app est déjà ouverte (ex. onAuthStateChanged qui se
+    // redéclenche) — on ne rejoue jamais l'animation d'entrée ni le message
+    // de bienvenue, et surtout on ne touche pas à la page où l'élève se trouve.
+    return;
+  }
+  appAlreadyEntered = true;
+  clearAuthForms();
   const displayNameForWelcome = (userProfile && userProfile.name) ? userProfile.name.split(' ')[0] : '';
   authEl.classList.add('leaving');
   setTimeout(()=>{
@@ -2588,7 +2729,7 @@ function enterApp(){
     shellEl.classList.add('entering');
     renderProfil();
     initGamification();
-    if(displayNameForWelcome) showWelcomeBurst(`👋 Content de te revoir, ${displayNameForWelcome} !`);
+    if(displayNameForWelcome) showWelcomeBurst(`<i data-lucide="hand" class="lucide-icon"></i> Content de te revoir, ${displayNameForWelcome} !`);
     setTimeout(()=> shellEl.classList.remove('entering'), 500);
   }, 320);
 }
@@ -2605,6 +2746,7 @@ function showAuthScreen(){
   switchAuthTab('login');
 }
 async function logoutUser(){
+  appAlreadyEntered = false;
   if(isFirebaseConfigured() && typeof firebase !== 'undefined' && firebase.auth){
     localStorage.removeItem('solci_guest_mode');
     userProfile = null;
@@ -2614,8 +2756,16 @@ async function logoutUser(){
     localStorage.removeItem(CURRENT_USER_KEY);
     showAuthScreen();
   }
-  document.getElementById('login-form').reset();
+  clearAuthForms();
   showToast('👋 À bientôt !');
+}
+function clearAuthForms(){
+  // Vide systématiquement identifiant/mot de passe après connexion ou déconnexion,
+  // pour qu'aucun ancien champ ne reste affiché sur un poste partagé.
+  const loginForm = document.getElementById('login-form');
+  const signupForm = document.getElementById('signup-form');
+  if(loginForm) loginForm.reset();
+  if(signupForm) signupForm.reset();
 }
 
 /* ============ PROFIL Firestore : favoris / téléchargements / quiz synchronisés ============ */
@@ -2654,7 +2804,7 @@ function openAIChat(){
   document.body.style.overflow = 'hidden';
   if(!aiWelcomed){
     aiWelcomed = true;
-    addAIMessage('ai', "Salut ! 👋 Je suis l'assistant Maths & Physique-Chimie de Schoolonline.ci. Pose-moi une question sur un chapitre du programme (Terminale D) et je t'explique ça simplement.\n\nÀ ta première question, une fenêtre peut te demander de te connecter gratuitement avec un compte Puter — c'est normal, ça sert uniquement à faire fonctionner l'IA.");
+    addAIMessage('ai', "Salut ! Je suis l'assistant Maths & Physique-Chimie de Schoolonline.ci. Pose-moi une question sur un chapitre du programme (Terminale D) et je t'explique ça simplement.\n\nÀ ta première question, une fenêtre peut te demander de te connecter gratuitement avec un compte Puter — c'est normal, ça sert uniquement à faire fonctionner l'IA.");
   }
 }
 function closeAIChat(){
@@ -2708,7 +2858,7 @@ async function sendAIMessage(){
   const text = input.value.trim();
   if(!text) return;
   if(typeof puter === 'undefined'){
-    addAIMessage('ai', "⚠️ Le moteur IA (Puter.js) n'a pas pu se charger. Vérifie ta connexion internet et réessaie.");
+    addAIMessage('ai', "Le moteur IA (Puter.js) n'a pas pu se charger. Vérifie ta connexion internet et réessaie.");
     return;
   }
   input.value = '';
@@ -2738,7 +2888,7 @@ async function sendAIMessage(){
     aiHistory.push({role:'assistant', content: reply});
   } catch(err){
     hideAITyping();
-    addAIMessage('ai', "⚠️ L'assistant IA n'est pas disponible pour le moment (connexion au compte Puter annulée ou erreur réseau). Réessaie dans un instant !");
+    addAIMessage('ai', "L'assistant IA n'est pas disponible pour le moment (connexion au compte Puter annulée ou erreur réseau). Réessaie dans un instant !");
   } finally {
     document.getElementById('ai-send-btn').disabled = false;
   }
@@ -2864,6 +3014,327 @@ function subscribeCoursesFirestore(retries){
 async function trySeedIfAdmin(){
   if(isAdminAuthed()) await seedFirestoreCoursesOnce();
 }
+/* ============ DEVOIRS & INTERROGATIONS ============
+   Modèle Firestore :
+   - collection "assignments" : { type:'devoir'|'interro', titre, matiere, niveau,
+     instructions, dateLimite, published, resultsPublished, createdAt }
+   - sous-collection "assignments/{id}/submissions/{uid élève}" : { studentUid,
+     studentName, answerText, submittedAt, score, feedback, status }
+   Le compte "professeur" est ici le même compte administrateur que pour les
+   cours (une seule école, un seul compte enseignant/admin pour l'instant). */
+let ASSIGNMENTS = [];
+let assignmentsUnsub = null;
+let assignmentsLoaded = false;
+let editingAssignmentId = null;
+let currentGradingAssignmentId = null;
+let devoirsFilter = 'tous';
+
+function initAssignmentsData(){
+  if(!isFirebaseConfigured()) return; // nécessite Firestore (soumissions propres à chaque élève)
+  initFirebaseIfNeeded();
+  subscribeAssignmentsFirestore();
+}
+function subscribeAssignmentsFirestore(retries){
+  retries = retries || 0;
+  if(!forumDb){
+    if(retries > 40) return;
+    setTimeout(()=>subscribeAssignmentsFirestore(retries+1), 250);
+    return;
+  }
+  if(assignmentsUnsub) assignmentsUnsub();
+  assignmentsUnsub = forumDb.collection('assignments').onSnapshot(snapshot=>{
+    ASSIGNMENTS = [];
+    snapshot.forEach(doc=> ASSIGNMENTS.push({id:doc.id, ...doc.data()}));
+    ASSIGNMENTS.sort((a,b)=> (a.dateLimite||'').localeCompare(b.dateLimite||''));
+    assignmentsLoaded = true;
+    const devoirsPage = document.getElementById('page-devoirs');
+    if(devoirsPage && devoirsPage.classList.contains('active')) renderDevoirsPage();
+    if(isAdminAuthed()) renderAdminAssignmentsList();
+  }, err=> console.error('Erreur Firestore assignments:', err));
+}
+
+/* --- Enseignant : créer / modifier --- */
+function openAssignmentForm(id){
+  editingAssignmentId = id || null;
+  const a = id ? ASSIGNMENTS.find(x=>x.id===id) : null;
+  document.getElementById('assignment-form-title').innerText = id ? 'Modifier' : 'Créer un devoir';
+  document.getElementById('af-type').value = a ? a.type : 'devoir';
+  document.getElementById('af-matiere').value = a ? a.matiere : 'maths';
+  document.getElementById('af-titre').value = a ? a.titre : '';
+  document.getElementById('af-niveau').value = a ? (a.niveau||'') : 'Terminale D';
+  document.getElementById('af-datelimite').value = a ? (a.dateLimite||'') : '';
+  document.getElementById('af-instructions').value = a ? (a.instructions||'') : '';
+  document.getElementById('af-published').checked = a ? !!a.published : true;
+  document.getElementById('assignment-form-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAssignmentForm(){
+  document.getElementById('assignment-form-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+async function saveAssignmentForm(){
+  const titre = document.getElementById('af-titre').value.trim();
+  if(!titre){ showToast('⚠️ Le titre est obligatoire'); return; }
+  const dateLimite = document.getElementById('af-datelimite').value;
+  if(!dateLimite){ showToast('⚠️ Choisis une date limite'); return; }
+  const data = {
+    type: document.getElementById('af-type').value,
+    matiere: document.getElementById('af-matiere').value,
+    titre,
+    niveau: document.getElementById('af-niveau').value.trim() || 'Terminale D',
+    dateLimite,
+    instructions: document.getElementById('af-instructions').value.trim(),
+    published: document.getElementById('af-published').checked
+  };
+  try {
+    if(editingAssignmentId){
+      await forumDb.collection('assignments').doc(editingAssignmentId).update(data);
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      data.resultsPublished = false;
+      await forumDb.collection('assignments').doc('a'+Date.now()).set(data);
+    }
+    showToast(editingAssignmentId ? '✅ Modifié' : '✅ Créé');
+    closeAssignmentForm();
+  } catch(e){
+    console.error(e);
+    showToast("⚠️ Erreur lors de l'enregistrement — vérifie les règles Firestore (collection assignments)");
+  }
+}
+async function deleteAssignment(id){
+  if(!confirm('Supprimer définitivement ce devoir/interrogation et toutes les copies rendues ?')) return;
+  try {
+    const subs = await forumDb.collection('assignments').doc(id).collection('submissions').get();
+    const batch = forumDb.batch();
+    subs.forEach(d=> batch.delete(d.ref));
+    batch.delete(forumDb.collection('assignments').doc(id));
+    await batch.commit();
+    showToast('🗑️ Supprimé');
+  } catch(e){ console.error(e); showToast('⚠️ Erreur lors de la suppression'); }
+}
+function renderAdminAssignmentsList(){
+  const list = document.getElementById('admin-assignments-list');
+  if(!list) return;
+  if(ASSIGNMENTS.length===0){
+    list.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="clipboard-check" class="lucide-icon"></i></div><strong>Aucun devoir créé</strong>Crée ton premier devoir ou interrogation.</div>`;
+    return;
+  }
+  list.innerHTML = ASSIGNMENTS.map(a=>`<div class="admin-list-item" style="align-items:flex-start;">
+      <div style="flex:1;min-width:0;">
+        <strong>${escapeHtml(a.titre)}</strong>
+        <p class="meta-line">${a.type==='interro'?'Interrogation':'Devoir'} • ${a.matiere==='maths'?'Mathématiques':'Physique-Chimie'} • ${escapeHtml(a.niveau||'')} • Limite : ${a.dateLimite||'—'}
+          <span class="status-badge ${a.published?'ready':'pending'}">${a.published?'Publié aux élèves':'Brouillon'}</span>
+          ${a.resultsPublished? '<span class="status-badge ready">Résultats publiés</span>' : ''}
+        </p>
+      </div>
+      <button class="admin-icon-btn" aria-label="Voir les copies" onclick="openGradingModal('${a.id}')"><i data-lucide="users" class="lucide-icon"></i></button>
+      <button class="admin-icon-btn edit" aria-label="Modifier" onclick="openAssignmentForm('${a.id}')"><i data-lucide="pencil" class="lucide-icon"></i></button>
+      <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteAssignment('${a.id}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
+    </div>`).join('');
+}
+
+/* --- Enseignant : correction des copies --- */
+async function openGradingModal(assignmentId){
+  currentGradingAssignmentId = assignmentId;
+  const a = ASSIGNMENTS.find(x=>x.id===assignmentId);
+  if(!a) return;
+  document.getElementById('grading-modal-title').innerText = a.titre;
+  document.getElementById('grading-modal-meta').innerText = (a.type==='interro'?'Interrogation':'Devoir') + ' • ' + (a.matiere==='maths'?'Mathématiques':'Physique-Chimie');
+  const body = document.getElementById('grading-modal-body');
+  body.innerHTML = `<p class="empty-hint">Chargement des copies...</p>`;
+  document.getElementById('grading-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  try {
+    const snap = await forumDb.collection('assignments').doc(assignmentId).collection('submissions').orderBy('submittedAt','asc').get();
+    if(snap.empty){
+      body.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="inbox" class="lucide-icon"></i></div><strong>Aucune copie rendue pour l'instant</strong></div>`;
+      return;
+    }
+    body.innerHTML = snap.docs.map(doc=>{
+      const s = doc.data();
+      const dateStr = (s.submittedAt && s.submittedAt.toDate) ? s.submittedAt.toDate().toLocaleDateString('fr-FR') : '';
+      return `<div class="grading-row">
+        <div class="grading-row-head"><strong>${escapeHtml(s.studentName||'Élève')}</strong><span class="submission-meta">${dateStr}</span></div>
+        <div class="submission-answer-box">${escapeHtml(s.answerText||'')}</div>
+        <div class="form-row-2">
+          <div class="form-sheet-field"><label>Note /20</label>
+            <input type="number" min="0" max="20" id="grade-score-${doc.id}" value="${s.score!=null?s.score:''}">
+          </div>
+        </div>
+        <div class="form-sheet-field"><label>Commentaire</label>
+          <textarea rows="2" id="grade-feedback-${doc.id}">${escapeHtml(s.feedback||'')}</textarea>
+        </div>
+        <button class="btn-mini" onclick="saveGrade('${assignmentId}','${doc.id}')"><i data-lucide="save" class="lucide-icon"></i> Enregistrer la note</button>
+      </div>`;
+    }).join('');
+  } catch(e){
+    console.error(e);
+    body.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>Impossible de charger les copies</strong></div>`;
+  }
+}
+function closeGradingModal(){
+  document.getElementById('grading-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+async function saveGrade(assignmentId, studentUid){
+  const scoreEl = document.getElementById('grade-score-'+studentUid);
+  const feedbackEl = document.getElementById('grade-feedback-'+studentUid);
+  const raw = scoreEl.value;
+  const score = raw === '' ? null : Math.max(0, Math.min(20, Number(raw)));
+  try {
+    await forumDb.collection('assignments').doc(assignmentId).collection('submissions').doc(studentUid).update({
+      score, feedback: feedbackEl.value.trim(), status: 'note', gradedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    showToast('✅ Note enregistrée');
+  } catch(e){ console.error(e); showToast("⚠️ Erreur lors de l'enregistrement de la note"); }
+}
+async function publishAssignmentResults(){
+  if(!currentGradingAssignmentId) return;
+  try {
+    await forumDb.collection('assignments').doc(currentGradingAssignmentId).update({ resultsPublished: true });
+    showToast('📣 Résultats publiés aux élèves');
+  } catch(e){ console.error(e); showToast('⚠️ Erreur lors de la publication'); }
+}
+
+/* --- Élève : consulter et rendre --- */
+function setDevoirsFilter(f){
+  devoirsFilter = f;
+  ['tous','afaire','rendu','note'].forEach(k=>{
+    const el = document.getElementById('devoirs-filter-'+k);
+    if(el) el.classList.toggle('active', k===f);
+  });
+  renderDevoirsPage();
+}
+async function renderDevoirsPage(){
+  const container = document.getElementById('devoirs-list-container');
+  if(!container) return;
+  if(!isRealAccount()){
+    container.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="lock" class="lucide-icon"></i></div><strong>Connecte-toi pour voir tes devoirs</strong>Crée un compte gratuit pour recevoir tes devoirs, interrogations et notes.</div>`;
+    return;
+  }
+  if(!isFirebaseConfigured()){
+    container.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>Module indisponible hors-ligne</strong></div>`;
+    return;
+  }
+  if(!assignmentsLoaded){ container.innerHTML = coursSkeletons(3); return; }
+  const published = ASSIGNMENTS.filter(a=>a.published);
+  if(published.length===0){
+    container.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="clipboard-check" class="lucide-icon"></i></div><strong>Aucun devoir pour l'instant</strong>Reviens plus tard, ton professeur n'a encore rien publié.</div>`;
+    return;
+  }
+  const uid = firebaseUser ? firebaseUser.uid : null;
+  container.innerHTML = coursSkeletons(Math.min(3, published.length));
+  const results = await Promise.all(published.map(async a=>{
+    let sub = null;
+    try {
+      const doc = await forumDb.collection('assignments').doc(a.id).collection('submissions').doc(uid).get();
+      if(doc.exists) sub = doc.data();
+    } catch(e){ console.error(e); }
+    return { a, sub };
+  }));
+  let filtered = results;
+  if(devoirsFilter==='afaire') filtered = results.filter(r=>!r.sub);
+  if(devoirsFilter==='rendu') filtered = results.filter(r=>r.sub && !(r.a.resultsPublished && r.sub.score!=null));
+  if(devoirsFilter==='note') filtered = results.filter(r=>r.sub && r.a.resultsPublished && r.sub.score!=null);
+  if(filtered.length===0){
+    container.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="search" class="lucide-icon"></i></div><strong>Rien ici</strong></div>`;
+    return;
+  }
+  container.innerHTML = `<div class="content-card-grid stagger">${filtered.map(r=>devoirCardHtml(r.a, r.sub)).join('')}</div>`;
+}
+function devoirCardHtml(a, sub){
+  const overdue = a.dateLimite && new Date(a.dateLimite) < new Date(new Date().toDateString()) && !sub;
+  let statusBadge, ctaLabel;
+  if(sub && a.resultsPublished && sub.score!=null){
+    statusBadge = `<span class="status-badge ready">Noté : ${sub.score}/20</span>`;
+    ctaLabel = 'Voir ma correction';
+  } else if(sub){
+    statusBadge = `<span class="status-badge pending">Rendu — en attente de correction</span>`;
+    ctaLabel = 'Voir ma copie';
+  } else if(overdue){
+    statusBadge = `<span class="status-badge" style="background:#fee2e2;color:#dc2626;">En retard</span>`;
+    ctaLabel = 'Rendre en retard';
+  } else {
+    statusBadge = `<span class="status-badge pending">À faire</span>`;
+    ctaLabel = 'Faire le devoir';
+  }
+  return `<div class="content-card subj-${a.matiere==='physique'?'physique':'maths'}">
+    <div class="cc-top">
+      <div class="cc-icon">${a.type==='interro'?'<i data-lucide="file-text" class="lucide-icon"></i>':'<i data-lucide="clipboard-check" class="lucide-icon"></i>'}</div>
+      <div class="cc-body">
+        <h4>${escapeHtml(a.titre)}</h4>
+        <div class="cc-meta-row">
+          <span>${a.type==='interro'?'Interrogation':'Devoir'}</span><span class="dot">•</span>
+          <span>${a.matiere==='maths'?'Mathématiques':'Physique-Chimie'}</span><span class="dot">•</span>
+          <span>Limite : ${a.dateLimite||'—'}</span>
+        </div>
+      </div>
+    </div>
+    <div class="cc-badges">${statusBadge}</div>
+    <div class="cc-footer">
+      <button class="cc-cta" onclick="openSubmissionModal('${a.id}')">${ctaLabel}</button>
+    </div>
+  </div>`;
+}
+async function openSubmissionModal(assignmentId){
+  const a = ASSIGNMENTS.find(x=>x.id===assignmentId);
+  if(!a) return;
+  document.getElementById('submission-modal-title').innerText = a.titre;
+  document.getElementById('submission-modal-meta').innerText = (a.type==='interro'?'Interrogation':'Devoir') + ' • Limite : ' + (a.dateLimite||'—');
+  const body = document.getElementById('submission-modal-body');
+  body.innerHTML = `<p class="empty-hint">Chargement...</p>`;
+  document.getElementById('submission-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const uid = firebaseUser.uid;
+  let sub = null;
+  try {
+    const doc = await forumDb.collection('assignments').doc(assignmentId).collection('submissions').doc(uid).get();
+    if(doc.exists) sub = doc.data();
+  } catch(e){ console.error(e); }
+  if(sub && a.resultsPublished && sub.score!=null){
+    body.innerHTML = `
+      <p style="white-space:pre-wrap;font-size:13px;color:var(--text-muted);margin-bottom:14px;">${escapeHtml(a.instructions||'')}</p>
+      <div class="submission-answer-box">${escapeHtml(sub.answerText||'')}</div>
+      <div class="score-ring" style="margin:18px auto;background: conic-gradient(#1a9640 ${sub.score*5}%, #e2e8f0 ${sub.score*5}% 100%);"><div class="inner"><span class="big">${sub.score}/20</span></div></div>
+      ${sub.feedback ? `<p style="font-size:13px;"><strong>Commentaire du professeur :</strong> ${escapeHtml(sub.feedback)}</p>` : ''}
+      <button class="btn-cancel-form" onclick="closeSubmissionModal()">Fermer</button>`;
+  } else if(sub){
+    body.innerHTML = `
+      <p style="white-space:pre-wrap;font-size:13px;color:var(--text-muted);margin-bottom:14px;">${escapeHtml(a.instructions||'')}</p>
+      <div class="submission-answer-box">${escapeHtml(sub.answerText||'')}</div>
+      <p class="empty-hint" style="margin-top:12px;"><i data-lucide="clock" class="lucide-icon"></i> En attente de correction par ton professeur.</p>
+      <button class="btn-cancel-form" onclick="closeSubmissionModal()">Fermer</button>`;
+  } else {
+    body.innerHTML = `
+      <p style="white-space:pre-wrap;font-size:13px;color:var(--text-muted);margin-bottom:14px;">${escapeHtml(a.instructions||'Aucune consigne particulière.')}</p>
+      <div class="form-sheet-field"><label>Ta réponse</label>
+        <textarea id="submission-answer-input" rows="6" placeholder="Écris ta réponse ici..."></textarea>
+      </div>
+      <button class="btn-save-form" onclick="submitAssignmentAnswer('${assignmentId}')"><i data-lucide="send" class="lucide-icon"></i> Envoyer ma réponse</button>
+      <button class="btn-cancel-form" onclick="closeSubmissionModal()">Annuler</button>`;
+  }
+}
+function closeSubmissionModal(){
+  document.getElementById('submission-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+async function submitAssignmentAnswer(assignmentId){
+  const input = document.getElementById('submission-answer-input');
+  const answerText = input.value.trim();
+  if(!answerText){ showToast('⚠️ Écris une réponse avant d\'envoyer'); return; }
+  try {
+    await forumDb.collection('assignments').doc(assignmentId).collection('submissions').doc(firebaseUser.uid).set({
+      studentUid: firebaseUser.uid,
+      studentName: (userProfile && userProfile.name) || 'Élève',
+      answerText,
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'rendu', score: null, feedback: ''
+    });
+    showToast('✅ Réponse envoyée');
+    closeSubmissionModal();
+    renderDevoirsPage();
+  } catch(e){ console.error(e); showToast("⚠️ Erreur lors de l'envoi — vérifie les règles Firestore (collection assignments)"); }
+}
 async function seedFirestoreCoursesOnce(){
   try {
     const coursesSnap = await forumDb.collection('courses').limit(1).get();
@@ -2927,11 +3398,11 @@ function timeAgo(date){
   return Math.floor(diff/86400) + ' j';
 }
 const REACTION_TYPES = [
-  { id: 'like', icon: '👍', label: "J'aime" },
-  { id: 'coeur', icon: '❤️', label: "J'adore" },
-  { id: 'bravo', icon: '🎉', label: 'Bravo' },
-  { id: 'idee', icon: '💡', label: 'Idée' },
-  { id: 'applaudir', icon: '👏', label: 'Applaudissements' }
+  { id: 'like', icon: '<i data-lucide="thumbs-up" class="lucide-icon"></i>', label: "J'aime" },
+  { id: 'coeur', icon: '<i data-lucide="heart" class="lucide-icon"></i>', label: "J'adore" },
+  { id: 'bravo', icon: '<i data-lucide="party-popper" class="lucide-icon"></i>', label: 'Bravo' },
+  { id: 'idee', icon: '<i data-lucide="lightbulb" class="lucide-icon"></i>', label: 'Idée' },
+  { id: 'applaudir', icon: '<i data-lucide="sparkles" class="lucide-icon"></i>', label: 'Applaudissements' }
 ];
 function forumReactionsOf(p){
   const base = { like: p.likes||0, coeur: 0, bravo: 0, idee: 0, applaudir: 0 };
@@ -3025,7 +3496,7 @@ function initForum(){
   if(!isFirebaseConfigured()){
     document.getElementById('forum-feed').innerHTML = '';
     document.querySelector('.forum-composer').style.display = 'none';
-    document.getElementById('forum-feed').innerHTML = `<div class="forum-empty-config"><div class="emoji">🛠️</div><strong>Le forum arrive bientôt</strong><br>L'administrateur doit d'abord connecter une base de données gratuite (Firebase) pour activer les discussions entre élèves.</div>`;
+    document.getElementById('forum-feed').innerHTML = `<div class="forum-empty-config"><div class="emoji"><i data-lucide="wrench" class="lucide-icon"></i></div><strong>Le forum arrive bientôt</strong><br>L'administrateur doit d'abord connecter une base de données gratuite (Firebase) pour activer les discussions entre élèves.</div>`;
     return;
   }
   document.querySelector('.forum-composer').style.display = 'block';
@@ -3043,7 +3514,7 @@ function subscribeForumFeed(){
   let resolved = false;
   const timeoutId = setTimeout(()=>{
     if(resolved) return;
-    body.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Le chargement prend trop de temps</strong>Vérifie ta connexion internet, ou essaie d'ouvrir le site depuis un navigateur (Chrome) plutôt que depuis l'appli de téléchargements.<br><br><button class="btn-action" onclick="subscribeForumFeed()">🔄 Réessayer</button></div>`;
+    body.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>Le chargement prend trop de temps</strong>Vérifie ta connexion internet, ou essaie d'ouvrir le site depuis un navigateur (Chrome) plutôt que depuis l'appli de téléchargements.<br><br><button class="btn-action" onclick="subscribeForumFeed()"><i data-lucide="refresh-cw" class="lucide-icon"></i> Réessayer</button></div>`;
   }, 8000);
   forumUnsub = forumDb.collection('forumPosts')
     .where('matiere','==', forumSubject)
@@ -3060,7 +3531,7 @@ function subscribeForumFeed(){
     }, err=>{
       resolved = true;
       clearTimeout(timeoutId);
-      body.innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de charger le forum</strong>Vérifie la configuration Firebase et les règles Firestore.<br><br><button class="btn-action" onclick="subscribeForumFeed()">🔄 Réessayer</button></div>`;
+      body.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>Impossible de charger le forum</strong>Vérifie la configuration Firebase et les règles Firestore.<br><br><button class="btn-action" onclick="subscribeForumFeed()"><i data-lucide="refresh-cw" class="lucide-icon"></i> Réessayer</button></div>`;
       console.error(err);
     });
 }
@@ -3080,7 +3551,7 @@ function renderForumFeed(){
   if(forumFilterMode==='unanswered') posts = posts.filter(p=> !(p.replies||[]).length);
 
   if(posts.length===0){
-    body.innerHTML = `<div class="empty-state"><div class="emoji">💬</div><strong>Aucune question pour l'instant</strong>Sois le premier à lancer une discussion !</div>`;
+    body.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="message-circle" class="lucide-icon"></i></div><strong>Aucune question pour l'instant</strong>Sois le premier à lancer une discussion !</div>`;
     return;
   }
   const likedPosts = JSON.parse(localStorage.getItem('solci_liked_posts')||'{}');
@@ -3107,18 +3578,18 @@ function renderForumFeed(){
           <div class="time">${timeAgo(created)}${p.classe ? ' · <span class="forum-classe-chip">'+escapeHtml(p.classe)+'</span>' : ''}</div>
         </div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-          ${isTrending ? '<span class="forum-classe-chip" style="color:#ef4444;font-weight:800;">🔥 Tendance</span>' : ''}
+          ${isTrending ? '<span class="forum-classe-chip" style="color:#ef4444;font-weight:800;"><i data-lucide="flame" class="lucide-icon"></i> Tendance</span>' : ''}
           <span class="forum-post-tag">${escapeHtml(p.theme||'Question générale')}</span>
         </div>
       </div>
       <div class="forum-post-text">${forumRenderText(p.text)}</div>
-      ${p.pdfUrl ? `<a class="forum-pdf-chip" href="${escapeHtml(p.pdfUrl)}" target="_blank" rel="noopener">📎 Pièce jointe PDF</a>` : ''}
+      ${p.pdfUrl ? `<a class="forum-pdf-chip" href="${escapeHtml(p.pdfUrl)}" target="_blank" rel="noopener"><i data-lucide="paperclip" class="lucide-icon"></i> Pièce jointe PDF</a>` : ''}
       <div class="forum-post-actions">
         <div class="forum-reactions-row">
           ${REACTION_TYPES.map(rt=>`<button class="forum-reaction-btn ${myReactions.includes(rt.id)?'active':''}" aria-label="${rt.label}" onclick="this.classList.add('reaction-pop'); setTimeout(()=>this.classList.remove('reaction-pop'),400); toggleForumReaction('${p.id}','${rt.id}')">${rt.icon} ${reactions[rt.id]||0}</button>`).join('')}
         </div>
-        <button class="forum-action-btn" onclick="toggleReplyForm('${p.id}')">💬 ${replies.length} réponse${replies.length>1?'s':''}</button>
-        ${isAdminAuthed() ? `<button class="forum-action-btn" style="margin-left:auto;color:#ef4444;" onclick="moderateDeletePost('${p.id}')">🗑️ Supprimer</button>` : ''}
+        <button class="forum-action-btn" onclick="toggleReplyForm('${p.id}')"><i data-lucide="message-circle" class="lucide-icon"></i> ${replies.length} réponse${replies.length>1?'s':''}</button>
+        ${isAdminAuthed() ? `<button class="forum-action-btn" style="margin-left:auto;color:#ef4444;" onclick="moderateDeletePost('${p.id}')"><i data-lucide="trash-2" class="lucide-icon"></i> Supprimer</button>` : ''}
       </div>
       ${replies.length ? `<div class="forum-replies">${orderedReplies.map(({r,i})=>{
         const isNested = /^@/.test((r.text||'').trim());
@@ -3126,19 +3597,19 @@ function renderForumFeed(){
         return `<div class="forum-reply ${isNested?'is-nested':''} ${isAccepted?'is-accepted':''}">
           <div class="forum-avatar-lg" style="width:30px;height:30px;font-size:14px;">${r.authorAvatar || forumInitials(r.author)}</div>
           <div class="forum-reply-bubble">
-            ${isAccepted ? `<div class="forum-reply-nested-tag" style="color:var(--green-dark);">⭐ Meilleure réponse</div>` : (isNested ? `<div class="forum-reply-nested-tag">↳ réponse</div>` : '')}
+            ${isAccepted ? `<div class="forum-reply-nested-tag" style="color:var(--green-dark);"><i data-lucide="star" class="lucide-icon"></i> Meilleure réponse</div>` : (isNested ? `<div class="forum-reply-nested-tag"><i data-lucide="corner-down-right" class="lucide-icon"></i> réponse</div>` : '')}
             <div class="author">${escapeHtml(r.author)} ${r.authorLevel ? `<span class="forum-level-chip">Niv. ${r.authorLevel}</span>` : ''}</div>
             <div class="text">${forumRenderText(r.text)}</div>
             <div style="display:flex; gap:10px; align-items:center; margin-top:4px;">
               <button class="forum-reply-mention-btn" onclick="mentionReply('${p.id}','${escapeHtml(r.author).replace(/'/g,"\\'")}')">Répondre</button>
-              ${isOwner ? `<button class="forum-accept-btn ${isAccepted?'accepted':''}" onclick="forumAcceptReply('${p.id}', ${i})">${isAccepted ? '✔️ Réponse acceptée' : 'Marquer comme réponse acceptée'}</button>` : ''}
+              ${isOwner ? `<button class="forum-accept-btn ${isAccepted?'accepted':''}" onclick="forumAcceptReply('${p.id}', ${i})">${isAccepted ? '<i data-lucide="check" class="lucide-icon"></i> Réponse acceptée' : 'Marquer comme réponse acceptée'}</button>` : ''}
             </div>
           </div>
         </div>`;
       }).join('')}</div>` : ''}
       <div class="forum-reply-form" id="reply-form-${p.id}" style="display:none;">
         <input type="text" id="reply-input-${p.id}" placeholder="Répondre..." maxlength="400" onkeydown="if(event.key==='Enter') submitForumReply('${p.id}')">
-        <button onclick="submitForumReply('${p.id}')">➤</button>
+        <button onclick="submitForumReply('${p.id}')"><i data-lucide="chevron-right" class="lucide-icon"></i></button>
       </div>
     </div>`;
   }).join('');
@@ -3332,7 +3803,7 @@ function renderPopularWeek(){
     <div class="forum-popular-row">
       <span class="rank">#${i+1}</span>
       <span class="forum-popular-title">${escapeHtml(p.text.slice(0,40))}${p.text.length>40?'…':''}</span>
-      <span class="forum-contrib-xp">${forumReactionsTotal(p)+((p.replies||[]).length)} 🔥</span>
+      <span class="forum-contrib-xp">${forumReactionsTotal(p)+((p.replies||[]).length)} <i data-lucide="flame" class="lucide-icon"></i></span>
     </div>`).join('') : '<p class="empty-hint">Rien de populaire cette semaine pour l\'instant.</p>';
 }
 function toggleNotifDropdown(){
@@ -3434,7 +3905,7 @@ async function openQuiz(courseId){
     renderQuizQuestion();
   } catch(e){
     console.error(e);
-    document.getElementById('quiz-body').innerHTML = `<div class="empty-state"><div class="emoji">⚠️</div><strong>Impossible de générer le quiz</strong>Vérifie ta connexion et réessaie dans un instant.</div>`;
+    document.getElementById('quiz-body').innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>Impossible de générer le quiz</strong>Vérifie ta connexion et réessaie dans un instant.</div>`;
   }
 }
 
@@ -3540,7 +4011,7 @@ function selectQuizOption(idx){
   });
   if(idx !== q.correct && navigator.vibrate) { try{ navigator.vibrate(120); }catch(e){} }
   if(q.explain){
-    document.getElementById('quiz-explain-slot').innerHTML = `<div class="quiz-explain">💡 ${escapeHtml(q.explain)}</div>`;
+    document.getElementById('quiz-explain-slot').innerHTML = `<div class="quiz-explain"><i data-lucide="lightbulb" class="lucide-icon"></i> ${escapeHtml(q.explain)}</div>`;
   }
   document.getElementById('quiz-next-btn').disabled = false;
 }
@@ -3561,7 +4032,7 @@ function renderQuizResult(){
   document.getElementById('quiz-progress-fill').style.width = '100%';
   document.getElementById('quiz-footer').style.display = 'none';
   const color = pct >= 70 ? '#1a9640' : pct >= 40 ? '#F47B20' : '#ef4444';
-  const msg = pct >= 70 ? 'Excellent travail ! 🎉' : pct >= 40 ? 'Pas mal, continue à réviser 💪' : 'Ce chapitre mérite une relecture 📖';
+  const msg = pct >= 70 ? 'Excellent travail ! <i data-lucide="party-popper" class="lucide-icon"></i>' : pct >= 40 ? 'Pas mal, continue à réviser <i data-lucide="dumbbell" class="lucide-icon"></i>' : 'Ce chapitre mérite une relecture <i data-lucide="book-open" class="lucide-icon"></i>';
 
   document.getElementById('quiz-body').innerHTML = `
     <div class="quiz-result">
@@ -3570,7 +4041,7 @@ function renderQuizResult(){
       </div>
       <h3>${msg}</h3>
       <p>Quiz sur "${escapeHtml(currentQuiz.titre)}"</p>
-      <button class="btn-download-trigger" style="margin-bottom:10px;" onclick="restartQuiz()">🔁 Refaire le quiz</button>
+      <button class="btn-download-trigger" style="margin-bottom:10px;" onclick="restartQuiz()"><i data-lucide="repeat" class="lucide-icon"></i> Refaire le quiz</button>
       <button class="btn-dismiss" onclick="closeQuiz()">Fermer</button>
     </div>`;
   saveQuizResult(currentQuiz.courseId, currentQuiz.titre, pct);
@@ -3727,10 +4198,10 @@ function levelFromTotalXP(xp){
   return { level, xpIntoLevel: remaining, xpForNext: needed };
 }
 function levelEmoji(level){
-  if(level >= 15) return '💎';
-  if(level >= 10) return '🥇';
-  if(level >= 5) return '🥈';
-  return '🥉';
+  if(level >= 15) return '<i data-lucide="gem" class="lucide-icon"></i>';
+  if(level >= 10) return '<i data-lucide="award" class="lucide-icon"></i>';
+  if(level >= 5) return '<i data-lucide="medal" class="lucide-icon"></i>';
+  return '<i data-lucide="medal" class="lucide-icon"></i>';
 }
 const LEVEL_REWARDS = [
   { level: 2, id: 'title_debutant', type: 'title', label: 'Titre « Apprenti Motivé »' },
@@ -3748,7 +4219,7 @@ function grantLevelRewards(level){
   let text = 'Continue comme ça, tu progresses vite !';
   LEVEL_REWARDS.filter(r => r.level <= level && !GAM.unlockedRewards.includes(r.id)).forEach(r => {
     GAM.unlockedRewards.push(r.id);
-    text = '🎁 ' + r.label;
+    text = '<i data-lucide="gift" class="lucide-icon"></i> ' + r.label;
   });
   persistGam();
   return text;
@@ -3809,7 +4280,7 @@ function updateXPBarUI(){
     pageTitle.textContent = titleDef ? titleDef.label.replace('Titre ','').replace(/«|»/g,'').trim() : 'Élève Scientifique';
   }
   const streakDetail = document.getElementById('gam-streak-detail');
-  if(streakDetail) streakDetail.textContent = (GAM.streak||0) + ' 🔥';
+  if(streakDetail) streakDetail.innerHTML = (GAM.streak||0) + ' <i data-lucide="flame" class="lucide-icon"></i>';
 }
 
 /* --- Connexion quotidienne & série --- */
@@ -3828,19 +4299,19 @@ function handleDailyLogin(){
 
 /* --- Badges --- */
 const BADGE_DEFS = [
-  { id: 'first_quiz', icon: '🥇', name: 'Premier Quiz', desc: 'Terminer ton premier quiz.' },
-  { id: 'assidu', icon: '📚', name: 'Élève Assidu', desc: 'Faire un quiz sur 10 chapitres différents.' },
-  { id: 'streak7', icon: '🔥', name: '7 jours consécutifs', desc: 'Se connecter 7 jours de suite.' },
-  { id: 'streak30', icon: '💎', name: '30 jours consécutifs', desc: 'Se connecter 30 jours de suite.' },
-  { id: 'expert_maths', icon: '🧮', name: 'Expert en Mathématiques', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de maths.' },
-  { id: 'roi_forum', icon: '👑', name: 'Roi du Forum', desc: 'Participer 20 fois au forum.' },
-  { id: 'champion_sciences', icon: '⚗️', name: 'Champion des Sciences', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de physique-chimie.' },
-  { id: 'bac_ready', icon: '🎓', name: 'Bac Ready', desc: 'Atteindre le niveau 10.' },
-  { id: 'forum_expert_maths', icon: '➗', name: 'Expert Maths (forum)', desc: 'Participer 10 fois au forum de Mathématiques.' },
-  { id: 'mentor', icon: '🧑‍🏫', name: 'Mentor', desc: 'Répondre à 15 questions sur le forum.' },
-  { id: 'aide_precieuse', icon: '💎', name: 'Aide Précieuse', desc: 'Recevoir 15 réactions sur tes publications.' },
-  { id: 'meilleur_contributeur', icon: '🏅', name: 'Meilleur Contributeur', desc: 'Participer 30 fois au forum.' },
-  { id: 'reponse_acceptee', icon: '✔️', name: 'Réponse Acceptée', desc: "Voir une de tes réponses marquée comme acceptée." }
+  { id: 'first_quiz', icon: '<i data-lucide="award" class="lucide-icon"></i>', name: 'Premier Quiz', desc: 'Terminer ton premier quiz.' },
+  { id: 'assidu', icon: '<i data-lucide="library" class="lucide-icon"></i>', name: 'Élève Assidu', desc: 'Faire un quiz sur 10 chapitres différents.' },
+  { id: 'streak7', icon: '<i data-lucide="flame" class="lucide-icon"></i>', name: '7 jours consécutifs', desc: 'Se connecter 7 jours de suite.' },
+  { id: 'streak30', icon: '<i data-lucide="gem" class="lucide-icon"></i>', name: '30 jours consécutifs', desc: 'Se connecter 30 jours de suite.' },
+  { id: 'expert_maths', icon: '<i data-lucide="calculator" class="lucide-icon"></i>', name: 'Expert en Mathématiques', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de maths.' },
+  { id: 'roi_forum', icon: '<i data-lucide="crown" class="lucide-icon"></i>', name: 'Roi du Forum', desc: 'Participer 20 fois au forum.' },
+  { id: 'champion_sciences', icon: '<i data-lucide="flask-conical" class="lucide-icon"></i>', name: 'Champion des Sciences', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de physique-chimie.' },
+  { id: 'bac_ready', icon: '<i data-lucide="graduation-cap" class="lucide-icon"></i>', name: 'Bac Ready', desc: 'Atteindre le niveau 10.' },
+  { id: 'forum_expert_maths', icon: '<i data-lucide="divide" class="lucide-icon"></i>', name: 'Expert Maths (forum)', desc: 'Participer 10 fois au forum de Mathématiques.' },
+  { id: 'mentor', icon: '<i data-lucide="presentation" class="lucide-icon"></i>', name: 'Mentor', desc: 'Répondre à 15 questions sur le forum.' },
+  { id: 'aide_precieuse', icon: '<i data-lucide="gem" class="lucide-icon"></i>', name: 'Aide Précieuse', desc: 'Recevoir 15 réactions sur tes publications.' },
+  { id: 'meilleur_contributeur', icon: '<i data-lucide="medal" class="lucide-icon"></i>', name: 'Meilleur Contributeur', desc: 'Participer 30 fois au forum.' },
+  { id: 'reponse_acceptee', icon: '<i data-lucide="check" class="lucide-icon"></i>', name: 'Réponse Acceptée', desc: "Voir une de tes réponses marquée comme acceptée." }
 ];
 function checkBadges(){
   if(!GAM) return;
@@ -3885,7 +4356,7 @@ function showNextBadgeUnlock(){
   if(!b) return;
   fireConfetti(70);
   playLevelSound();
-  const emojiEl = document.getElementById('badge-unlock-emoji'); if(emojiEl) emojiEl.textContent = b.icon;
+  const emojiEl = document.getElementById('badge-unlock-emoji'); if(emojiEl) emojiEl.innerHTML = b.icon;
   const nameEl = document.getElementById('badge-unlock-name'); if(nameEl) nameEl.textContent = b.name;
   const descEl = document.getElementById('badge-unlock-desc'); if(descEl) descEl.textContent = b.desc;
   const overlay = document.getElementById('badge-unlock-overlay');
@@ -3904,7 +4375,7 @@ function renderBadgesGrid(){
   el.innerHTML = BADGE_DEFS.map(b=>{
     const owned = GAM.badges && GAM.badges[b.id];
     return `<div class="badge-card ${owned?'owned':'locked'}" title="${escapeHtml(b.desc)}">
-      <span class="badge-icon">${owned ? b.icon : '🔒'}</span>
+      <span class="badge-icon">${owned ? b.icon : '<i data-lucide="lock" class="lucide-icon"></i>'}</span>
       <span class="badge-name">${escapeHtml(b.name)}</span>
       ${owned ? `<span class="badge-date">${new Date(owned.date).toLocaleDateString('fr-FR')}</span>` : `<span class="badge-desc">${escapeHtml(b.desc)}</span>`}
     </div>`;
@@ -3913,13 +4384,13 @@ function renderBadgesGrid(){
 
 /* --- Défis quotidiens --- */
 const CHALLENGE_POOL = [
-  { id: 'lire_chapitre', label: 'Terminer un cours', icon: '📖', target: 1 },
-  { id: 'deux_quiz', label: 'Réussir deux quiz', icon: '✅', target: 2 },
-  { id: 'obtenir80', label: 'Obtenir au moins 80% à un quiz', icon: '🎯', target: 1 },
-  { id: 'repondre_forum', label: 'Répondre à une question sur le forum', icon: '💬', target: 1 },
-  { id: 'regarder_video', label: 'Regarder une vidéo jusqu\'à la fin', icon: '🎥', target: 1 },
-  { id: 'etudier_temps', label: 'Étudier pendant 15 minutes', icon: '⏱️', target: 15 },
-  { id: 'terminer_exercices', label: 'Terminer deux exercices', icon: '📝', target: 2 }
+  { id: 'lire_chapitre', label: 'Terminer un cours', icon: '<i data-lucide="book-open" class="lucide-icon"></i>', target: 1 },
+  { id: 'deux_quiz', label: 'Réussir deux quiz', icon: '<i data-lucide="circle-check-big" class="lucide-icon"></i>', target: 2 },
+  { id: 'obtenir80', label: 'Obtenir au moins 80% à un quiz', icon: '<i data-lucide="target" class="lucide-icon"></i>', target: 1 },
+  { id: 'repondre_forum', label: 'Répondre à une question sur le forum', icon: '<i data-lucide="message-circle" class="lucide-icon"></i>', target: 1 },
+  { id: 'regarder_video', label: 'Regarder une vidéo jusqu\'à la fin', icon: '<i data-lucide="video" class="lucide-icon"></i>', target: 1 },
+  { id: 'etudier_temps', label: 'Étudier pendant 15 minutes', icon: '<i data-lucide="timer" class="lucide-icon"></i>', target: 15 },
+  { id: 'terminer_exercices', label: 'Terminer deux exercices', icon: '<i data-lucide="pencil" class="lucide-icon"></i>', target: 2 }
 ];
 function seededShuffle(dateStr, arr){
   let seed = 0;
@@ -3975,12 +4446,12 @@ function renderDailyChallenges(){
     const c = todayC[id];
     const pct = Math.min(100, Math.round((c.progress / c.target) * 100));
     return `<div class="challenge-card ${c.done?'done':''}">
-      <span class="challenge-icon">${def ? def.icon : '🎯'}</span>
+      <span class="challenge-icon">${def ? def.icon : '<i data-lucide="target" class="lucide-icon"></i>'}</span>
       <div class="challenge-info">
         <span class="challenge-label">${def ? escapeHtml(def.label) : id}</span>
         <div class="challenge-bar"><div class="challenge-fill" style="width:${pct}%"></div></div>
       </div>
-      <span class="challenge-status">${c.done ? '✔️' : Math.round(c.progress) + '/' + c.target}</span>
+      <span class="challenge-status">${c.done ? '<i data-lucide="check" class="lucide-icon"></i>' : Math.round(c.progress) + '/' + c.target}</span>
     </div>`;
   }).join('');
   ['daily-challenges-list', 'daily-challenges-list-page'].forEach(id=>{
@@ -3991,13 +4462,15 @@ function renderDailyChallenges(){
 
 /* --- Événements déclencheurs d'XP --- */
 function onChapterOpened(courseId){
+  // Correctif : ouvrir la fiche d'un cours n'est PAS "terminer" un cours.
+  // On garde uniquement la trace pour la barre de progression (état "En cours"),
+  // sans jamais accorder d'XP ni valider le défi ici — voir onQuizGamification()
+  // et onVideoWatched() pour les vraies actions de complétion.
   if(!GAM) loadGam();
-  bumpChallenge('lire_chapitre');
   GAM.openedCourses = GAM.openedCourses || [];
   if(!GAM.openedCourses.includes(courseId)){
     GAM.openedCourses.push(courseId);
     persistGam();
-    addXP(15, 'Chapitre terminé');
   }
 }
 function onQuizGamification(courseId, pct){
@@ -4006,6 +4479,7 @@ function onQuizGamification(courseId, pct){
   if(pct>=90){ xp = 40; reason = 'Excellente note !'; }
   else if(pct<40){ xp = 8; reason = 'Quiz terminé'; }
   addXP(xp, reason);
+  bumpChallenge('lire_chapitre'); // terminer un quiz = avoir réellement terminé le cours
   bumpChallenge('deux_quiz');
   if(pct>=80) bumpChallenge('obtenir80');
   if(pct===100) fireConfetti(150);
@@ -4030,6 +4504,7 @@ function onVideoWatched(courseId){
   persistGam();
   addXP(15, 'Vidéo visionnée');
   bumpChallenge('regarder_video');
+  bumpChallenge('lire_chapitre'); // regarder la vidéo du cours = cours réellement suivi
 }
 
 /* --- Passage de niveau --- */
@@ -4277,7 +4752,7 @@ function renderQuoteOfDay(){
   const dayIndex = Math.floor(Date.now() / 86400000);
   const order = getQuoteRotation();
   const quote = MOTIVATIONAL_QUOTES[order[dayIndex % order.length]];
-  el.innerHTML = `<span class="quote-mark">❝</span><div class="quote-text-wrap"><p>${escapeHtml(quote.t)}</p>${quote.a ? `<span class="quote-author">— ${escapeHtml(quote.a)}</span>` : ''}</div>`;
+  el.innerHTML = `<span class="quote-mark"><i data-lucide="quote" class="lucide-icon"></i></span><div class="quote-text-wrap"><p>${escapeHtml(quote.t)}</p>${quote.a ? `<span class="quote-author">— ${escapeHtml(quote.a)}</span>` : ''}</div>`;
 }
 
 /* --- Performances : matières fortes/faibles, historique, recommandations --- */
@@ -4311,7 +4786,7 @@ function renderPerformanceInsights(){
   if(histEl){
     histEl.innerHTML = historyRows.length ? historyRows.slice(0,10).map(r=>`
       <div class="history-row">
-        <span>${r.matiere==='maths'?'🧮':r.matiere==='physique'?'⚗️':'📘'} ${escapeHtml(r.titre)}</span>
+        <span>${r.matiere==='maths'?'<i data-lucide="calculator" class="lucide-icon"></i>':r.matiere==='physique'?'<i data-lucide="flask-conical" class="lucide-icon"></i>':'<i data-lucide="book" class="lucide-icon"></i>'} ${escapeHtml(r.titre)}</span>
         <span class="history-pct" style="color:${r.pct>=70?'#1a9640':r.pct>=40?'#F47B20':'#ef4444'}">${r.pct}%</span>
       </div>`).join('') : '<p class="empty-hint">Aucun quiz effectué pour le moment.</p>';
   }
@@ -4329,7 +4804,7 @@ function renderPerformanceInsights(){
     }
     recoEl.innerHTML = recos.length ? recos.map(c=>`
       <div class="reco-mini-card" onclick="switchPage('cours'); selectSubjectTab('cours','${c.matiere}'); openModalById('course','${c.id}')">
-        <span>${c.matiere==='maths'?'🧮':'⚗️'}</span><span>${escapeHtml(c.titre)}</span>
+        <span>${c.matiere==='maths'?'<i data-lucide="calculator" class="lucide-icon"></i>':'<i data-lucide="flask-conical" class="lucide-icon"></i>'}</span><span>${escapeHtml(c.titre)}</span>
       </div>`).join('') : '<p class="empty-hint">Tu es à jour, continue comme ça !</p>';
   }
 }
@@ -4384,7 +4859,7 @@ function renderFriendsList(){
   const el = document.getElementById('gam-friends-list');
   if(!el || !GAM) return;
   el.innerHTML = (GAM.friends||[]).length
-    ? GAM.friends.map(f=>`<span class="friend-chip">${escapeHtml(f)} <button onclick="removeFriend('${f}')">✕</button></span>`).join('')
+    ? GAM.friends.map(f=>`<span class="friend-chip">${escapeHtml(f)} <button onclick="removeFriend('${f}')"><i data-lucide="x" class="lucide-icon"></i></button></span>`).join('')
     : '<span class="empty-hint">Aucun ami ajouté</span>';
 }
 function toggleSound(v){ if(GAM){ GAM.soundEnabled = v; persistGam(); } }
@@ -4434,7 +4909,7 @@ async function renderLeaderboard(){
       </div>`).join('');
   } catch(e){
     console.error('Classement indisponible', e);
-    el.innerHTML = '<p class="empty-hint">⚠️ Classement indisponible pour le moment. (Vérifie que les règles Firestore autorisent la lecture de la collection "users".)</p>';
+    el.innerHTML = '<p class="empty-hint"><i data-lucide="triangle-alert" class="lucide-icon"></i> Classement indisponible pour le moment. (Vérifie que les règles Firestore autorisent la lecture de la collection "users".)</p>';
   }
 }
 
@@ -4502,10 +4977,10 @@ function initLandingCounters(){
 }
 
 const TESTIMONIALS = [
-  { name: 'Aïcha K.', school: "Lycée Moderne d'Abidjan", role: 'Élève, Terminale D', avatar: '👩🏾‍🎓', stars: 5, text: "Les quiz corrigés m'ont vraiment aidée à combler mes lacunes en maths avant le Bac." },
-  { name: 'Yao B.', school: 'Lycée Municipal de Cocody', role: 'Élève, Première D', avatar: '🧑🏾‍🎓', stars: 5, text: "Le forum est génial : je pose une question le soir et j'ai déjà une réponse le lendemain matin." },
-  { name: 'M. Kouadio', school: "Enseignant, Lycée d'Excellence", role: 'Professeur de Physique-Chimie', avatar: '👨🏾‍🏫', stars: 5, text: "Je recommande cette plateforme à mes élèves : les fiches suivent bien le programme ivoirien." },
-  { name: 'Fatou D.', school: 'Lycée Sainte-Marie', role: 'Élève, Seconde', avatar: '👩🏾‍🎓', stars: 4, text: "Le système de niveaux et de badges me motive à me connecter tous les jours." }
+  { name: 'Aïcha K.', school: "Lycée Moderne d'Abidjan", role: 'Élève, Terminale D', avatar: '<i data-lucide="graduation-cap" class="lucide-icon"></i>', stars: 5, text: "Les quiz corrigés m'ont vraiment aidée à combler mes lacunes en maths avant le Bac." },
+  { name: 'Yao B.', school: 'Lycée Municipal de Cocody', role: 'Élève, Première D', avatar: '<i data-lucide="graduation-cap" class="lucide-icon"></i>', stars: 5, text: "Le forum est génial : je pose une question le soir et j'ai déjà une réponse le lendemain matin." },
+  { name: 'M. Kouadio', school: "Enseignant, Lycée d'Excellence", role: 'Professeur de Physique-Chimie', avatar: '<i data-lucide="presentation" class="lucide-icon"></i>', stars: 5, text: "Je recommande cette plateforme à mes élèves : les fiches suivent bien le programme ivoirien." },
+  { name: 'Fatou D.', school: 'Lycée Sainte-Marie', role: 'Élève, Seconde', avatar: '<i data-lucide="graduation-cap" class="lucide-icon"></i>', stars: 4, text: "Le système de niveaux et de badges me motive à me connecter tous les jours." }
 ];
 let landingTestimonialIndex = 0;
 let landingTestimonialTimer = null;
@@ -4515,7 +4990,7 @@ function renderLandingTestimonials(){
   if(!track || !dots) return;
   track.innerHTML = TESTIMONIALS.map(t=>`
     <div class="landing-testimonial-card">
-      <div class="landing-testimonial-stars">${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</div>
+      <div class="landing-testimonial-stars">${'<i data-lucide="star" class="lucide-icon filled"></i>'.repeat(t.stars)}${'<i data-lucide="star" class="lucide-icon"></i>'.repeat(5-t.stars)}</div>
       <p class="landing-testimonial-text">« ${escapeHtml(t.text)} »</p>
       <div class="landing-testimonial-person">
         <div class="landing-testimonial-avatar">${t.avatar}</div>
@@ -4551,8 +5026,20 @@ document.querySelectorAll('.bottom-nav-dock .dock-item[data-page]').forEach(btn=
 renderReco();
 updateSubjectCounts();
 initCoursesData();
+initAssignmentsData();
 initRippleEffect();
 initLandingPage();
+/* Icônes Lucide : hydratation initiale, puis auto-hydratation de toute
+   nouvelle icône injectée dynamiquement (rendus de listes, toasts, modales...)
+   sans avoir à appeler lucide.createIcons() manuellement partout dans le code. */
+if(window.lucide){
+  lucide.createIcons();
+  let lucideDebounce = null;
+  new MutationObserver(()=>{
+    clearTimeout(lucideDebounce);
+    lucideDebounce = setTimeout(()=>{ try{ lucide.createIcons(); }catch(e){} }, 40);
+  }).observe(document.body, { childList: true, subtree: true });
+}
 if(isFirebaseConfigured()){
   // L'écran (connexion vs app) est décidé par handleAuthStateChange une fois la session Firebase résolue.
   initFirebaseIfNeeded();
