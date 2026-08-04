@@ -3,6 +3,7 @@
 <head>
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -24,8 +25,10 @@
   --orange-dark: #d96a10;
   --orange-light: #fef0e6;
   --orange-gradient: linear-gradient(135deg, #F47B20, #b8540a);
-  --bg-main: #f8fafc;
+  --bg-main: var(--surface-alt-2);
   --white: #ffffff;
+  --surface-alt: #f1f5f9;
+  --surface-alt-2: #f8fafc;
   --text-main: #0f172a;
   --text-muted: #64748b;
   --border-color: #e2e8f0;
@@ -35,6 +38,25 @@
   --shadow-md: 0 10px 25px rgba(26,150,64,0.1);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ============ THÈME SOMBRE ============ */
+[data-theme="dark"] {
+  --bg-main: #0b1220;
+  --white: #151e2e;
+  --surface-alt: #1e293b;
+  --surface-alt-2: #111827;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border-color: #263449;
+  --shadow-sm: 0 2px 10px rgba(0,0,0,0.35);
+  --shadow-md: 0 10px 25px rgba(0,0,0,0.45);
+}
+[data-theme="dark"] body { background: var(--bg-main); }
+[data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea {
+  background: var(--surface-alt); color: var(--text-main); border-color: var(--border-color);
+}
+[data-theme="dark"] input::placeholder, [data-theme="dark"] textarea::placeholder { color: var(--text-muted); }
+[data-theme="dark"] .toast { background: #1e293b; }
 
 body {
   font-family: 'Nunito', sans-serif;
@@ -53,7 +75,7 @@ button, a, input { font-family: inherit; }
 nav { background: var(--green-gradient); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 70px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(15,99,39,0.2); }
 .nav-left { display: flex; align-items: center; gap: 14px; }
 .brand-title { color: white; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 19px; letter-spacing: -0.5px; }
-.logo-container { width: 42px; height: 42px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.logo-container { width: 42px; height: 42px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 .logo-img { width: 26px; height: 26px; object-fit: contain; }
 .profile-trigger { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; cursor: pointer; border: 1.5px solid white; transition: var(--transition); }
 .profile-trigger:hover { transform: scale(1.08); background: rgba(255,255,255,0.32); }
@@ -70,9 +92,9 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .stagger > *:nth-child(n+7){animation-delay:.32s}
 
 /* SEARCH */
-.search-wrapper { padding: 16px 20px 8px; background: white; }
-.search-bar { display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid transparent; transition: var(--transition); }
-.search-bar:focus-within { border-color: var(--green); background: white; box-shadow: 0 0 0 4px rgba(26,150,64,0.1); }
+.search-wrapper { padding: 16px 20px 8px; background: var(--white); }
+.search-bar { display: flex; align-items: center; gap: 10px; background: var(--surface-alt); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid transparent; transition: var(--transition); }
+.search-bar:focus-within { border-color: var(--green); background: var(--white); box-shadow: 0 0 0 4px rgba(26,150,64,0.1); }
 .search-bar input { border: none; background: none; width: 100%; outline: none; font-size: 14px; font-weight: 600; color: var(--text-main); }
 .search-bar input::placeholder { color: var(--text-muted); }
 .search-bar .clear-btn { display:none; background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer; }
@@ -92,13 +114,13 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 
 /* PROGRESSION - rings */
 .progression-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; margin-top: 16px; }
-.progression-card { background: white; padding: 14px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display:flex; align-items:center; gap:10px; min-width:0; overflow:hidden; }
+.progression-card { background: var(--white); padding: 14px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display:flex; align-items:center; gap:10px; min-width:0; overflow:hidden; }
 .progression-card .ring { flex-shrink:0; }
 .progression-card .prog-text-col { min-width:0; flex:1; }
 .ring { width:54px; height:54px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
 .ring-maths { background: conic-gradient(var(--green) 0% var(--p,72%), #e2e8f0 var(--p,72%) 100%); }
 .ring-phys { background: conic-gradient(var(--orange) 0% var(--p,61%), #e2e8f0 var(--p,61%) 100%); }
-.ring::before { content: attr(data-label); background:white; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.ring::before { content: attr(data-label); background:var(--white); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
 .prog-subject { font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; overflow-wrap: break-word; }
 .prog-value { font-size: 13.5px; font-weight: 900; overflow-wrap: break-word; line-height: 1.3; }
 .prog-value span { font-size: 10.5px; font-weight: 600; color: var(--text-muted); display:block; margin-top:2px; }
@@ -110,14 +132,14 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 
 /* SUBJECT TABS (pills) */
 .subject-tabs { display:flex; gap:8px; padding: 0 20px 4px; }
-.subject-tab { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:11px 8px; border-radius: 30px; border:1.5px solid var(--border-color); background:white; font-weight:800; font-size:13px; color:var(--text-muted); cursor:pointer; transition:var(--transition); }
+.subject-tab { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:11px 8px; border-radius: 30px; border:1.5px solid var(--border-color); background:var(--white); font-weight:800; font-size:13px; color:var(--text-muted); cursor:pointer; transition:var(--transition); }
 .subject-tab.active.tab-maths { background: var(--green-gradient); color:white; border-color:transparent; box-shadow:0 6px 16px rgba(26,150,64,0.3); }
 .subject-tab.active.tab-physique { background: var(--orange-gradient); color:white; border-color:transparent; box-shadow:0 6px 16px rgba(244,123,32,0.3); }
 .subject-tab:active { transform: scale(0.97); }
 
 /* SUB TABS (video / fiches) */
 .sub-tabs { display:flex; gap:8px; padding: 14px 20px 4px; }
-.sub-tab { flex:1; text-align:center; padding:9px 6px; border-radius:10px; background:#f1f5f9; font-weight:700; font-size:12.5px; color:var(--text-muted); cursor:pointer; border:none; transition:var(--transition); }
+.sub-tab { flex:1; text-align:center; padding:9px 6px; border-radius:10px; background:var(--surface-alt); font-weight:700; font-size:12.5px; color:var(--text-muted); cursor:pointer; border:none; transition:var(--transition); }
 .sub-tab.active { background: var(--text-main); color:white; }
 
 .theme-subheader { padding: 16px 20px 4px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; color: var(--text-muted); display:flex; align-items:center; gap:8px; }
@@ -129,7 +151,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .subject-box.maths-style { background: linear-gradient(135deg, #e8f5ed, #ccebda); color: var(--green-dark); }
 .subject-box.physique-style { background: linear-gradient(135deg, #fef0e6, #ffdcc3); color: var(--orange-dark); }
 .subject-box:hover { transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.06); }
-.subject-box .box-icon { font-size: 32px; background: white; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.subject-box .box-icon { font-size: 32px; background: var(--white); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .subject-box h4 { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 800; color: var(--text-main); }
 .subject-box .indicator { font-size: 12px; font-weight: 700; opacity: 0.8; }
 .subject-box .count-badge { position:absolute; top:14px; right:14px; background:rgba(255,255,255,0.7); font-size:11px; font-weight:800; padding:3px 9px; border-radius:20px; }
@@ -137,7 +159,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 /* HORIZONTAL SCROLL */
 .horizontal-cards-scroller { display: flex; gap: 14px; overflow-x: auto; padding: 0 20px 12px; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; }
 .horizontal-cards-scroller::-webkit-scrollbar { display: none; }
-.premium-course-card { scroll-snap-align:start; min-width: 220px; max-width: 240px; background: white; border-radius: var(--radius-md); padding: 16px; flex-shrink: 0; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+.premium-course-card { scroll-snap-align:start; min-width: 220px; max-width: 240px; background: var(--white); border-radius: var(--radius-md); padding: 16px; flex-shrink: 0; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-sm); transition: var(--transition); }
 .premium-course-card:hover { border-color: #cbd5e1; transform: scale(1.02) translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
 .card-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content; padding: 3px 9px; border-radius: 20px; }
 .card-tag.maths-tag { background: var(--green-light); color: var(--green); }
@@ -146,7 +168,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 
 /* LIST */
 .extended-list-wrapper { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
-.premium-list-item { background: white; border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: var(--transition); gap:10px; }
+.premium-list-item { background: var(--white); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: var(--transition); gap:10px; }
 .premium-list-item:hover { transform: translateX(4px); border-color: #cbd5e1; }
 .item-left-meta { display: flex; align-items: center; gap: 14px; min-width:0; }
 .item-icon-indicator { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink:0; }
@@ -156,7 +178,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .item-info-titles h4 { font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .item-info-titles p { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 .item-actions { display:flex; align-items:center; gap:6px; flex-shrink:0; }
-.action-circle-btn { width: 34px; height: 34px; border-radius: 50%; background: #f1f5f9; border: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: var(--transition); color: var(--text-main); text-decoration:none; }
+.action-circle-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-alt); border: none; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: var(--transition); color: var(--text-main); text-decoration:none; }
 .action-circle-btn:hover { background: var(--text-main); color: white; }
 .fav-btn { background:none; border:none; font-size:17px; cursor:pointer; color:#cbd5e1; transition:var(--transition); }
 .fav-btn.active { color: var(--orange); transform: scale(1.15); }
@@ -168,14 +190,14 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 /* ============ FILTER CHIPS ============ */
 .filter-chip-row { display:flex; gap:8px; padding: 6px 20px 14px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
 .filter-chip-row::-webkit-scrollbar { display:none; }
-.filter-chip { flex-shrink:0; padding:7px 14px; border-radius:20px; background:#f1f5f9; border:1.5px solid transparent; font-size:12px; font-weight:800; color:var(--text-muted); cursor:pointer; transition:var(--transition); white-space:nowrap; }
+.filter-chip { flex-shrink:0; padding:7px 14px; border-radius:20px; background:var(--surface-alt); border:1.5px solid transparent; font-size:12px; font-weight:800; color:var(--text-muted); cursor:pointer; transition:var(--transition); white-space:nowrap; }
 .filter-chip:hover { background:#e2e8f0; }
 .filter-chip.active.chip-maths { background:var(--green-light); color:var(--green-dark); border-color:var(--green); }
 .filter-chip.active.chip-physique { background:var(--orange-light); color:var(--orange-dark); border-color:var(--orange); }
 
 /* ============ PREMIUM CONTENT CARDS (cours / exercices) ============ */
 .content-card-grid { padding: 4px 20px 20px; display:flex; flex-direction:column; gap:14px; }
-.content-card { background:white; border-radius: var(--radius-lg); border:1px solid var(--border-color); box-shadow: var(--shadow-sm); transition: transform .25s cubic-bezier(0.4,0,0.2,1), box-shadow .25s ease, border-color .25s ease; overflow:hidden; position:relative; }
+.content-card { background:var(--white); border-radius: var(--radius-lg); border:1px solid var(--border-color); box-shadow: var(--shadow-sm); transition: transform .25s cubic-bezier(0.4,0,0.2,1), box-shadow .25s ease, border-color .25s ease; overflow:hidden; position:relative; }
 .content-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(15,23,42,0.1); border-color:#cbd5e1; }
 .content-card::before { content:''; position:absolute; top:0; left:0; width:5px; height:100%; background: var(--green-gradient); opacity:.9; }
 .content-card.subj-physique::before { background: var(--orange-gradient); }
@@ -194,44 +216,51 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .cc-progress-fill { height:100%; border-radius:10px; background: var(--green-gradient); transition: width .5s cubic-bezier(0.16,1,0.3,1); }
 .content-card.subj-physique .cc-progress-fill { background: var(--orange-gradient); }
 .cc-progress-label { font-size:10px; font-weight:800; color:var(--text-muted); margin-top:5px; }
-.cc-footer { display:flex; align-items:center; gap:8px; padding: 12px 16px 16px 20px; border-top:1px solid #f1f5f9; }
+.cc-footer { display:flex; align-items:center; gap:8px; padding: 12px 16px 16px 20px; border-top:1px solid var(--surface-alt); }
 .cc-cta { flex:1; text-align:center; padding:10px 14px; border-radius:12px; border:none; background: var(--green-gradient); color:white; font-weight:800; font-size:12.5px; cursor:pointer; transition:var(--transition); text-decoration:none; }
 .content-card.subj-physique .cc-cta { background: var(--orange-gradient); }
 .cc-cta:hover { filter:brightness(1.06); transform: translateY(-1px); }
-.cc-icon-btn { width:34px; height:34px; border-radius:50%; background:#f1f5f9; border:none; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); color:var(--text-main); flex-shrink:0; }
+.cc-icon-btn { width:34px; height:34px; border-radius:50%; background:var(--surface-alt); border:none; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:var(--transition); color:var(--text-main); flex-shrink:0; }
 .cc-icon-btn:hover { background:var(--text-main); color:white; }
 .skeleton-content-card { height:150px; border-radius:var(--radius-lg); margin-bottom:14px; }
 
+/* ============ AVATARS & PHOTO DE PROFIL ============ */
+.avatar-photo-img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
+.avatar-cat-label { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .03em; margin: 12px 0 6px; }
+.avatar-photo-row { display:flex; align-items:center; gap:14px; margin: 8px 0 4px; }
+.avatar-photo-preview { width:64px; height:64px; border-radius:50%; background:var(--green-light); display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; overflow:hidden; border:2px solid var(--green); }
+.avatar-photo-actions { display:flex; flex-direction:column; gap:8px; }
+
 /* ============ DEVOIRS & INTERROGATIONS ============ */
 .submission-meta { font-size: 12px; color: var(--text-muted); font-weight: 700; }
-.submission-answer-box { background:#f8fafc; border:1px solid var(--border-color); border-radius:12px; padding:14px; font-size:13px; white-space:pre-wrap; color:var(--text-main); margin-bottom:12px; }
+.submission-answer-box { background:var(--surface-alt-2); border:1px solid var(--border-color); border-radius:12px; padding:14px; font-size:13px; white-space:pre-wrap; color:var(--text-main); margin-bottom:12px; }
 .grading-row { border:1px solid var(--border-color); border-radius:14px; padding:14px; margin-bottom:12px; }
 .grading-row-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
 
 /* PROFIL */
 .dashboard-profile-box { background: var(--green-gradient); color: white; padding: 40px 20px 30px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: var(--shadow-md); }
-.big-avatar { width: 90px; height: 90px; background: white; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 42px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+.big-avatar { width: 90px; height: 90px; background: var(--white); border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 42px; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
 .big-avatar-label { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 800; }
 .big-avatar-sub { font-size: 13px; opacity: 0.85; margin-top: 2px; }
-.settings-group { background: white; margin: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow-sm); }
+.settings-group { background: var(--white); margin: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow-sm); }
 .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: var(--transition); background:none; border-left:none; border-right:none; border-top:none; width:100%; text-align:left; }
 .settings-row:last-child { border-bottom: none; }
-.settings-row:hover { background: #f8fafc; }
+.settings-row:hover { background: var(--surface-alt-2); }
 .settings-label-side { display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; color: var(--text-main); }
 .settings-row .chev { color:var(--text-muted); }
 .mini-sub-list { padding: 0 20px 18px; display:flex; flex-direction:column; gap:8px; }
-.mini-sub-item { font-size:12.5px; font-weight:700; background:#f8fafc; padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; }
+.mini-sub-item { font-size:12.5px; font-weight:700; background:var(--surface-alt-2); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; }
 
 /* MODAL téléchargement */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(5px); transition: var(--transition); }
 .modal-overlay.open { display: flex; }
-.modal-sheet { background: white; border-radius: 30px 30px 0 0; padding: 24px 20px 34px; width: 100%; max-width: 480px; box-shadow: 0 -10px 35px rgba(0,0,0,0.1); animation: slideSheet 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); max-height:88vh; overflow-y:auto; }
+.modal-sheet { background: var(--white); border-radius: 30px 30px 0 0; padding: 24px 20px 34px; width: 100%; max-width: 480px; box-shadow: 0 -10px 35px rgba(0,0,0,0.1); animation: slideSheet 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); max-height:88vh; overflow-y:auto; }
 @keyframes slideSheet { from { transform: translateY(100%);} to { transform: translateY(0);} }
 .modal-drag-handle { width: 46px; height: 5px; background: #cbd5e1; border-radius: 3px; margin: 0 auto 20px; }
 .modal-main-icon { font-size: 44px; text-align: center; margin-bottom: 12px; }
 .modal-sheet h3 { font-family: 'Poppins', sans-serif; font-size: 19px; font-weight: 800; text-align: center; color: var(--text-main); margin-bottom: 6px; }
 .modal-sheet p.modal-desc-text { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px; line-height: 1.5; padding: 0 10px; }
-.meta-table-box { background: #f8fafc; border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 24px; border: 1px solid var(--border-color); }
+.meta-table-box { background: var(--surface-alt-2); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 24px; border: 1px solid var(--border-color); }
 .meta-table-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; }
 .meta-table-row:last-child { border-bottom: none; }
 .meta-table-row span:first-child { color: var(--text-muted); font-weight: 600; }
@@ -241,7 +270,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .btn-dismiss { display: block; text-align: center; margin-top: 16px; color: var(--text-muted); font-size: 13px; font-weight: 700; background: none; border: none; width: 100%; cursor: pointer; }
 
 /* FOOTER NAV */
-.bottom-nav-dock { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border-color); display: flex; box-shadow: 0 -8px 30px rgba(0,0,0,0.06); z-index: 90; height: 70px; }
+.bottom-nav-dock { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--border-color); display: flex; box-shadow: 0 -8px 30px rgba(0,0,0,0.06); z-index: 90; height: 70px; }
 .dock-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-muted); border: none; background: none; cursor: pointer; transition: var(--transition); }
 .dock-item.active { color: var(--green); }
 .dock-item svg, .dock-item img { width: 22px; height: 22px; transition: var(--transition); opacity: 0.8; }
@@ -263,7 +292,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .ai-fab .pulse-dot { position:absolute; top:2px; right:2px; width:12px; height:12px; background:var(--orange); border-radius:50%; border:2px solid white; }
 .ai-chat-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:1300; align-items:flex-end; justify-content:center; backdrop-filter: blur(4px); }
 .ai-chat-overlay.open { display:flex; }
-.ai-chat-panel { background:white; width:100%; max-width:480px; height:82vh; border-radius:26px 26px 0 0; display:flex; flex-direction:column; overflow:hidden; animation: slideSheet 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
+.ai-chat-panel { background:var(--white); width:100%; max-width:480px; height:82vh; border-radius:26px 26px 0 0; display:flex; flex-direction:column; overflow:hidden; animation: slideSheet 0.35s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
 .ai-chat-header { background: var(--green-gradient); color:white; padding:16px 18px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
 .ai-chat-avatar { width:38px; height:38px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:19px; border:1.5px solid rgba(255,255,255,0.4); }
 .ai-chat-header .grow { flex:1; }
@@ -271,26 +300,26 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .ai-chat-header p { font-size:11px; opacity:0.85; display:flex; align-items:center; gap:5px; }
 .ai-chat-header p::before { content:''; width:7px; height:7px; background:#4ade80; border-radius:50%; display:inline-block; }
 .ai-chat-close { background:rgba(255,255,255,0.2); border:none; color:white; width:30px; height:30px; border-radius:50%; font-size:15px; cursor:pointer; }
-.ai-chat-body { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; background:#f8fafc; }
+.ai-chat-body { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; background:var(--surface-alt-2); }
 .ai-msg { max-width:82%; padding:11px 14px; border-radius:16px; font-size:13.5px; line-height:1.5; animation: fadeUp 0.3s ease both; white-space:pre-wrap; }
-.ai-msg.from-ai { background:white; border:1px solid var(--border-color); align-self:flex-start; border-bottom-left-radius:4px; }
+.ai-msg.from-ai { background:var(--white); border:1px solid var(--border-color); align-self:flex-start; border-bottom-left-radius:4px; }
 .ai-msg.from-user { background: var(--green-gradient); color:white; align-self:flex-end; border-bottom-right-radius:4px; }
 .ai-chips { display:flex; gap:8px; overflow-x:auto; padding: 2px 2px 4px; }
-.ai-chip { flex-shrink:0; background:white; border:1.5px solid var(--border-color); color:var(--green-dark); font-size:11.5px; font-weight:700; padding:8px 13px; border-radius:20px; cursor:pointer; white-space:nowrap; }
+.ai-chip { flex-shrink:0; background:var(--white); border:1.5px solid var(--border-color); color:var(--green-dark); font-size:11.5px; font-weight:700; padding:8px 13px; border-radius:20px; cursor:pointer; white-space:nowrap; }
 .ai-chip:hover { border-color:var(--green); }
-.ai-typing { display:flex; gap:4px; align-self:flex-start; background:white; border:1px solid var(--border-color); padding:12px 16px; border-radius:16px; border-bottom-left-radius:4px; }
+.ai-typing { display:flex; gap:4px; align-self:flex-start; background:var(--white); border:1px solid var(--border-color); padding:12px 16px; border-radius:16px; border-bottom-left-radius:4px; }
 .ai-typing span { width:6px; height:6px; background:#94a3b8; border-radius:50%; animation: typingBounce 1.1s infinite; }
 .ai-typing span:nth-child(2){animation-delay:.15s} .ai-typing span:nth-child(3){animation-delay:.3s}
 @keyframes typingBounce { 0%,60%,100%{transform:translateY(0);opacity:.5;} 30%{transform:translateY(-5px);opacity:1;} }
-.ai-chat-footer { padding:12px 14px; border-top:1px solid var(--border-color); background:white; flex-shrink:0; }
-.ai-input-row { display:flex; gap:8px; align-items:center; background:#f1f5f9; border-radius:26px; padding:6px 6px 6px 16px; }
+.ai-chat-footer { padding:12px 14px; border-top:1px solid var(--border-color); background:var(--white); flex-shrink:0; }
+.ai-input-row { display:flex; gap:8px; align-items:center; background:var(--surface-alt); border-radius:26px; padding:6px 6px 6px 16px; }
 .ai-input-row input { flex:1; border:none; background:none; outline:none; font-size:13.5px; font-weight:600; font-family:inherit; }
 .ai-send-btn { width:38px; height:38px; border-radius:50%; background:var(--green-gradient); color:white; border:none; font-size:16px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
 .ai-send-btn:disabled { opacity:0.5; }
 .ai-disclaimer { font-size:10px; color:var(--text-muted); text-align:center; margin-top:8px; }
 
 /* FORUM */
-.forum-composer { margin: 16px 20px; background: white; border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+.forum-composer { margin: 16px 20px; background: var(--white); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
 .forum-composer textarea { width:100%; border:1.5px solid var(--border-color); border-radius:12px; padding:12px 14px; font-family:inherit; font-size:13.5px; font-weight:600; resize:vertical; min-height:70px; margin-bottom:10px; }
 .forum-composer textarea:focus { outline:none; border-color:var(--green); }
 .forum-composer-row { display:flex; gap:8px; align-items:center; }
@@ -298,7 +327,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .forum-post-btn { background: var(--green-gradient); color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:800; font-size:13px; cursor:pointer; flex-shrink:0; }
 .forum-post-btn:disabled { opacity:0.5; }
 .forum-feed { padding: 0 20px; display:flex; flex-direction:column; gap:12px; }
-.forum-post-card { background:white; border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.forum-post-card { background:var(--white); border-radius:var(--radius-md); padding:16px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
 .forum-post-head { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
 .forum-avatar { width:34px; height:34px; border-radius:50%; background: var(--green-light); color:var(--green-dark); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0; }
 .forum-post-meta { min-width:0; }
@@ -312,35 +341,35 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .forum-replies { margin-top:12px; padding-top:12px; border-top:1px dashed var(--border-color); display:flex; flex-direction:column; gap:10px; }
 .forum-reply { display:flex; gap:8px; }
 .forum-reply .forum-avatar { width:26px; height:26px; font-size:11px; }
-.forum-reply-bubble { background:#f8fafc; border-radius:12px; padding:8px 12px; flex:1; }
+.forum-reply-bubble { background:var(--surface-alt-2); border-radius:12px; padding:8px 12px; flex:1; }
 .forum-reply-bubble .author { font-size:12px; font-weight:800; }
 .forum-reply-bubble .text { font-size:12.5px; margin-top:2px; }
 .forum-reply-form { display:flex; gap:8px; margin-top:10px; }
 .forum-reply-form input { flex:1; border:1.5px solid var(--border-color); border-radius:20px; padding:8px 14px; font-size:12.5px; font-family:inherit; }
 .forum-reply-form button { background:var(--text-main); color:white; border:none; width:32px; height:32px; border-radius:50%; font-size:13px; cursor:pointer; flex-shrink:0; }
-.forum-empty-config { margin: 40px 24px; text-align:center; color:var(--text-muted); background:white; border-radius:var(--radius-lg); padding:30px 20px; border:1px dashed var(--border-color); }
+.forum-empty-config { margin: 40px 24px; text-align:center; color:var(--text-muted); background:var(--white); border-radius:var(--radius-lg); padding:30px 20px; border:1px dashed var(--border-color); }
 .forum-empty-config .emoji { font-size:32px; margin-bottom:10px; }
 
 /* QUIZ */
 .quiz-btn { background: var(--orange-light); color: var(--orange-dark); }
 .quiz-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:1250; align-items:flex-end; justify-content:center; backdrop-filter: blur(4px); }
 .quiz-overlay.open { display:flex; }
-.quiz-panel { background:#f8fafc; width:100%; max-width:480px; height:88vh; border-radius:26px 26px 0 0; display:flex; flex-direction:column; overflow:hidden; animation: slideSheet 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+.quiz-panel { background:var(--surface-alt-2); width:100%; max-width:480px; height:88vh; border-radius:26px 26px 0 0; display:flex; flex-direction:column; overflow:hidden; animation: slideSheet 0.35s cubic-bezier(0.34,1.56,0.64,1); }
 .quiz-header { background: var(--orange-gradient); color:white; padding:16px 18px; flex-shrink:0; }
 .quiz-header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
 .quiz-header h4 { font-family:'Poppins',sans-serif; font-size:14.5px; font-weight:800; }
 .quiz-close { background:rgba(255,255,255,0.2); border:none; color:white; width:30px; height:30px; border-radius:50%; font-size:15px; cursor:pointer; }
 .quiz-progress-bar { height:6px; background:rgba(255,255,255,0.3); border-radius:10px; overflow:hidden; }
-.quiz-progress-fill { height:100%; background:white; border-radius:10px; transition: width 0.35s ease; }
+.quiz-progress-fill { height:100%; background:var(--white); border-radius:10px; transition: width 0.35s ease; }
 .quiz-body { flex:1; overflow-y:auto; padding:20px 18px; }
 .quiz-loading { text-align:center; padding: 60px 20px; color:var(--text-muted); }
 .quiz-loading .spinner { width:36px; height:36px; border:3px solid #e2e8f0; border-top-color:var(--orange); border-radius:50%; margin:0 auto 16px; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.quiz-question-card { background:white; border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.quiz-question-card { background:var(--white); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
 .quiz-q-label { font-size:11px; font-weight:800; color:var(--orange-dark); text-transform:uppercase; margin-bottom:8px; }
 .quiz-q-text { font-size:15.5px; font-weight:800; line-height:1.45; margin-bottom:18px; }
-.quiz-option { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#f8fafc; border:1.5px solid var(--border-color); border-radius:14px; padding:13px 16px; margin-bottom:10px; cursor:pointer; font-size:13.5px; font-weight:700; font-family:inherit; color:var(--text-main); transition:var(--transition); }
-.quiz-option .opt-letter { width:26px; height:26px; border-radius:50%; background:white; border:1.5px solid var(--border-color); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+.quiz-option { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:var(--surface-alt-2); border:1.5px solid var(--border-color); border-radius:14px; padding:13px 16px; margin-bottom:10px; cursor:pointer; font-size:13.5px; font-weight:700; font-family:inherit; color:var(--text-main); transition:var(--transition); }
+.quiz-option .opt-letter { width:26px; height:26px; border-radius:50%; background:var(--white); border:1.5px solid var(--border-color); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
 .quiz-option:not(:disabled):hover { border-color:var(--orange); }
 .quiz-option.selected { border-color: var(--green); background: var(--green-light); }
 .quiz-option.correct { border-color:#16a34a; background:#dcfce7; }
@@ -348,12 +377,12 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .quiz-option.correct .opt-letter { background:#16a34a; color:white; border-color:#16a34a; }
 .quiz-option.incorrect .opt-letter { background:#ef4444; color:white; border-color:#ef4444; }
 .quiz-explain { background:var(--orange-light); border-radius:12px; padding:12px 14px; font-size:12.5px; line-height:1.5; color:var(--orange-dark); margin-top:6px; }
-.quiz-footer { padding:14px 18px; background:white; border-top:1px solid var(--border-color); flex-shrink:0; }
+.quiz-footer { padding:14px 18px; background:var(--white); border-top:1px solid var(--border-color); flex-shrink:0; }
 .quiz-next-btn { width:100%; background: var(--green-gradient); color:white; font-weight:800; font-size:15px; padding:15px; border-radius:14px; border:none; cursor:pointer; }
 .quiz-next-btn:disabled { opacity:0.4; }
 .quiz-result { text-align:center; padding:20px 10px; }
 .quiz-result .score-ring { width:120px; height:120px; border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; }
-.quiz-result .score-ring .inner { width:96px; height:96px; background:white; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.quiz-result .score-ring .inner { width:96px; height:96px; background:var(--white); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .quiz-result .inner .big { font-size:26px; font-weight:900; font-family:'Poppins',sans-serif; }
 .quiz-result .inner .small { font-size:11px; color:var(--text-muted); font-weight:700; }
 .quiz-result h3 { font-family:'Poppins',sans-serif; font-size:18px; font-weight:800; margin-bottom:6px; }
@@ -373,7 +402,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 /* LÉGAL (confidentialité / CGU) : voir .legal-content plus haut pour les styles du contenu */
 
 /* COURS VIDÉO */
-.video-course-card { background:white; border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); cursor:pointer; transition:var(--transition); }
+.video-course-card { background:var(--white); border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); cursor:pointer; transition:var(--transition); }
 .video-course-card:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.08); }
 .video-thumb-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#0f172a; overflow:hidden; }
 .video-thumb-wrap img { width:100%; height:100%; object-fit:cover; }
@@ -400,16 +429,30 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .admin-header h2 { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; }
 .admin-header p { font-size:12.5px; color:#94a3b8; margin-top:4px; }
 .admin-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding: 16px 20px; }
-.admin-stat-card { background:white; border-radius:var(--radius-md); padding:14px 10px; text-align:center; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.admin-stat-card { background:var(--white); border-radius:var(--radius-md); padding:14px 10px; text-align:center; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
 .admin-stat-card .num { font-family:'Poppins',sans-serif; font-size:20px; font-weight:900; color:var(--green-dark); }
 .admin-stat-card .lbl { font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-top:2px; }
+
+/* ============ ADMIN : NAVIGATION PAR ONGLETS ============ */
+.admin-tab-strip { display:flex; gap:6px; overflow-x:auto; padding:4px 16px 14px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.admin-tab-strip::-webkit-scrollbar { display:none; }
+.admin-tab { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--surface-alt); border:1.5px solid transparent; border-radius:14px; padding:9px 14px; font-size:10.5px; font-weight:800; color:var(--text-muted); cursor:pointer; transition:var(--transition); white-space:nowrap; }
+.admin-tab:hover { background:#e2e8f0; }
+.admin-tab.active { background:#0f172a; color:#fff; border-color:#0f172a; }
+.admin-tab-panel { display:none; }
+.admin-tab-panel.active { display:block; }
+.admin-chart-card { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--border-color); box-shadow:var(--shadow-sm); margin:0 20px 20px; padding:14px; }
+.search-mini-wrap { padding: 0 20px 12px; }
+.search-mini { display:flex; align-items:center; gap:8px; background:var(--surface-alt); border-radius:14px; padding:10px 14px; }
+.search-mini input { border:none; background:none; outline:none; font-size:13px; font-weight:600; flex:1; color:var(--text-main); }
+.search-mini input::placeholder { color:#94a3b8; }
 .admin-add-btn { margin: 4px 20px 8px; display:flex; align-items:center; justify-content:center; gap:8px; background: var(--orange-gradient); color:white; font-weight:800; font-size:14px; padding:14px; border-radius:var(--radius-md); border:none; cursor:pointer; box-shadow:0 6px 18px rgba(244,123,32,0.35); width:calc(100% - 40px); }
-.admin-list-item { background:white; border-radius:var(--radius-md); padding:13px 16px; display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
+.admin-list-item { background:var(--white); border-radius:var(--radius-md); padding:13px 16px; display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-sm); border:1px solid var(--border-color); }
 .admin-list-item .grow { flex:1; min-width:0; }
 .admin-list-item h5 { font-size:13.5px; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .admin-list-item .tags { display:flex; gap:6px; margin-top:4px; flex-wrap:wrap; }
-.admin-list-item .tags span { font-size:10px; font-weight:800; padding:2px 8px; border-radius:20px; background:#f1f5f9; color:var(--text-muted); }
-.admin-icon-btn { width:32px; height:32px; border-radius:10px; border:none; background:#f1f5f9; cursor:pointer; font-size:14px; }
+.admin-list-item .tags span { font-size:10px; font-weight:800; padding:2px 8px; border-radius:20px; background:var(--surface-alt); color:var(--text-muted); }
+.admin-icon-btn { width:32px; height:32px; border-radius:10px; border:none; background:var(--surface-alt); cursor:pointer; font-size:14px; }
 .admin-icon-btn.danger:hover { background:#fee2e2; }
 .admin-icon-btn.edit:hover { background:var(--green-light); }
 
@@ -420,17 +463,17 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .item-info-titles p.meta-line { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 
 /* AUTH SCREENS */
-.auth-screen { min-height: 100vh; padding: 0; background: #ffffff; }
+.auth-screen { min-height: 100vh; padding: 0; background: var(--white)fff; }
 .landing-hero { background: linear-gradient(160deg,#0f172a,#134e2b 55%,#1a9640); position: relative; overflow: hidden; border-radius: 0 0 32px 32px; padding-bottom: 46px; }
 .landing-hero::before { content:''; position:absolute; top:-80px; left:-60px; width:220px; height:220px; background:var(--orange); opacity:.25; filter:blur(60px); border-radius:50%; animation: floatBlob 8s ease-in-out infinite; z-index:0; }
 .landing-hero::after { content:''; position:absolute; bottom:-100px; right:-60px; width:260px; height:260px; background:#4ade80; opacity:.2; filter:blur(70px); border-radius:50%; animation: floatBlob 9s ease-in-out infinite reverse; z-index:0; }
-.auth-card { position:relative; z-index:1; width:100%; max-width:380px; background:white; border-radius: 26px; padding: 30px 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.35); animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+.auth-card { position:relative; z-index:1; width:100%; max-width:380px; background:var(--white); border-radius: 26px; padding: 30px 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.35); animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
 .auth-logo { width:64px; height:64px; border-radius:50%; background: var(--green-gradient); display:flex; align-items:center; justify-content:center; font-size:28px; margin: 0 auto 14px; box-shadow: 0 10px 24px rgba(26,150,64,0.35); }
 .auth-card h2 { font-family:'Poppins',sans-serif; text-align:center; font-size:20px; font-weight:800; margin-bottom:4px; }
 .auth-card .auth-sub { text-align:center; font-size:12.5px; color:var(--text-muted); margin-bottom:22px; }
-.auth-tabs { display:flex; background:#f1f5f9; border-radius:14px; padding:4px; margin-bottom:20px; }
+.auth-tabs { display:flex; background:var(--surface-alt); border-radius:14px; padding:4px; margin-bottom:20px; }
 .auth-tab { flex:1; text-align:center; padding:9px; border-radius:11px; font-size:13px; font-weight:800; color:var(--text-muted); background:none; border:none; cursor:pointer; transition:var(--transition); }
-.auth-tab.active { background:white; color:var(--green-dark); box-shadow:0 3px 10px rgba(0,0,0,0.08); }
+.auth-tab.active { background:var(--white); color:var(--green-dark); box-shadow:0 3px 10px rgba(0,0,0,0.08); }
 .auth-field { margin-bottom: 14px; position:relative; }
 .auth-field label { display:block; font-size:11.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px; letter-spacing:.3px; }
 .auth-field input { width:100%; padding:13px 14px; border-radius:12px; border:1.5px solid var(--border-color); font-size:14px; font-weight:600; font-family:inherit; transition:var(--transition); }
@@ -535,7 +578,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 .badge-card.owned:hover { transform: translateY(-3px) scale(1.03); }
 
 /* --- Skeleton loading --- */
-.skeleton-row, .skeleton-card { background: linear-gradient(90deg, #eef1f5 25%, #f8fafc 37%, #eef1f5 63%); background-size: 400% 100%; animation: skeletonShine 1.3s ease infinite; border-radius: 14px; }
+.skeleton-row, .skeleton-card { background: linear-gradient(90deg, #eef1f5 25%, var(--surface-alt-2) 37%, #eef1f5 63%); background-size: 400% 100%; animation: skeletonShine 1.3s ease infinite; border-radius: 14px; }
 .skeleton-row { height: 68px; margin-bottom: 10px; }
 .skeleton-card { height: 130px; min-width: 220px; display: inline-block; margin-right: 12px; }
 @keyframes skeletonShine { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
@@ -560,7 +603,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 .xp-float-toast .xp-reason { font-size: 11px; opacity: .9; }
 
 /* --- Barre XP / niveau (dashboard) --- */
-.gam-topbar { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow-sm); margin: 14px 20px 0; cursor: pointer; }
+.gam-topbar { display: flex; align-items: center; gap: 12px; background: var(--white); border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow-sm); margin: 14px 20px 0; cursor: pointer; }
 .gam-level-badge { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
 .gam-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; border: 2px solid var(--green); }
 .gam-level-info { flex: 1; min-width: 0; }
@@ -581,7 +624,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 
 /* --- Défis quotidiens --- */
 .daily-challenges-list { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; }
-.challenge-card { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: var(--radius-md); padding: 10px 14px; box-shadow: var(--shadow-sm); }
+.challenge-card { display: flex; align-items: center; gap: 10px; background: var(--white); border-radius: var(--radius-md); padding: 10px 14px; box-shadow: var(--shadow-sm); }
 .challenge-card.done { background: var(--green-light); }
 .challenge-icon { font-size: 18px; }
 .challenge-info { flex: 1; min-width: 0; }
@@ -592,22 +635,42 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 
 /* --- Page Gamification --- */
 .gam-hero { text-align: center; padding: 26px 20px 10px; }
+.gam-hero-name { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 20px; color: var(--text-main); margin-top: 4px; }
+.gam-hero-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 13px; color: var(--green-dark); background: var(--green-light); display:inline-block; padding: 3px 12px; border-radius: 20px; margin-top: 4px; }
+.gam-hero-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+.gam-rank-pill { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:12px; font-weight:700; color: var(--text-muted); background:var(--surface-alt); padding:7px 14px; border-radius:20px; }
+.gam-rank-pill strong { color: var(--text-main); }
+.gam-motivation-card { margin: 4px 20px 18px; background: var(--orange-gradient); color:#fff; border-radius: var(--radius-md); padding: 14px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; gap:10px; box-shadow: var(--shadow-sm); }
+.global-progress-row { margin-bottom: 12px; }
+.global-progress-row:last-child { margin-bottom: 0; }
+.global-progress-row .lbl { font-size: 11.5px; font-weight: 700; color: var(--text-muted); display:block; margin-bottom: 5px; }
+.gam-timeline { padding: 0 20px; display:flex; flex-direction:column; gap:10px; }
+.timeline-row { display:flex; align-items:center; gap:10px; background:var(--white); border:1px solid var(--border-color); border-radius:12px; padding:10px 14px; box-shadow: var(--shadow-sm); }
+.timeline-icon { color: var(--green); flex-shrink:0; }
+.timeline-text { flex:1; font-size:12.5px; font-weight:700; color: var(--text-main); }
+.timeline-time { font-size:10.5px; color: var(--text-muted); flex-shrink:0; }
+.theme-swatch-row { display:flex; gap:12px; padding: 6px 0; }
+.theme-swatch { width:34px; height:34px; border-radius:50%; border:3px solid transparent; cursor:pointer; transition: var(--transition); }
+.theme-swatch.active { border-color: var(--text-main); transform: scale(1.1); }
 .gam-big-avatar { width: 92px; height: 92px; border-radius: 50%; background: var(--green-light); border: 3px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 44px; margin: 0 auto 10px; box-shadow: 0 10px 24px rgba(26,150,64,.18); }
 .gam-big-avatar.frame_argent { border-color: #94a3b8; box-shadow: 0 10px 24px rgba(148,163,184,.35); }
 .gam-big-avatar.frame_or { border-color: #f59e0b; box-shadow: 0 10px 24px rgba(245,158,11,.4); }
-.gam-hero-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 17px; }
-.gam-hero-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .gam-ring { width: 130px; height: 130px; border-radius: 50%; margin: 14px auto; display: flex; align-items: center; justify-content: center; position: relative; background: conic-gradient(var(--green) calc(var(--p, 0%)), #e2e8f0 0); }
-.gam-ring::before { content: ''; position: absolute; inset: 9px; background: #fff; border-radius: 50%; }
+.gam-ring::before { content: ''; position: absolute; inset: 9px; background: var(--white); border-radius: 50%; }
 .gam-ring .gam-ring-label { position: relative; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 16px; text-align: center; }
 .gam-stat-row { display: flex; gap: 10px; padding: 0 20px; margin-top: 14px; }
-.gam-stat-box { flex: 1; background: #fff; border-radius: var(--radius-md); padding: 12px; text-align: center; box-shadow: var(--shadow-sm); }
+.gam-stat-box { flex: 1; background: var(--white); border-radius: var(--radius-md); padding: 12px; text-align: center; box-shadow: var(--shadow-sm); }
 .gam-stat-box .num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 15px; color: var(--green-dark); display: block; }
 .gam-stat-box .lbl { font-size: 10.5px; color: var(--text-muted); }
 
 .gam-badges-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 20px; }
-.badge-card { background: #fff; border-radius: var(--radius-md); padding: 14px 10px; text-align: center; box-shadow: var(--shadow-sm); }
+.badge-card { background: var(--white); border-radius: var(--radius-md); padding: 14px 10px; text-align: center; box-shadow: var(--shadow-sm); position: relative; border: 1.5px solid transparent; }
 .badge-card.locked { opacity: .5; }
+.badge-rarity-tag { position:absolute; top:8px; right:8px; font-size:8.5px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; padding:2px 6px; border-radius:8px; background:var(--surface-alt); color:var(--text-muted); }
+.badge-card.owned.rarity-bronze { border-color:#cd7f32; } .badge-card.owned.rarity-bronze .badge-rarity-tag { background:#fdf0e4; color:#a0562a; }
+.badge-card.owned.rarity-argent { border-color:#94a3b8; } .badge-card.owned.rarity-argent .badge-rarity-tag { background:var(--surface-alt); color:#475569; }
+.badge-card.owned.rarity-or { border-color:#f59e0b; } .badge-card.owned.rarity-or .badge-rarity-tag { background:#fef3c7; color:#b45309; }
+.badge-card.owned.rarity-platine { border-color:#7dd3fc; } .badge-card.owned.rarity-platine .badge-rarity-tag { background:#e0f2fe; color:#0369a1; }
 .badge-icon { font-size: 26px; display: block; margin-bottom: 6px; }
 .badge-name { font-size: 11.5px; font-weight: 800; display: block; }
 .badge-date, .badge-desc { font-size: 9.5px; color: var(--text-muted); display: block; margin-top: 2px; }
@@ -617,12 +680,12 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 .cal-cell.active { background: var(--green); }
 
 .gam-tabs { display: flex; gap: 6px; padding: 0 20px; overflow-x: auto; }
-.gam-tab { flex-shrink: 0; padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--border-color); background: #fff; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+.gam-tab { flex-shrink: 0; padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
 .gam-tab.active { background: var(--green-gradient); color: #fff; border-color: transparent; }
-.leaderboard-row { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: var(--radius-md); padding: 10px 14px; margin: 8px 20px 0; box-shadow: var(--shadow-sm); }
+.leaderboard-row { display: flex; align-items: center; gap: 10px; background: var(--white); border-radius: var(--radius-md); padding: 10px 14px; margin: 8px 20px 0; box-shadow: var(--shadow-sm); }
 .leaderboard-row.me { background: var(--green-light); border: 1.5px solid var(--green); }
 .lb-rank { font-weight: 800; color: var(--text-muted); width: 28px; }
-.lb-avatar { font-size: 18px; }
+.lb-avatar { font-size: 18px; width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; overflow:hidden; flex-shrink:0; }
 .lb-name { flex: 1; font-size: 12.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lb-level { font-size: 11px; color: var(--text-muted); }
 .lb-xp { font-size: 12px; font-weight: 800; color: var(--green-dark); }
@@ -639,11 +702,11 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 .friend-chip button { background: none; border: none; color: var(--green-dark); cursor: pointer; font-size: 11px; }
 .gam-toggle-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-main); font-weight: 600; }
 .reward-avatar-row, .reward-title-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 14px; }
-.reward-pick-btn { border: 1.5px solid var(--border-color); background: #fff; border-radius: 12px; padding: 8px 12px; font-size: 16px; cursor: pointer; }
+.reward-pick-btn { border: 1.5px solid var(--border-color); background: var(--white); border-radius: 12px; padding: 8px 12px; font-size: 16px; cursor: pointer; }
 .reward-pick-btn.active { border-color: var(--green); background: var(--green-light); }
-.history-row { display: flex; justify-content: space-between; background: #fff; border-radius: 12px; padding: 10px 14px; margin: 0 20px 8px; box-shadow: var(--shadow-sm); font-size: 12.5px; }
+.history-row { display: flex; justify-content: space-between; background: var(--white); border-radius: 12px; padding: 10px 14px; margin: 0 20px 8px; box-shadow: var(--shadow-sm); font-size: 12.5px; }
 .history-pct { font-weight: 800; }
-.reco-mini-card { display: flex; align-items: center; gap: 8px; background: #fff; border-radius: 12px; padding: 10px 14px; margin: 0 20px 8px; box-shadow: var(--shadow-sm); font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.reco-mini-card { display: flex; align-items: center; gap: 8px; background: var(--white); border-radius: 12px; padding: 10px 14px; margin: 0 20px 8px; box-shadow: var(--shadow-sm); font-size: 12.5px; font-weight: 700; cursor: pointer; }
 .empty-hint { font-size: 12px; color: var(--text-muted); padding: 0 20px; }
 
 /* --- Confetti / notifications --- */
@@ -651,7 +714,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 
 .levelup-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); display: none; align-items: center; justify-content: center; z-index: 2100; padding: 20px; }
 .levelup-overlay.open { display: flex; }
-.levelup-card { background: #fff; border-radius: 24px; padding: 34px 26px; text-align: center; max-width: 320px; width: 100%; animation: levelUpPop .5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
+.levelup-card { background: var(--white); border-radius: 24px; padding: 34px 26px; text-align: center; max-width: 320px; width: 100%; animation: levelUpPop .5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
 @keyframes levelUpPop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); } }
 .levelup-emoji { font-size: 54px; animation: levelUpSpin 1s ease; }
 @keyframes levelUpSpin { from { transform: rotate(-15deg) scale(0.8); } to { transform: rotate(0) scale(1); } }
@@ -661,9 +724,9 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 /* --- Déblocage de badge --- */
 .badge-unlock-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.55); display: none; align-items: center; justify-content: center; z-index: 2100; padding: 20px; }
 .badge-unlock-overlay.open { display: flex; }
-.badge-unlock-card { background: #fff; border-radius: 24px; padding: 32px 26px; text-align: center; max-width: 320px; width: 100%; animation: levelUpPop .5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
+.badge-unlock-card { background: var(--white); border-radius: 24px; padding: 32px 26px; text-align: center; max-width: 320px; width: 100%; animation: levelUpPop .5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 30px 60px rgba(0,0,0,0.3); }
 .badge-unlock-ring { width: 96px; height: 96px; margin: 0 auto 12px; border-radius: 50%; display:flex; align-items:center; justify-content:center; background: conic-gradient(from 0deg, #fde68a, #f59e0b, #fde68a); animation: badgeRingSpin 2.5s linear infinite; box-shadow: 0 8px 24px rgba(245,158,11,0.35); }
-.badge-unlock-emoji { font-size: 46px; background:#fff; width: 80px; height: 80px; border-radius: 50%; display:flex; align-items:center; justify-content:center; animation: levelUpSpin .8s ease; }
+.badge-unlock-emoji { font-size: 46px; background:var(--white); width: 80px; height: 80px; border-radius: 50%; display:flex; align-items:center; justify-content:center; animation: levelUpSpin .8s ease; }
 @keyframes badgeRingSpin { to { transform: rotate(360deg); } }
 .badge-unlock-tag { display:inline-block; background: var(--orange-light); color: var(--orange-dark); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; margin-bottom: 8px; letter-spacing:.03em; text-transform:uppercase; }
 .badge-unlock-card h2 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 19px; margin: 4px 0 6px; }
@@ -739,17 +802,17 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 }
 
 .landing-stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-.landing-stat-card { background: #fff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px 12px; text-align: center; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; }
+.landing-stat-card { background: var(--white); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px 12px; text-align: center; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; }
 .landing-stat-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(15,23,42,0.1); }
 .landing-stat-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 18px; margin: 0 auto 10px; }
 .landing-stat-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 24px; color: var(--green-dark); display: block; }
 .landing-stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
 
-.landing-section.light { background: #f8fafc; color: var(--text-main); background-image: radial-gradient(rgba(26,150,64,0.06) 1.5px, transparent 1.5px); background-size: 24px 24px; }
+.landing-section.light { background: var(--surface-alt-2); color: var(--text-main); background-image: radial-gradient(rgba(26,150,64,0.06) 1.5px, transparent 1.5px); background-size: 24px 24px; }
 .landing-section-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 19px; text-align: center; margin-bottom: 4px; }
 .landing-section-sub { font-size: 12.5px; color: var(--text-muted); text-align: center; margin-bottom: 22px; }
 .landing-why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.landing-why-card { background: #fff; border-radius: var(--radius-md); padding: 16px 12px; text-align: center; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; }
+.landing-why-card { background: var(--white); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; box-shadow: var(--shadow-sm); transition: transform .25s ease, box-shadow .25s ease; }
 .landing-why-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(15,23,42,0.12); }
 .landing-why-icon { width: 46px; height: 46px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 10px; }
 .landing-why-card h4 { font-size: 12.5px; font-weight: 800; margin-bottom: 4px; }
@@ -767,7 +830,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 
 .landing-testimonial-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
 .landing-testimonial-track::-webkit-scrollbar { display: none; }
-.landing-testimonial-card { scroll-snap-align: center; flex: 0 0 82%; background: #fff; border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm); }
+.landing-testimonial-card { scroll-snap-align: center; flex: 0 0 82%; background: var(--white); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm); }
 .landing-testimonial-stars { color: #f59e0b; font-size: 13px; margin-bottom: 8px; }
 .landing-testimonial-text { font-size: 12.5px; color: var(--text-main); line-height: 1.5; margin-bottom: 12px; }
 .landing-testimonial-person { display: flex; align-items: center; gap: 10px; }
@@ -789,32 +852,32 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
    ============================================================ */
 .forum-toolbar { display: flex; gap: 8px; padding: 0 0 10px; align-items: center; }
 .forum-search-input { flex: 1; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 10px 14px; font-size: 13px; }
-.forum-notif-btn { position: relative; background: #fff; border: 1.5px solid var(--border-color); border-radius: 14px; width: 42px; height: 42px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+.forum-notif-btn { position: relative; background: var(--white); border: 1.5px solid var(--border-color); border-radius: 14px; width: 42px; height: 42px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
 .forum-notif-dot { position: absolute; top: -3px; right: -3px; background: #ef4444; color: #fff; font-size: 9px; font-weight: 800; min-width: 16px; height: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
-.forum-notif-dropdown { position: absolute; right: 20px; margin-top: 6px; background: #fff; border-radius: 16px; box-shadow: 0 20px 40px rgba(15,23,42,0.18); width: min(320px, 86vw); max-height: 360px; overflow-y: auto; z-index: 500; display: none; }
+.forum-notif-dropdown { position: absolute; right: 20px; margin-top: 6px; background: var(--white); border-radius: 16px; box-shadow: 0 20px 40px rgba(15,23,42,0.18); width: min(320px, 86vw); max-height: 360px; overflow-y: auto; z-index: 500; display: none; }
 .forum-notif-dropdown.open { display: block; }
-.forum-notif-item { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 12px; }
+.forum-notif-item { padding: 12px 14px; border-bottom: 1px solid var(--surface-alt); font-size: 12px; }
 .forum-notif-item:last-child { border-bottom: none; }
 .forum-notif-item.unread { background: var(--green-light); }
 .forum-notif-empty { padding: 20px; text-align: center; font-size: 12px; color: var(--text-muted); }
 
 .forum-filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; }
-.forum-filter-chip { flex-shrink: 0; padding: 7px 13px; border-radius: 18px; border: 1.5px solid var(--border-color); background: #fff; font-size: 11.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+.forum-filter-chip { flex-shrink: 0; padding: 7px 13px; border-radius: 18px; border: 1.5px solid var(--border-color); background: var(--white); font-size: 11.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
 .forum-filter-chip.active { background: var(--green-gradient); color: #fff; border-color: transparent; }
 
-.forum-side-panel { background: #fff; border-radius: var(--radius-md); padding: 14px; box-shadow: var(--shadow-sm); margin-bottom: 12px; }
+.forum-side-panel { background: var(--white); border-radius: var(--radius-md); padding: 14px; box-shadow: var(--shadow-sm); margin-bottom: 12px; }
 .forum-side-panel h4 { font-size: 12.5px; font-weight: 800; margin-bottom: 10px; }
 .forum-contrib-row, .forum-popular-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 11.5px; }
-.forum-contrib-avatar { font-size: 16px; }
+.forum-contrib-avatar { font-size: 16px; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; overflow:hidden; flex-shrink:0; }
 .forum-contrib-name { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .forum-contrib-xp { font-size: 10.5px; color: var(--green-dark); font-weight: 800; }
 .forum-popular-row .rank { font-weight: 800; color: var(--text-muted); width: 16px; }
 .forum-popular-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .forum-composer-toolbar { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
-.forum-tool-btn { background: #f1f5f9; border: none; border-radius: 8px; width: 30px; height: 30px; font-size: 13px; cursor: pointer; }
+.forum-tool-btn { background: var(--surface-alt); border: none; border-radius: 8px; width: 30px; height: 30px; font-size: 13px; cursor: pointer; }
 .forum-tool-btn.active { background: var(--green-light); color: var(--green-dark); }
-.forum-preview-box { background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 12px; padding: 12px; font-size: 12.5px; margin-bottom: 8px; }
+.forum-preview-box { background: var(--surface-alt-2); border: 1px dashed var(--border-color); border-radius: 12px; padding: 12px; font-size: 12.5px; margin-bottom: 8px; }
 .forum-preview-box img { max-width: 100%; border-radius: 8px; margin: 6px 0; }
 .forum-preview-box code { background: #e2e8f0; padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
 .forum-preview-box pre { background: #0f172a; color: #e2e8f0; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 11px; }
@@ -832,7 +895,7 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 .forum-pdf-chip { display: inline-flex; align-items: center; gap: 5px; background: #fee2e2; color: #b91c1c; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 10px; margin-top: 6px; text-decoration: none; }
 
 .forum-reactions-row { display: flex; gap: 5px; flex-wrap: wrap; }
-.forum-reaction-btn { font-size: 12px; padding: 5px 9px; border-radius: 14px; border: 1.5px solid var(--border-color); background: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.forum-reaction-btn { font-size: 12px; padding: 5px 9px; border-radius: 14px; border: 1.5px solid var(--border-color); background: var(--white); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
 .forum-reaction-btn.active { background: var(--green-light); border-color: var(--green); }
 .forum-reaction-btn.reaction-pop { animation: likeBounce .4s ease; }
 
@@ -873,6 +936,15 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
 </style>
 </head>
 <body>
+<script>
+  (function(){
+    try {
+      var stored = localStorage.getItem('solci_dark_mode');
+      var dark = stored !== null ? stored === '1' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    } catch(e){}
+  })();
+</script>
 
 <div class="auth-screen" id="auth-screen">
   <div class="landing-wrap">
@@ -1060,7 +1132,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
       <button class="btn-action" onclick="switchPage('cours')"><i data-lucide="rocket" class="lucide-icon"></i> Découvrir les chapitres</button>
     </div>
 
-    <div class="gam-topbar" role="button" tabindex="0" aria-label="Voir ma progression et mes récompenses" onclick="switchPage('gamification')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchPage('gamification');}">
+    <div class="gam-topbar" role="button" tabindex="0" aria-label="Voir ma progression et mes récompenses" onclick="switchPage('profil')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchPage('profil');}">
       <div class="gam-level-badge">
         <span class="gam-avatar" id="gam-avatar-emoji"><i data-lucide="graduation-cap" class="lucide-icon"></i></span>
         <div class="gam-level-info">
@@ -1073,7 +1145,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
     </div>
     <div class="gam-quote-card" id="gam-quote-card"></div>
 
-    <div class="section-headline"><h3><i data-lucide="target" class="lucide-icon"></i> Défis du jour</h3><button class="link" onclick="switchPage('gamification')">Voir tout</button></div>
+    <div class="section-headline"><h3><i data-lucide="target" class="lucide-icon"></i> Défis du jour</h3><button class="link" onclick="switchPage('profil')">Voir tout</button></div>
     <div class="daily-challenges-list" id="daily-challenges-list"></div>
 
     <div class="section-headline" style="padding-top:10px;"><h3>Mon parcours de progression</h3></div>
@@ -1251,16 +1323,91 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
   </div>
 
   <div id="page-profil" class="page">
-    <div class="dashboard-profile-box">
-      <div class="big-avatar"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
-      <div class="big-avatar-label" id="profil-name">Espace Élève Scientifique</div>
-      <div class="big-avatar-sub" id="profil-sub">Lycée Connecté • Côte d'Ivoire</div>
+    <div class="gam-hero">
+      <div class="gam-big-avatar" id="gam-page-avatar"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
+      <div class="gam-hero-name" id="gam-page-name">Élève</div>
+      <div class="gam-hero-title" id="gam-page-earned-title">Élève Scientifique</div>
+      <div class="gam-hero-sub" id="gam-page-sub">Niveau <span id="gam-page-level-num">1</span></div>
+      <div class="gam-ring" id="gam-big-ring" style="--p:0%">
+        <span class="gam-ring-label" id="gam-page-xp-label">0 / 100 XP</span>
+      </div>
+      <div class="gam-rank-pill"><i data-lucide="trophy" class="lucide-icon"></i> Rang national : <strong id="gam-my-rank">—</strong></div>
     </div>
+
+    <div class="gam-motivation-card" id="gam-motivation-card"></div>
+
+    <div class="section-headline"><h3><i data-lucide="target" class="lucide-icon"></i> Objectif du jour</h3></div>
+    <div class="daily-challenges-list" id="daily-challenges-list-page"></div>
+
+    <div class="section-headline"><h3><i data-lucide="flame" class="lucide-icon"></i> Série</h3></div>
+    <div class="gam-stat-row">
+      <div class="gam-stat-box"><span class="num" id="gam-streak-detail">0 <i data-lucide="flame" class="lucide-icon"></i></span><span class="lbl">Série actuelle</span></div>
+      <div class="gam-stat-box"><span class="num" id="gam-total-time">0 min</span><span class="lbl">Temps total</span></div>
+      <div class="gam-stat-box"><span class="num" id="gam-week-time">0 min</span><span class="lbl">Cette semaine</span></div>
+    </div>
+
+    <div class="section-headline"><h3><i data-lucide="activity" class="lucide-icon"></i> Progression globale</h3></div>
+    <div class="gam-settings-block">
+      <div class="global-progress-row"><span class="lbl" id="gp-week-label">0 / 120 min cette semaine</span><div class="cc-progress-track"><div class="cc-progress-fill" id="gp-week-fill" style="width:0%"></div></div></div>
+      <div class="global-progress-row"><span class="lbl" id="gp-month-label">0 jour(s) actif(s) ce mois-ci</span><div class="cc-progress-track"><div class="cc-progress-fill" id="gp-month-fill" style="width:0%"></div></div></div>
+      <div class="global-progress-row"><span class="lbl" id="gp-year-label">0 h étudiées depuis le début</span><div class="cc-progress-track"><div class="cc-progress-fill" id="gp-year-fill" style="width:0%"></div></div></div>
+    </div>
+
+    <div class="section-headline"><h3><i data-lucide="book-open" class="lucide-icon"></i> Mes matières</h3></div>
+    <div class="content-card-grid stagger" id="gam-subject-cards"></div>
+
+    <div class="section-headline"><h3><i data-lucide="award" class="lucide-icon"></i> Salle des trophées</h3></div>
+    <div class="gam-badges-grid stagger" id="gam-badges-grid"></div>
+    <div class="section-headline" style="padding-top:6px;"><h4 style="font-size:13px;font-weight:800;padding:0 20px;"><i data-lucide="star" class="lucide-icon"></i> Meilleurs scores</h4></div>
+    <div id="gam-best-scores" style="padding:0 20px 4px;"></div>
+
+    <div class="section-headline"><h3><i data-lucide="calendar" class="lucide-icon"></i> Activité (35 derniers jours)</h3></div>
+    <div class="gam-activity-calendar" id="gam-activity-calendar"></div>
+
+    <div class="section-headline"><h3><i data-lucide="bar-chart-3" class="lucide-icon"></i> Mes performances</h3></div>
+    <div class="gam-stat-row">
+      <div class="gam-stat-box"><span class="num" id="gam-strong-subject">—</span><span class="lbl">Matière forte</span></div>
+      <div class="gam-stat-box"><span class="num" id="gam-weak-subject">—</span><span class="lbl">À améliorer</span></div>
+    </div>
+    <div id="gam-history-list" style="margin-top:12px;"></div>
+
+    <div class="section-headline"><h3><i data-lucide="clock" class="lucide-icon"></i> Activité récente</h3></div>
+    <div class="gam-timeline stagger" id="gam-activity-timeline"></div>
+
+    <div class="section-headline"><h3><i data-lucide="sparkles" class="lucide-icon"></i> Recommandé pour toi</h3></div>
+    <div id="gam-recommendations"></div>
+
+    <div class="section-headline"><h3><i data-lucide="trophy" class="lucide-icon"></i> Classement</h3></div>
+    <div class="gam-tabs">
+      <button class="gam-tab active" data-tab="general" onclick="selectLeaderboardTab('general')"><i data-lucide="globe" class="lucide-icon"></i> National</button>
+      <button class="gam-tab" data-tab="school" onclick="selectLeaderboardTab('school')"><i data-lucide="school" class="lucide-icon"></i> Établissement</button>
+      <button class="gam-tab" data-tab="city" onclick="selectLeaderboardTab('city')"><i data-lucide="building-2" class="lucide-icon"></i> Ville</button>
+      <button class="gam-tab" data-tab="friends" onclick="selectLeaderboardTab('friends')"><i data-lucide="users" class="lucide-icon"></i> Amis</button>
+    </div>
+    <div id="gam-leaderboard-list" style="margin-top:10px;"></div>
+
+    <div class="section-headline"><h3><i data-lucide="palette" class="lucide-icon"></i> Personnalisation</h3></div>
+    <div class="gam-settings-block">
+      <label class="gam-toggle-row"><input type="checkbox" id="dark-mode-toggle" onchange="setDarkMode(this.checked)"> <i data-lucide="moon" class="lucide-icon"></i> Thème sombre</label>
+      <label style="font-size:12px;font-weight:700;margin-top:8px;">Thème de couleur</label>
+      <div class="theme-swatch-row" id="gam-theme-picker"></div>
+    </div>
+    <div class="gam-settings-block" id="gam-rewards-picker"></div>
+
+    <div class="section-headline"><h3><i data-lucide="settings" class="lucide-icon"></i> Réglages du classement</h3></div>
+    <div class="gam-settings-block">
+      <label style="font-size:12px;font-weight:700;"><i data-lucide="school" class="lucide-icon"></i> Établissement</label>
+      <input id="gam-school-input" type="text" maxlength="60" placeholder="Ex : Lycée Moderne d'Abidjan">
+      <label style="font-size:12px;font-weight:700;"><i data-lucide="building-2" class="lucide-icon"></i> Ville</label>
+      <input id="gam-city-input" type="text" maxlength="40" placeholder="Ex : Abidjan">
+      <button class="btn-mini" style="align-self:flex-start;" onclick="saveSchoolCity()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
+      <label style="font-size:12px;font-weight:700;margin-top:6px;"><i data-lucide="users" class="lucide-icon"></i> Ajouter un ami (par email)</label>
+      <div class="gam-inline-form"><input id="gam-friend-input" type="email" placeholder="email@exemple.com"><button class="btn-mini" onclick="addFriend()">Ajouter</button></div>
+      <div class="gam-friends-list" id="gam-friends-list"></div>
+      <label class="gam-toggle-row" style="margin-top:10px;"><input type="checkbox" id="gam-sound-toggle" checked onchange="toggleSound(this.checked)"> <i data-lucide="volume-2" class="lucide-icon"></i> Sons de progression</label>
+    </div>
+
     <div class="settings-group">
-      <button class="settings-row" onclick="switchPage('gamification')">
-        <div class="settings-label-side"><i data-lucide="trophy" class="lucide-icon"></i> <span>Ma progression & récompenses</span></div>
-        <span class="chev">›</span>
-      </button>
       <button class="settings-row" onclick="toggleMiniList('dl-list')">
         <div class="settings-label-side"><i data-lucide="save" class="lucide-icon"></i> <span>Mes téléchargements récents</span></div>
         <span class="chev">›</span>
@@ -1299,72 +1446,6 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
       </button>
     </div>
     <p style="text-align:center; font-size:11px; color:var(--text-muted); padding:16px 20px 30px;">Version du site : <strong id="profil-build-version"></strong></p>
-  </div>
-
-  <div id="page-gamification" class="page">
-    <div class="section-headline" style="padding-top:10px;">
-      <button class="link" onclick="switchPage('accueil')"><i data-lucide="arrow-left" class="lucide-icon"></i> Retour</button>
-    </div>
-
-    <div class="gam-hero">
-      <div class="gam-big-avatar" id="gam-page-avatar"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
-      <div class="gam-hero-title" id="gam-page-title">Élève Scientifique</div>
-      <div class="gam-hero-sub" id="gam-page-sub">Niveau <span id="gam-page-level-num">1</span></div>
-      <div class="gam-ring" id="gam-big-ring" style="--p:0%">
-        <span class="gam-ring-label" id="gam-page-xp-label">0 / 100 XP</span>
-      </div>
-    </div>
-
-    <div class="gam-stat-row">
-      <div class="gam-stat-box"><span class="num" id="gam-streak-detail">0 <i data-lucide="flame" class="lucide-icon"></i></span><span class="lbl">Série de jours</span></div>
-      <div class="gam-stat-box"><span class="num" id="gam-total-time">0 min</span><span class="lbl">Temps total</span></div>
-      <div class="gam-stat-box"><span class="num" id="gam-week-time">0 min</span><span class="lbl">Cette semaine</span></div>
-    </div>
-
-    <div class="section-headline"><h3><i data-lucide="calendar" class="lucide-icon"></i> Activité (35 derniers jours)</h3></div>
-    <div class="gam-activity-calendar" id="gam-activity-calendar"></div>
-
-    <div class="section-headline"><h3><i data-lucide="target" class="lucide-icon"></i> Défis du jour</h3></div>
-    <div class="daily-challenges-list" id="daily-challenges-list-page"></div>
-
-    <div class="section-headline"><h3><i data-lucide="medal" class="lucide-icon"></i> Badges</h3></div>
-    <div class="gam-badges-grid" id="gam-badges-grid"></div>
-
-    <div class="section-headline"><h3><i data-lucide="palette" class="lucide-icon"></i> Personnalisation</h3></div>
-    <div class="gam-settings-block" id="gam-rewards-picker"></div>
-
-    <div class="section-headline"><h3><i data-lucide="bar-chart-3" class="lucide-icon"></i> Mes performances</h3></div>
-    <div class="gam-stat-row">
-      <div class="gam-stat-box"><span class="num" id="gam-strong-subject">—</span><span class="lbl">Matière forte</span></div>
-      <div class="gam-stat-box"><span class="num" id="gam-weak-subject">—</span><span class="lbl">À améliorer</span></div>
-    </div>
-    <div id="gam-history-list" style="margin-top:12px;"></div>
-
-    <div class="section-headline"><h3><i data-lucide="sparkles" class="lucide-icon"></i> Recommandé pour toi</h3></div>
-    <div id="gam-recommendations"></div>
-
-    <div class="section-headline"><h3><i data-lucide="trophy" class="lucide-icon"></i> Classement</h3></div>
-    <div class="gam-tabs">
-      <button class="gam-tab active" data-tab="general" onclick="selectLeaderboardTab('general')"><i data-lucide="globe" class="lucide-icon"></i> National</button>
-      <button class="gam-tab" data-tab="school" onclick="selectLeaderboardTab('school')"><i data-lucide="school" class="lucide-icon"></i> Établissement</button>
-      <button class="gam-tab" data-tab="city" onclick="selectLeaderboardTab('city')"><i data-lucide="building-2" class="lucide-icon"></i> Ville</button>
-      <button class="gam-tab" data-tab="friends" onclick="selectLeaderboardTab('friends')"><i data-lucide="users" class="lucide-icon"></i> Amis</button>
-    </div>
-    <div id="gam-leaderboard-list" style="margin-top:10px;"></div>
-
-    <div class="section-headline"><h3><i data-lucide="settings" class="lucide-icon"></i> Réglages du classement</h3></div>
-    <div class="gam-settings-block">
-      <label style="font-size:12px;font-weight:700;"><i data-lucide="school" class="lucide-icon"></i> Établissement</label>
-      <input id="gam-school-input" type="text" maxlength="60" placeholder="Ex : Lycée Moderne d'Abidjan">
-      <label style="font-size:12px;font-weight:700;"><i data-lucide="building-2" class="lucide-icon"></i> Ville</label>
-      <input id="gam-city-input" type="text" maxlength="40" placeholder="Ex : Abidjan">
-      <button class="btn-mini" style="align-self:flex-start;" onclick="saveSchoolCity()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
-      <label style="font-size:12px;font-weight:700;margin-top:6px;"><i data-lucide="users" class="lucide-icon"></i> Ajouter un ami (par email)</label>
-      <div class="gam-inline-form"><input id="gam-friend-input" type="email" placeholder="email@exemple.com"><button class="btn-mini" onclick="addFriend()">Ajouter</button></div>
-      <div class="gam-friends-list" id="gam-friends-list"></div>
-      <label class="gam-toggle-row" style="margin-top:10px;"><input type="checkbox" id="gam-sound-toggle" checked onchange="toggleSound(this.checked)"> <i data-lucide="volume-2" class="lucide-icon"></i> Sons de progression</label>
-    </div>
-    <div style="height:20px;"></div>
   </div>
 
   <div id="page-legal" class="page">
@@ -1432,32 +1513,70 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
     <div id="admin-dashboard" style="display:none;">
       <div class="admin-header">
         <h2><i data-lucide="hand" class="lucide-icon"></i> Bonjour, Administrateur</h2>
-        <p>Gère les cours de Maths et Physique-Chimie affichés sur le site.</p>
+        <p>Tableau de bord School Online</p>
       </div>
-      <div class="admin-stats">
-        <div class="admin-stat-card"><div class="num" id="admin-stat-maths">0</div><div class="lbl">Cours Maths</div></div>
-        <div class="admin-stat-card"><div class="num" id="admin-stat-physique">0</div><div class="lbl">Cours Phys-Chim</div></div>
-        <div class="admin-stat-card"><div class="num" id="admin-stat-exo">0</div><div class="lbl">Exercices</div></div>
-      </div>
-      <button class="admin-add-btn" onclick="openCourseForm()"><i data-lucide="plus" class="lucide-icon"></i> Ajouter un cours</button>
-      <button class="admin-add-btn" style="background:var(--green-gradient); box-shadow:0 6px 18px rgba(26,150,64,0.3);" onclick="resyncCourseVideos()"><i data-lucide="video" class="lucide-icon"></i> Resynchroniser les vidéos de cours</button>
-      <div class="section-headline" style="padding-top:6px;"><h3>Tous les cours</h3></div>
-      <div class="extended-list-wrapper" id="admin-course-list"></div>
 
-      <div class="section-headline" style="padding-top:6px;">
-        <h3><i data-lucide="clipboard-check" class="lucide-icon"></i> Devoirs & Interrogations</h3>
+      <div class="admin-tab-strip" id="admin-tab-strip">
+        <button class="admin-tab active" data-tab="overview" onclick="switchAdminTab('overview')"><i data-lucide="layout-dashboard" class="lucide-icon"></i><span>Vue d'ensemble</span></button>
+        <button class="admin-tab" data-tab="users" onclick="switchAdminTab('users')"><i data-lucide="users" class="lucide-icon"></i><span>Utilisateurs</span></button>
+        <button class="admin-tab" data-tab="courses" onclick="switchAdminTab('courses')"><i data-lucide="book-open" class="lucide-icon"></i><span>Cours</span></button>
+        <button class="admin-tab" data-tab="exercices" onclick="switchAdminTab('exercices')"><i data-lucide="file-text" class="lucide-icon"></i><span>Exercices</span></button>
+        <button class="admin-tab" data-tab="devoirs" onclick="switchAdminTab('devoirs')"><i data-lucide="clipboard-check" class="lucide-icon"></i><span>Devoirs</span></button>
+        <button class="admin-tab" data-tab="journal" onclick="switchAdminTab('journal')"><i data-lucide="bug" class="lucide-icon"></i><span>Journal</span></button>
       </div>
-      <button class="admin-add-btn" onclick="openAssignmentForm()"><i data-lucide="plus" class="lucide-icon"></i> Créer un devoir / une interrogation</button>
-      <div class="extended-list-wrapper" id="admin-assignments-list"></div>
 
-      <div class="section-headline">
-        <h3><i data-lucide="bug" class="lucide-icon"></i> Journal d'erreurs <span id="admin-error-count" class="status-badge pending" style="margin-left:6px;">0</span></h3>
-        <button class="link" onclick="loadAdminErrorLogs()">Actualiser</button>
+      <!-- Vue d'ensemble -->
+      <div class="admin-tab-panel active" id="admin-panel-overview">
+        <div class="admin-stats">
+          <div class="admin-stat-card"><div class="num" id="admin-stat-maths">0</div><div class="lbl">Cours Maths</div></div>
+          <div class="admin-stat-card"><div class="num" id="admin-stat-physique">0</div><div class="lbl">Cours Phys-Chim</div></div>
+          <div class="admin-stat-card"><div class="num" id="admin-stat-exo">0</div><div class="lbl">Exercices</div></div>
+          <div class="admin-stat-card"><div class="num" id="admin-stat-users">0</div><div class="lbl">Élèves inscrits</div></div>
+          <div class="admin-stat-card"><div class="num" id="admin-stat-xp">0</div><div class="lbl">XP moyen</div></div>
+          <div class="admin-stat-card"><div class="num" id="admin-stat-quizpct">0%</div><div class="lbl">Réussite moyenne quiz</div></div>
+        </div>
+        <div class="section-headline"><h3><i data-lucide="activity" class="lucide-icon"></i> Connexions — 7 derniers jours</h3></div>
+        <div class="admin-chart-card"><canvas id="admin-chart-logins" height="180"></canvas></div>
+        <div class="section-headline"><h3><i data-lucide="bar-chart-3" class="lucide-icon"></i> Performance moyenne par matière</h3></div>
+        <div class="admin-chart-card"><canvas id="admin-chart-perf" height="180"></canvas></div>
       </div>
-      <p style="padding:0 20px 10px;font-size:12px;color:var(--text-muted);">Erreurs rencontrées automatiquement par les élèves sur le site (silencieuses pour eux, visibles ici pour toi).</p>
-      <div class="extended-list-wrapper" id="admin-error-list"></div>
 
-      <button class="settings-row" style="margin:20px; width:calc(100% - 40px); background:white; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);" onclick="adminLogout()">
+      <!-- Utilisateurs -->
+      <div class="admin-tab-panel" id="admin-panel-users">
+        <div class="search-mini-wrap"><div class="search-mini"><i data-lucide="search" class="lucide-icon"></i><input type="text" id="admin-users-search" placeholder="Rechercher un élève..." oninput="renderAdminUsersList()"></div></div>
+        <div class="extended-list-wrapper" id="admin-users-list"></div>
+      </div>
+
+      <!-- Cours -->
+      <div class="admin-tab-panel" id="admin-panel-courses">
+        <button class="admin-add-btn" onclick="openCourseForm()"><i data-lucide="plus" class="lucide-icon"></i> Ajouter un cours</button>
+        <button class="admin-add-btn" style="background:var(--green-gradient); box-shadow:0 6px 18px rgba(26,150,64,0.3);" onclick="resyncCourseVideos()"><i data-lucide="video" class="lucide-icon"></i> Resynchroniser les vidéos de cours</button>
+        <div class="extended-list-wrapper" id="admin-course-list"></div>
+      </div>
+
+      <!-- Exercices -->
+      <div class="admin-tab-panel" id="admin-panel-exercices">
+        <button class="admin-add-btn" onclick="openExoForm()"><i data-lucide="plus" class="lucide-icon"></i> Ajouter un exercice</button>
+        <div class="extended-list-wrapper" id="admin-exo-list"></div>
+      </div>
+
+      <!-- Devoirs -->
+      <div class="admin-tab-panel" id="admin-panel-devoirs">
+        <button class="admin-add-btn" onclick="openAssignmentForm()"><i data-lucide="plus" class="lucide-icon"></i> Créer un devoir / une interrogation</button>
+        <div class="extended-list-wrapper" id="admin-assignments-list"></div>
+      </div>
+
+      <!-- Journal -->
+      <div class="admin-tab-panel" id="admin-panel-journal">
+        <div class="section-headline">
+          <h3><i data-lucide="bug" class="lucide-icon"></i> Journal d'erreurs <span id="admin-error-count" class="status-badge pending" style="margin-left:6px;">0</span></h3>
+          <button class="link" onclick="loadAdminErrorLogs()">Actualiser</button>
+        </div>
+        <p style="padding:0 20px 10px;font-size:12px;color:var(--text-muted);">Erreurs rencontrées automatiquement par les élèves sur le site (silencieuses pour eux, visibles ici pour toi).</p>
+        <div class="extended-list-wrapper" id="admin-error-list"></div>
+      </div>
+
+      <button class="settings-row" style="margin:20px; width:calc(100% - 40px); background:var(--white); border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);" onclick="adminLogout()">
         <div class="settings-label-side"><i data-lucide="log-out" class="lucide-icon"></i> <span>Se déconnecter</span></div>
       </button>
       <p style="text-align:center; font-size:11px; color:var(--text-muted); padding:0 20px 30px;">Version du code : <strong id="build-version-tag"></strong></p>
@@ -1564,6 +1683,46 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
       </div>
       <button class="btn-save-form" onclick="saveCourseForm()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
       <button class="btn-cancel-form" onclick="closeFormModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- Formulaire admin : créer / modifier un exercice -->
+<div class="modal-overlay" id="exo-form-modal" onclick="if(event.target===this) closeExoForm()">
+  <div class="modal-sheet">
+    <div class="modal-drag-handle"></div>
+    <h3 id="exo-form-title">Ajouter un exercice</h3>
+    <div style="margin-top:18px;">
+      <div class="form-row-2">
+        <div class="form-sheet-field">
+          <label>Matière</label>
+          <select id="ef-matiere">
+            <option value="maths">Mathématiques</option>
+            <option value="physique">Physique-Chimie</option>
+          </select>
+        </div>
+        <div class="form-sheet-field">
+          <label>Type</label>
+          <select id="ef-sous">
+            <option value="fiche">Fiche PDF</option>
+            <option value="video">Vidéo de correction</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-sheet-field">
+        <label>Titre</label>
+        <input id="ef-titre" placeholder="Ex : Limites et continuité — Exercices corrigés">
+      </div>
+      <div class="form-sheet-field">
+        <label>Description courte</label>
+        <input id="ef-desc" placeholder="Ex : Calcul de limites, étude de continuité">
+      </div>
+      <div class="form-sheet-field">
+        <label>Lien (PDF ou vidéo YouTube)</label>
+        <input id="ef-lien" placeholder="https://...">
+      </div>
+      <button class="btn-save-form" onclick="saveExoForm()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
+      <button class="btn-cancel-form" onclick="closeExoForm()">Annuler</button>
     </div>
   </div>
 </div>
@@ -1862,6 +2021,15 @@ function loadCourses(){
   return seeded;
 }
 function saveCourses(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+const EXO_STORAGE_KEY = 'solci_exercices_v1';
+function loadExercicesLocal(){
+  const raw = localStorage.getItem(EXO_STORAGE_KEY);
+  if(raw){ try { return JSON.parse(raw); } catch(e){} }
+  const seeded = seedExercices();
+  localStorage.setItem(EXO_STORAGE_KEY, JSON.stringify(seeded));
+  return seeded;
+}
+function saveExercicesLocal(list){ localStorage.setItem(EXO_STORAGE_KEY, JSON.stringify(list)); }
 function loadFavs(){
   if(isRealAccount() && userProfile) return userProfile.favorites || [];
   return loadLocalFavs();
@@ -1881,7 +2049,8 @@ function saveDownloads(a){
 
 let COURSES = [];
 let coursesLoaded = false;
-const EXERCICES = seedExercices();
+let EXERCICES = [];
+let exercicesLoaded = false;
 let currentSearch = '';
 let coursSubject = 'maths';
 let coursSubTab = 'fiche';
@@ -1902,10 +2071,9 @@ function switchPage(pageId){
   if(pageId==='cours') renderCoursList();
   if(pageId==='exercices') renderExoList();
   if(pageId==='devoirs') renderDevoirsPage();
-  if(pageId==='profil') renderProfil();
+  if(pageId==='profil'){ renderProfil(); renderGamificationPage(); }
   if(pageId==='admin') renderAdminIfLogged();
   if(pageId==='forum') initForum();
-  if(pageId==='gamification') renderGamificationPage();
 }
 
 function selectSubjectTab(scope, subject){
@@ -2138,6 +2306,7 @@ function exoSkeletons(n){
 }
 function renderExoList(){
   const container = document.getElementById('exo-list-container');
+  if(!exercicesLoaded){ container.innerHTML = exoSkeletons(4); return; }
   let list = EXERCICES.filter(e=>e.matiere===exoSubject && e.sous===exoSubTab);
   if(currentSearch){ list = list.filter(e=>(e.titre||'').toLowerCase().includes(currentSearch)); }
   if(list.length===0){
@@ -2204,10 +2373,12 @@ function toggleMiniList(id){
 function renderProfil(){
   const versionTag = document.getElementById('profil-build-version');
   if(versionTag) versionTag.textContent = BUILD_VERSION;
+  if(!GAM) loadGam();
+  updateXPBarUI();
   const user = getCurrentUser();
-  if(user){
-    document.getElementById('profil-name').textContent = user.guest ? 'Invité' : user.name;
-    document.getElementById('profil-sub').textContent = user.guest ? 'Mode invité • Lycée Connecté' : (user.email || 'Lycée Connecté • Côte d\'Ivoire');
+  const nameEl = document.getElementById('gam-page-name');
+  if(user && nameEl){
+    nameEl.textContent = user.guest ? 'Invité' : user.name;
   }
   const adminEntry = document.getElementById('admin-menu-entry');
   if(adminEntry){
@@ -2248,7 +2419,7 @@ function openModal(title, matiere, type, niveau, format, date, fileLink, kind){
   const downloadBtn = document.getElementById('modal-download-btn');
   const hasLink = fileLink && fileLink !== '#';
   downloadBtn.href = hasLink ? fileLink : '#';
-  downloadBtn.innerText = hasLink ? '<i data-lucide="arrow-down-to-line" class="lucide-icon"></i> Lancer le téléchargement' : '<i data-lucide="hourglass" class="lucide-icon"></i> Fichier bientôt disponible';
+  downloadBtn.innerHTML = hasLink ? '<i data-lucide="arrow-down-to-line" class="lucide-icon"></i> Lancer le téléchargement' : '<i data-lucide="hourglass" class="lucide-icon"></i> Fichier bientôt disponible';
   downloadBtn.onclick = function(e){
     if(!hasLink){ e.preventDefault(); showToast("Ce fichier n'est pas encore disponible"); return; }
     trackDownload(title);
@@ -2359,8 +2530,7 @@ function renderAdminDashboard(){
   if(COURSES.length===0 && isFirebaseConfigured()){
     list.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="sprout" class="lucide-icon"></i></div><strong>Base de cours vide</strong>Importe les cours de démarrage (Maths + Physique-Chimie) pour que les élèves voient du contenu.</div>
       <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreCoursesOnce()"><i data-lucide="sprout" class="lucide-icon"></i> Importer les cours de démarrage</button>`;
-    return;
-  }
+  } else {
   const corrupted = COURSES.filter(c=>!c.titre);
   let html = '';
   if(corrupted.length > 0 && isFirebaseConfigured()){
@@ -2384,6 +2554,17 @@ function renderAdminDashboard(){
       <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteCourse('${c.id}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
     </div>`).join('');
   list.innerHTML = html;
+  }
+  const exoList = document.getElementById('admin-exo-list');
+  if(exoList){
+    if(EXERCICES.length===0 && isFirebaseConfigured()){
+      exoList.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="sprout" class="lucide-icon"></i></div><strong>Base d'exercices vide</strong>Importe les exercices de démarrage.</div>
+        <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreExercicesOnce()"><i data-lucide="sprout" class="lucide-icon"></i> Importer les exercices de démarrage</button>`;
+    } else {
+      renderAdminExoList();
+    }
+  }
+  renderOverviewTab();
 }
 async function resetAndReseedCourses(){
   if(!confirm("Ceci va SUPPRIMER tous les cours actuels et les remplacer par la liste de démarrage propre. Les liens PDF ajoutés manuellement seront perdus. Continuer ?")) return;
@@ -2565,7 +2746,7 @@ function getCurrentUser(){
     if(firebaseUser && !firebaseUser.isAnonymous && userProfile){
       return { name: userProfile.name, email: firebaseUser.email, guest:false };
     }
-    if(localStorage.getItem('solci_guest_mode')==='1'){
+    if(sessionStorage.getItem('solci_guest_mode')==='1'){
       return { name:'Invité', email:'', guest:true };
     }
     return null;
@@ -2690,7 +2871,7 @@ async function handleSignup(evt){
 
 function continueAsGuest(){
   if(isFirebaseConfigured()){
-    localStorage.setItem('solci_guest_mode', '1');
+    sessionStorage.setItem('solci_guest_mode', '1');
     initFirebaseIfNeeded();
     try {
       if(typeof firebase !== 'undefined'){
@@ -2748,7 +2929,7 @@ function showAuthScreen(){
 async function logoutUser(){
   appAlreadyEntered = false;
   if(isFirebaseConfigured() && typeof firebase !== 'undefined' && firebase.auth){
-    localStorage.removeItem('solci_guest_mode');
+    sessionStorage.removeItem('solci_guest_mode');
     userProfile = null;
     try { await firebase.auth().signOut(); } catch(e){}
     showAuthScreen(); // filet de sécurité si onAuthStateChanged ne se déclenche pas (SDK indisponible)
@@ -2951,12 +3132,12 @@ async function handleAuthStateChange(user){
     await loadUserProfile(user);
     enterApp();
   } else if(user && user.isAnonymous){
-    if(localStorage.getItem('solci_guest_mode')==='1'){
+    if(sessionStorage.getItem('solci_guest_mode')==='1'){
       userProfile = null;
       enterApp();
     }
     // sinon : session anonyme d'arrière-plan (lecture publique), on laisse l'écran de connexion affiché
-  } else if(localStorage.getItem('solci_guest_mode')==='1'){
+  } else if(sessionStorage.getItem('solci_guest_mode')==='1'){
     // Session perdue mais mode invité choisi précédemment : on en recrée une,
     // toujours en persistance "SESSION" (jamais transmise à un futur visiteur).
     try {
@@ -3383,6 +3564,286 @@ function afterCoursesLoaded(){
   if(themeSelect) populateForumThemeSelect();
 }
 
+/* ============ EXERCICES : synchronisation Firestore (même logique que les cours) ============ */
+let exercicesUnsub = null;
+function initExercicesData(){
+  if(isFirebaseConfigured()){
+    initFirebaseIfNeeded();
+    subscribeExercicesFirestore();
+  } else {
+    EXERCICES = loadExercicesLocal();
+    exercicesLoaded = true;
+    afterExercicesLoaded();
+  }
+}
+function subscribeExercicesFirestore(retries){
+  retries = retries || 0;
+  if(!forumDb){
+    if(retries > 40){
+      console.error('Firestore indisponible, bascule locale (exercices).');
+      EXERCICES = loadExercicesLocal(); exercicesLoaded = true; afterExercicesLoaded();
+      return;
+    }
+    setTimeout(()=>subscribeExercicesFirestore(retries+1), 250);
+    return;
+  }
+  if(exercicesUnsub) exercicesUnsub();
+  let exercicesResolved = false;
+  setTimeout(()=>{
+    if(exercicesResolved || exercicesLoaded) return;
+    console.error('Chargement des exercices trop long, bascule locale.');
+    EXERCICES = loadExercicesLocal(); exercicesLoaded = true; afterExercicesLoaded();
+  }, 8000);
+  exercicesUnsub = forumDb.collection('exercices').onSnapshot(snapshot=>{
+    exercicesResolved = true;
+    EXERCICES = [];
+    snapshot.forEach(doc=> EXERCICES.push({id:doc.id, ...doc.data()}));
+    exercicesLoaded = true;
+    afterExercicesLoaded();
+    if(EXERCICES.length===0) trySeedExercicesIfAdmin();
+  }, err=>{
+    exercicesResolved = true;
+    console.error('Erreur Firestore exercices:', err);
+    EXERCICES = loadExercicesLocal(); exercicesLoaded = true; afterExercicesLoaded();
+  });
+}
+function afterExercicesLoaded(){
+  updateSubjectCounts();
+  const activePage = document.querySelector('.page.active')?.id;
+  if(activePage==='page-exercices') renderExoList();
+  if(activePage==='page-admin') renderAdminIfLogged();
+}
+async function trySeedExercicesIfAdmin(){
+  if(isAdminAuthed()) await seedFirestoreExercicesOnce();
+}
+async function seedFirestoreExercicesOnce(){
+  try {
+    const snap = await forumDb.collection('exercices').limit(1).get();
+    if(!snap.empty){
+      showToast('Des exercices existent déjà dans la base — rien à importer.');
+      return;
+    }
+    const seed = seedExercices();
+    const batch = forumDb.batch();
+    seed.forEach(e=>{
+      const { id, ...rest } = e;
+      batch.set(forumDb.collection('exercices').doc(id), rest);
+    });
+    await batch.commit();
+    showToast('🌱 ' + seed.length + ' exercices importés avec succès !');
+  } catch(e){
+    console.error('Erreur seed exercices:', e);
+    showToast("⚠️ Échec de l'import : " + (e && e.message ? e.message : 'vérifie les règles Firestore'));
+  }
+}
+
+/* --- Admin : créer / modifier / supprimer un exercice --- */
+let editingExoId = null;
+function openExoForm(id){
+  editingExoId = id || null;
+  const e = id ? EXERCICES.find(x=>x.id===id) : null;
+  document.getElementById('exo-form-title').innerText = id ? "Modifier l'exercice" : 'Ajouter un exercice';
+  document.getElementById('ef-matiere').value = e ? e.matiere : 'maths';
+  document.getElementById('ef-sous').value = e ? e.sous : 'fiche';
+  document.getElementById('ef-titre').value = e ? e.titre : '';
+  document.getElementById('ef-desc').value = e ? (e.desc||'') : '';
+  document.getElementById('ef-lien').value = e ? e.lien : '';
+  document.getElementById('exo-form-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeExoForm(){
+  document.getElementById('exo-form-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+async function saveExoForm(){
+  const titre = document.getElementById('ef-titre').value.trim();
+  if(!titre){ showToast('⚠️ Le titre est obligatoire'); return; }
+  const data = {
+    matiere: document.getElementById('ef-matiere').value,
+    sous: document.getElementById('ef-sous').value,
+    titre,
+    desc: document.getElementById('ef-desc').value.trim(),
+    lien: document.getElementById('ef-lien').value.trim() || '#'
+  };
+  const useCloud = isFirebaseConfigured() && forumDb;
+  try {
+    if(useCloud){
+      if(editingExoId){
+        await forumDb.collection('exercices').doc(editingExoId).update(data);
+      } else {
+        await forumDb.collection('exercices').doc('e'+Date.now()).set(data);
+      }
+    } else {
+      if(editingExoId){
+        const idx = EXERCICES.findIndex(x=>x.id===editingExoId);
+        EXERCICES[idx] = {...EXERCICES[idx], ...data};
+      } else {
+        data.id = 'e' + Date.now();
+        EXERCICES.push(data);
+      }
+      saveExercicesLocal(EXERCICES);
+      renderAdminDashboard();
+      updateSubjectCounts();
+    }
+    showToast(editingExoId ? '✅ Exercice modifié' : '✅ Exercice ajouté');
+    closeExoForm();
+  } catch(e){
+    console.error(e);
+    showToast("⚠️ Erreur lors de l'enregistrement");
+  }
+}
+async function deleteExo(id){
+  if(!confirm('Supprimer définitivement cet exercice ?')) return;
+  const useCloud = isFirebaseConfigured() && forumDb;
+  try {
+    if(useCloud){
+      await forumDb.collection('exercices').doc(id).delete();
+    } else {
+      EXERCICES = EXERCICES.filter(x=>x.id!==id);
+      saveExercicesLocal(EXERCICES);
+      renderAdminDashboard();
+      updateSubjectCounts();
+    }
+    showToast('🗑️ Exercice supprimé');
+  } catch(e){
+    console.error(e);
+    showToast('⚠️ Erreur lors de la suppression');
+  }
+}
+function renderAdminExoList(){
+  const list = document.getElementById('admin-exo-list');
+  if(!list) return;
+  if(!exercicesLoaded){ list.innerHTML = `<p class="empty-hint">Chargement...</p>`; return; }
+  if(EXERCICES.length===0){
+    list.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="file-text" class="lucide-icon"></i></div><strong>Aucun exercice</strong></div>`;
+    return;
+  }
+  list.innerHTML = EXERCICES.map(e=>`<div class="admin-list-item">
+      <div style="flex:1;min-width:0;">
+        <strong>${escapeHtml(e.titre)}</strong>
+        <p class="meta-line">${e.matiere==='maths'?'Mathématiques':'Physique-Chimie'} • ${e.sous==='video'?'Vidéo':'Fiche PDF'}</p>
+      </div>
+      <button class="admin-icon-btn edit" aria-label="Modifier" onclick="openExoForm('${e.id}')"><i data-lucide="pencil" class="lucide-icon"></i></button>
+      <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteExo('${e.id}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
+    </div>`).join('');
+}
+
+/* ============ ADMIN : NAVIGATION PAR ONGLETS ============ */
+function switchAdminTab(tab){
+  document.querySelectorAll('.admin-tab').forEach(t=> t.classList.toggle('active', t.dataset.tab===tab));
+  document.querySelectorAll('.admin-tab-panel').forEach(p=> p.classList.toggle('active', p.id==='admin-panel-'+tab));
+  if(tab==='users') renderAdminUsersList();
+  if(tab==='overview') renderOverviewTab();
+}
+
+/* ============ ADMIN : VUE D'ENSEMBLE (stats animées + graphiques) ============ */
+let adminUsersCache = null;
+let loginsChartInstance = null;
+let perfChartInstance = null;
+function animateStatNumber(el, target, suffix){
+  suffix = suffix || '';
+  const duration = 900;
+  const start = performance.now();
+  const from = 0;
+  (function step(now){
+    const p = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(from + (target - from) * eased) + suffix;
+    if(p < 1) requestAnimationFrame(step);
+  })(start);
+}
+async function fetchAdminUsersOnce(force){
+  if(adminUsersCache && !force) return adminUsersCache;
+  if(!isFirebaseConfigured() || !forumDb) { adminUsersCache = []; return adminUsersCache; }
+  try {
+    const snap = await forumDb.collection('users').limit(500).get();
+    adminUsersCache = snap.docs.map(d=>({ id: d.id, ...d.data() }));
+  } catch(e){
+    console.error('Erreur chargement utilisateurs (admin):', e);
+    adminUsersCache = [];
+  }
+  return adminUsersCache;
+}
+async function renderOverviewTab(){
+  document.getElementById('admin-stat-maths').textContent = COURSES.filter(c=>c.matiere==='maths').length;
+  document.getElementById('admin-stat-physique').textContent = COURSES.filter(c=>c.matiere==='physique').length;
+  document.getElementById('admin-stat-exo').textContent = EXERCICES.length;
+  const users = await fetchAdminUsersOnce();
+  animateStatNumber(document.getElementById('admin-stat-users'), users.length);
+  const xps = users.map(u=> (u.gamification && u.gamification.xp) || 0);
+  const avgXp = xps.length ? Math.round(xps.reduce((a,b)=>a+b,0) / xps.length) : 0;
+  animateStatNumber(document.getElementById('admin-stat-xp'), avgXp);
+  const allPcts = [];
+  users.forEach(u=>{ Object.values(u.quizResults||{}).forEach(q=>{ if(typeof q.pct === 'number') allPcts.push(q.pct); }); });
+  const avgQuiz = allPcts.length ? Math.round(allPcts.reduce((a,b)=>a+b,0) / allPcts.length) : 0;
+  document.getElementById('admin-stat-quizpct').textContent = avgQuiz + '%';
+
+  // Connexions des 7 derniers jours (à partir de gamification.activeDates de chaque élève)
+  const days = [];
+  for(let i=6; i>=0; i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    days.push(d.toISOString().slice(0,10));
+  }
+  const loginsByDay = days.map(day=> users.filter(u=> (u.gamification && u.gamification.activeDates || []).includes(day)).length);
+  const loginsLabels = days.map(d=> new Date(d+'T00:00:00').toLocaleDateString('fr-FR', { weekday:'short' }));
+  if(window.Chart){
+    const ctx1 = document.getElementById('admin-chart-logins');
+    if(ctx1){
+      if(loginsChartInstance) loginsChartInstance.destroy();
+      loginsChartInstance = new Chart(ctx1, {
+        type: 'line',
+        data: { labels: loginsLabels, datasets: [{ label:'Élèves connectés', data: loginsByDay, borderColor:'#1a9640', backgroundColor:'rgba(26,150,64,0.12)', fill:true, tension:0.35, pointRadius:3 }] },
+        options: { responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } } } }
+      });
+    }
+    // Performance moyenne par matière (à partir des quizResults, reliés aux cours pour la matière)
+    const perfBySubject = { maths: [], physique: [] };
+    users.forEach(u=>{
+      Object.entries(u.quizResults||{}).forEach(([courseId, q])=>{
+        const course = COURSES.find(c=>c.id===courseId);
+        if(course && typeof q.pct === 'number') perfBySubject[course.matiere==='physique'?'physique':'maths'].push(q.pct);
+      });
+    });
+    const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
+    const ctx2 = document.getElementById('admin-chart-perf');
+    if(ctx2){
+      if(perfChartInstance) perfChartInstance.destroy();
+      perfChartInstance = new Chart(ctx2, {
+        type: 'bar',
+        data: { labels: ['Mathématiques','Physique-Chimie'], datasets: [{ label:'Score moyen aux quiz (%)', data: [avg(perfBySubject.maths), avg(perfBySubject.physique)], backgroundColor:['#1a9640','#f47b20'], borderRadius:8 }] },
+        options: { responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, max:100 } } }
+      });
+    }
+  }
+}
+
+/* ============ ADMIN : UTILISATEURS ============ */
+async function renderAdminUsersList(){
+  const list = document.getElementById('admin-users-list');
+  if(!list) return;
+  list.innerHTML = `<div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>`;
+  const users = await fetchAdminUsersOnce();
+  const q = (document.getElementById('admin-users-search').value||'').trim().toLowerCase();
+  let filtered = users;
+  if(q) filtered = users.filter(u=> (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q));
+  filtered.sort((a,b)=> ((b.gamification&&b.gamification.xp)||0) - ((a.gamification&&a.gamification.xp)||0));
+  if(filtered.length===0){
+    list.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="users" class="lucide-icon"></i></div><strong>Aucun élève trouvé</strong></div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(u=>{
+    const xp = (u.gamification && u.gamification.xp) || 0;
+    const level = levelFromTotalXP(xp).level;
+    const lastActive = (u.gamification && u.gamification.lastActiveDate) || '—';
+    return `<div class="admin-list-item">
+      <div style="flex:1;min-width:0;">
+        <strong>${escapeHtml(u.name||'Élève')}</strong>
+        <p class="meta-line">${escapeHtml(u.email||'')} • Niveau ${level} • ${xp} XP • Dernière connexion : ${escapeHtml(lastActive)}</p>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function forumAuthorName(){
   const user = getCurrentUser();
   return (user && !user.guest && user.name) ? user.name : 'Élève invité';
@@ -3780,11 +4241,11 @@ function renderTopContributors(){
     const rows = snap.docs.map(d=>{
       const data = d.data();
       const xp = (data.gamification && data.gamification.xp) || 0;
-      return { name: data.name||'Élève', avatar: (data.gamification && data.gamification.activeAvatar)||'🎓', level: levelFromTotalXP(xp).level, actions: (data.gamification && data.gamification.forumActionsCount)||0 };
+      return { name: data.name||'Élève', avatar: (data.gamification && (data.gamification.customPhoto || data.gamification.activeAvatar))||'🎓', level: levelFromTotalXP(xp).level, actions: (data.gamification && data.gamification.forumActionsCount)||0 };
     }).filter(r=>r.actions>0);
     el.innerHTML = rows.length ? rows.map(r=>`
       <div class="forum-contrib-row">
-        <span class="forum-contrib-avatar">${r.avatar}</span>
+        <span class="forum-contrib-avatar">${avatarDisplayHtml(r.avatar)}</span>
         <span class="forum-contrib-name">${escapeHtml(r.name)}</span>
         <span class="forum-level-chip">Niv. ${r.level}</span>
         <span class="forum-contrib-xp">${r.actions} participations</span>
@@ -4148,8 +4609,15 @@ function defaultGam(){
     reactionsReceived: 0, hasAcceptedReply: false,
     openedCourses: [], watchedVideos: [],
     totalStudySeconds: 0, weekStudy: {},
-    unlockedRewards: [], activeAvatar: '🎓', activeTitle: '', soundEnabled: true
+    unlockedRewards: [], activeAvatar: '🎓', customPhoto: '', activeTitle: '', soundEnabled: true,
+    activityLog: [], themeColor: 'green', classe: ''
   };
+}
+function logActivity(icon, text){
+  if(!GAM) return;
+  GAM.activityLog = GAM.activityLog || [];
+  GAM.activityLog.unshift({ icon, text, date: new Date().toISOString() });
+  GAM.activityLog = GAM.activityLog.slice(0, 20);
 }
 function loadGam(){
   if(isRealAccount() && userProfile){
@@ -4252,12 +4720,20 @@ function showXPGainToast(amount, reason){
   requestAnimationFrame(()=> el.classList.add('show'));
   setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=> el.remove(), 400); }, 2200);
 }
+function avatarDisplayHtml(value){
+  if(value && value.indexOf('data:image')===0) return `<img class="avatar-photo-img" src="${value}" alt="Photo de profil">`;
+  return escapeHtml(value || '🎓');
+}
+function currentAvatarValue(){
+  if(!GAM) loadGam();
+  return (GAM && GAM.customPhoto) || (GAM && GAM.activeAvatar) || '🎓';
+}
 function updateXPBarUI(){
   if(!GAM) return;
   const info = levelFromTotalXP(GAM.xp || 0);
   const pct = Math.round((info.xpIntoLevel / info.xpForNext) * 100);
-  const avatar = GAM.activeAvatar || '🎓';
-  ['gam-avatar-emoji'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent = avatar; });
+  const avatar = currentAvatarValue();
+  ['gam-avatar-emoji'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML = avatarDisplayHtml(avatar); });
   const fill = document.getElementById('gam-xp-fill');
   if(fill) fill.style.width = pct + '%';
   const numEl = document.getElementById('gam-level-num');
@@ -4273,14 +4749,16 @@ function updateXPBarUI(){
   const pageLevel = document.getElementById('gam-page-level-num');
   if(pageLevel) pageLevel.textContent = info.level;
   const pageAvatar = document.getElementById('gam-page-avatar');
-  if(pageAvatar){ pageAvatar.textContent = avatar; pageAvatar.className = 'gam-big-avatar ' + activeFrameClass(); }
-  const pageTitle = document.getElementById('gam-page-title');
+  if(pageAvatar){ pageAvatar.innerHTML = avatarDisplayHtml(avatar); pageAvatar.className = 'gam-big-avatar ' + activeFrameClass(); }
+  const pageTitle = document.getElementById('gam-page-earned-title');
   if(pageTitle){
     const titleDef = LEVEL_REWARDS.find(r=>r.id===GAM.activeTitle);
     pageTitle.textContent = titleDef ? titleDef.label.replace('Titre ','').replace(/«|»/g,'').trim() : 'Élève Scientifique';
   }
   const streakDetail = document.getElementById('gam-streak-detail');
   if(streakDetail) streakDetail.innerHTML = (GAM.streak||0) + ' <i data-lucide="flame" class="lucide-icon"></i>';
+  const headerTrigger = document.querySelector('.profile-trigger');
+  if(headerTrigger) headerTrigger.innerHTML = avatarDisplayHtml(avatar);
 }
 
 /* --- Connexion quotidienne & série --- */
@@ -4299,20 +4777,21 @@ function handleDailyLogin(){
 
 /* --- Badges --- */
 const BADGE_DEFS = [
-  { id: 'first_quiz', icon: '<i data-lucide="award" class="lucide-icon"></i>', name: 'Premier Quiz', desc: 'Terminer ton premier quiz.' },
-  { id: 'assidu', icon: '<i data-lucide="library" class="lucide-icon"></i>', name: 'Élève Assidu', desc: 'Faire un quiz sur 10 chapitres différents.' },
-  { id: 'streak7', icon: '<i data-lucide="flame" class="lucide-icon"></i>', name: '7 jours consécutifs', desc: 'Se connecter 7 jours de suite.' },
-  { id: 'streak30', icon: '<i data-lucide="gem" class="lucide-icon"></i>', name: '30 jours consécutifs', desc: 'Se connecter 30 jours de suite.' },
-  { id: 'expert_maths', icon: '<i data-lucide="calculator" class="lucide-icon"></i>', name: 'Expert en Mathématiques', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de maths.' },
-  { id: 'roi_forum', icon: '<i data-lucide="crown" class="lucide-icon"></i>', name: 'Roi du Forum', desc: 'Participer 20 fois au forum.' },
-  { id: 'champion_sciences', icon: '<i data-lucide="flask-conical" class="lucide-icon"></i>', name: 'Champion des Sciences', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de physique-chimie.' },
-  { id: 'bac_ready', icon: '<i data-lucide="graduation-cap" class="lucide-icon"></i>', name: 'Bac Ready', desc: 'Atteindre le niveau 10.' },
-  { id: 'forum_expert_maths', icon: '<i data-lucide="divide" class="lucide-icon"></i>', name: 'Expert Maths (forum)', desc: 'Participer 10 fois au forum de Mathématiques.' },
-  { id: 'mentor', icon: '<i data-lucide="presentation" class="lucide-icon"></i>', name: 'Mentor', desc: 'Répondre à 15 questions sur le forum.' },
-  { id: 'aide_precieuse', icon: '<i data-lucide="gem" class="lucide-icon"></i>', name: 'Aide Précieuse', desc: 'Recevoir 15 réactions sur tes publications.' },
-  { id: 'meilleur_contributeur', icon: '<i data-lucide="medal" class="lucide-icon"></i>', name: 'Meilleur Contributeur', desc: 'Participer 30 fois au forum.' },
-  { id: 'reponse_acceptee', icon: '<i data-lucide="check" class="lucide-icon"></i>', name: 'Réponse Acceptée', desc: "Voir une de tes réponses marquée comme acceptée." }
+  { id: 'first_quiz', icon: '<i data-lucide="award" class="lucide-icon"></i>', name: 'Premier Quiz', desc: 'Terminer ton premier quiz.', rarity: 'bronze' },
+  { id: 'assidu', icon: '<i data-lucide="library" class="lucide-icon"></i>', name: 'Élève Assidu', desc: 'Faire un quiz sur 10 chapitres différents.', rarity: 'argent' },
+  { id: 'streak7', icon: '<i data-lucide="flame" class="lucide-icon"></i>', name: '7 jours consécutifs', desc: 'Se connecter 7 jours de suite.', rarity: 'bronze' },
+  { id: 'streak30', icon: '<i data-lucide="gem" class="lucide-icon"></i>', name: '30 jours consécutifs', desc: 'Se connecter 30 jours de suite.', rarity: 'platine' },
+  { id: 'expert_maths', icon: '<i data-lucide="calculator" class="lucide-icon"></i>', name: 'Expert en Mathématiques', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de maths.', rarity: 'or' },
+  { id: 'roi_forum', icon: '<i data-lucide="crown" class="lucide-icon"></i>', name: 'Roi du Forum', desc: 'Participer 20 fois au forum.', rarity: 'or' },
+  { id: 'champion_sciences', icon: '<i data-lucide="flask-conical" class="lucide-icon"></i>', name: 'Champion des Sciences', desc: 'Moyenne ≥ 85% sur au moins 5 quiz de physique-chimie.', rarity: 'or' },
+  { id: 'bac_ready', icon: '<i data-lucide="graduation-cap" class="lucide-icon"></i>', name: 'Bac Ready', desc: 'Atteindre le niveau 10.', rarity: 'platine' },
+  { id: 'forum_expert_maths', icon: '<i data-lucide="divide" class="lucide-icon"></i>', name: 'Expert Maths (forum)', desc: 'Participer 10 fois au forum de Mathématiques.', rarity: 'argent' },
+  { id: 'mentor', icon: '<i data-lucide="presentation" class="lucide-icon"></i>', name: 'Mentor', desc: 'Répondre à 15 questions sur le forum.', rarity: 'argent' },
+  { id: 'aide_precieuse', icon: '<i data-lucide="gem" class="lucide-icon"></i>', name: 'Aide Précieuse', desc: 'Recevoir 15 réactions sur tes publications.', rarity: 'argent' },
+  { id: 'meilleur_contributeur', icon: '<i data-lucide="medal" class="lucide-icon"></i>', name: 'Meilleur Contributeur', desc: 'Participer 30 fois au forum.', rarity: 'platine' },
+  { id: 'reponse_acceptee', icon: '<i data-lucide="check" class="lucide-icon"></i>', name: 'Réponse Acceptée', desc: "Voir une de tes réponses marquée comme acceptée.", rarity: 'bronze' }
 ];
+const RARITY_LABELS = { bronze:'Bronze', argent:'Argent', or:'Or', platine:'Platine' };
 function checkBadges(){
   if(!GAM) return;
   const results = getQuizResultsMap();
@@ -4340,7 +4819,7 @@ function checkBadges(){
   if(GAM.hasAcceptedReply) toAward.push('reponse_acceptee');
   let changed = false;
   toAward.forEach(id=>{
-    if(!GAM.badges[id]){ GAM.badges[id] = { date: new Date().toISOString() }; changed = true; announceBadge(id); }
+    if(!GAM.badges[id]){ GAM.badges[id] = { date: new Date().toISOString() }; changed = true; logActivity('<i data-lucide="medal" class="lucide-icon"></i>', 'Badge débloqué : ' + (BADGE_DEFS.find(x=>x.id===id)||{}).name); announceBadge(id); }
   });
   if(changed){ persistGam(); renderBadgesGrid(); }
 }
@@ -4374,7 +4853,8 @@ function renderBadgesGrid(){
   if(!el || !GAM) return;
   el.innerHTML = BADGE_DEFS.map(b=>{
     const owned = GAM.badges && GAM.badges[b.id];
-    return `<div class="badge-card ${owned?'owned':'locked'}" title="${escapeHtml(b.desc)}">
+    return `<div class="badge-card ${owned?'owned':'locked'} rarity-${b.rarity}" title="${escapeHtml(b.desc)}">
+      <span class="badge-rarity-tag">${RARITY_LABELS[b.rarity]}</span>
       <span class="badge-icon">${owned ? b.icon : '<i data-lucide="lock" class="lucide-icon"></i>'}</span>
       <span class="badge-name">${escapeHtml(b.name)}</span>
       ${owned ? `<span class="badge-date">${new Date(owned.date).toLocaleDateString('fr-FR')}</span>` : `<span class="badge-desc">${escapeHtml(b.desc)}</span>`}
@@ -4427,6 +4907,8 @@ function bumpChallenge(id, amount){
   if(todayC[id].progress >= todayC[id].target){
     todayC[id].done = true;
     addXP(10, 'Défi accompli');
+    const def = CHALLENGE_POOL.find(p=>p.id===id);
+    logActivity('<i data-lucide="target" class="lucide-icon"></i>', 'Défi réussi : ' + (def?def.label:id));
     showToast('🏅 Défi accompli !');
     if(Object.values(todayC).every(c=>c.done)){
       addXP(30, 'Tous les défis du jour !');
@@ -4479,6 +4961,8 @@ function onQuizGamification(courseId, pct){
   if(pct>=90){ xp = 40; reason = 'Excellente note !'; }
   else if(pct<40){ xp = 8; reason = 'Quiz terminé'; }
   addXP(xp, reason);
+  const course = COURSES.find(c=>c.id===courseId);
+  logActivity('<i data-lucide="circle-check-big" class="lucide-icon"></i>', `Quiz ${course?(course.matiere==='maths'?'Mathématiques':'Physique-Chimie'):''} terminé — ${pct}%`);
   bumpChallenge('lire_chapitre'); // terminer un quiz = avoir réellement terminé le cours
   bumpChallenge('deux_quiz');
   if(pct>=80) bumpChallenge('obtenir80');
@@ -4512,6 +4996,7 @@ function onLevelUp(level){
   fireConfetti(120);
   playLevelSound();
   const rewardText = grantLevelRewards(level);
+  logActivity('<i data-lucide="trending-up" class="lucide-icon"></i>', `Niveau ${level} atteint`);
   const numEl = document.getElementById('levelup-num'); if(numEl) numEl.textContent = level;
   const emojiEl = document.getElementById('levelup-emoji'); if(emojiEl) emojiEl.textContent = levelEmoji(level);
   const rewardEl = document.getElementById('levelup-reward-text'); if(rewardEl) rewardEl.textContent = rewardText;
@@ -4809,13 +5294,191 @@ function renderPerformanceInsights(){
   }
 }
 
+/* --- Meilleurs scores (salle des trophées) --- */
+function renderBestScores(){
+  const el = document.getElementById('gam-best-scores');
+  if(!el) return;
+  const results = getQuizResultsMap();
+  const top = Object.entries(results)
+    .map(([id,r])=>({ id, pct:r.pct, date:r.date, course: COURSES.find(c=>c.id===id) }))
+    .filter(r=>r.course)
+    .sort((a,b)=>b.pct-a.pct)
+    .slice(0,5);
+  if(!top.length){ el.innerHTML = '<p class="empty-hint">Termine un quiz pour voir apparaître tes meilleurs scores ici.</p>'; return; }
+  el.innerHTML = top.map((r,i)=>`
+    <div class="mini-sub-item">
+      <span>${i===0?'<i data-lucide="crown" class="lucide-icon"></i> ':''}${escapeHtml(r.course.titre)}</span>
+      <span><strong>${r.pct}%</strong></span>
+    </div>`).join('');
+}
+
+/* --- Cartes par matière : progression, dernier chapitre, prochain objectif --- */
+function renderSubjectCards(){
+  const el = document.getElementById('gam-subject-cards');
+  if(!el) return;
+  const results = getQuizResultsMap();
+  const entries = Object.entries(results);
+  el.innerHTML = ['maths','physique'].map(subj=>{
+    const subjCourses = COURSES.filter(c=>c.matiere===subj);
+    const subjEntries = entries.filter(([id])=> subjCourses.some(c=>c.id===id));
+    const avg = subjEntries.length ? Math.round(subjEntries.reduce((s,[,r])=>s+r.pct,0)/subjEntries.length) : 0;
+    const doneIds = new Set(subjEntries.map(([id])=>id));
+    const progressPct = subjCourses.length ? Math.round((doneIds.size/subjCourses.length)*100) : 0;
+    const lastEntry = subjEntries.map(([id,r])=>({id,...r})).sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+    const lastCourse = lastEntry ? subjCourses.find(c=>c.id===lastEntry.id) : null;
+    const nextCourse = subjCourses.find(c=>!doneIds.has(c.id));
+    return `<div class="content-card subj-${subj==='physique'?'physique':'maths'}">
+      <div class="cc-top">
+        <div class="cc-icon">${subj==='maths'?'<i data-lucide="calculator" class="lucide-icon"></i>':'<i data-lucide="flask-conical" class="lucide-icon"></i>'}</div>
+        <div class="cc-body">
+          <h4>${subj==='maths'?'Mathématiques':'Physique-Chimie'}</h4>
+          <div class="cc-meta-row"><span>${doneIds.size}/${subjCourses.length||0} cours travaillés</span>${avg?`<span class="dot">•</span><span>Moyenne ${avg}%</span>`:''}</div>
+        </div>
+      </div>
+      <div class="cc-progress-wrap">
+        <div class="cc-progress-track"><div class="cc-progress-fill" style="width:${progressPct}%"></div></div>
+        <div class="cc-progress-label">${lastCourse ? 'Dernier : '+escapeHtml(lastCourse.titre) : "Pas encore commencé"}</div>
+      </div>
+      <div class="cc-footer">
+        <button class="cc-cta" onclick="switchPage('cours'); selectSubjectTab('cours','${subj}');${nextCourse?` openModalById('course','${nextCourse.id}');`:''}">${nextCourse ? 'Continuer' : 'Tout est fait, bravo !'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* --- Rang dans l'établissement / classement --- */
+async function renderMyRank(){
+  const el = document.getElementById('gam-my-rank');
+  if(!el) return;
+  if(!isRealAccount() || !isFirebaseConfigured() || !forumDb){ el.textContent = '—'; return; }
+  try {
+    const snap = await forumDb.collection('users').orderBy('gamification.xp','desc').limit(200).get();
+    const email = ((firebaseUser && firebaseUser.email) || '').toLowerCase();
+    const idx = snap.docs.findIndex(d=> (d.data().email||'').toLowerCase()===email);
+    el.textContent = idx>=0 ? ('#' + (idx+1)) : 'Top 200+';
+  } catch(e){ console.error('Rang indisponible', e); el.textContent = '—'; }
+}
+
+/* --- Message de motivation personnalisé --- */
+function renderMotivationCard(){
+  const el = document.getElementById('gam-motivation-card');
+  if(!el || !GAM) return;
+  const info = levelFromTotalXP(GAM.xp||0);
+  const remaining = info.xpForNext - info.xpIntoLevel;
+  const results = getQuizResultsMap();
+  const pctList = Object.values(results).map(r=>r.pct);
+  const recent3 = pctList.slice(-3);
+  const prev3 = pctList.slice(-6,-3);
+  const recentAvg = recent3.length ? Math.round(recent3.reduce((a,b)=>a+b,0)/recent3.length) : null;
+  const prevAvg = prev3.length ? Math.round(prev3.reduce((a,b)=>a+b,0)/prev3.length) : null;
+  let msg;
+  if(remaining <= 30) msg = `Tu es à seulement ${remaining} XP du niveau ${info.level+1} !`;
+  else if(recentAvg!==null && prevAvg!==null && recentAvg>prevAvg) msg = 'Tu progresses plus vite qu\'avant : continue comme ça !';
+  else if((GAM.streak||0) >= 3) msg = `${GAM.streak} jours de suite : ne casse pas ta série aujourd'hui !`;
+  else msg = 'Un petit quiz aujourd\'hui te rapprochera de ton prochain objectif.';
+  el.innerHTML = `<i data-lucide="sparkles" class="lucide-icon"></i><span>${escapeHtml(msg)}</span>`;
+}
+
+/* --- Barres de progression globales (semaine / mois / total) --- */
+function renderGlobalProgress(){
+  if(!GAM) return;
+  const weekGoalMin = 120;
+  const weekMin = Math.round(((GAM.weekStudy||{})[weekKey(new Date())]||0)/60);
+  const weekFill = document.getElementById('gp-week-fill');
+  if(weekFill) weekFill.style.width = Math.min(100, Math.round((weekMin/weekGoalMin)*100)) + '%';
+  const weekLbl = document.getElementById('gp-week-label');
+  if(weekLbl) weekLbl.textContent = `${weekMin} / ${weekGoalMin} min cette semaine`;
+
+  const now = new Date();
+  const daysElapsed = now.getDate();
+  const activeThisMonth = (GAM.activeDates||[]).filter(d=> d.startsWith(now.toISOString().slice(0,7))).length;
+  const monthFill = document.getElementById('gp-month-fill');
+  if(monthFill) monthFill.style.width = Math.min(100, Math.round((activeThisMonth/daysElapsed)*100)) + '%';
+  const monthLbl = document.getElementById('gp-month-label');
+  if(monthLbl) monthLbl.textContent = `${activeThisMonth} jour(s) actif(s) sur ${daysElapsed} ce mois-ci`;
+
+  const totalHours = Math.round((GAM.totalStudySeconds||0)/3600);
+  const yearFill = document.getElementById('gp-year-fill');
+  if(yearFill) yearFill.style.width = Math.min(100, totalHours) + '%';
+  const yearLbl = document.getElementById('gp-year-label');
+  if(yearLbl) yearLbl.textContent = `${totalHours} h étudiées depuis le début`;
+}
+
+/* --- Timeline d'activité récente --- */
+function renderActivityTimeline(){
+  const el = document.getElementById('gam-activity-timeline');
+  if(!el || !GAM) return;
+  const log = GAM.activityLog || [];
+  el.innerHTML = log.length ? log.slice(0,8).map(a=>`
+    <div class="timeline-row">
+      <span class="timeline-icon">${a.icon}</span>
+      <span class="timeline-text">${escapeHtml(a.text)}</span>
+      <span class="timeline-time">${timeAgo(new Date(a.date))}</span>
+    </div>`).join('') : '<p class="empty-hint">Ton activité récente apparaîtra ici.</p>';
+}
+
+/* --- Thème de couleur --- */
+const THEME_PRESETS = {
+  green: { a:'#1a9640', dark:'#0f6327', light:'#e3f6e9' },
+  orange: { a:'#F47B20', dark:'#c2570f', light:'#fef1e6' },
+  blue: { a:'#2563eb', dark:'#1e3a8a', light:'#e6edfd' },
+  violet: { a:'#7c3aed', dark:'#4c1d95', light:'#efe6fd' }
+};
+/* --- Thème sombre (préférence d'affichage locale, pas liée au compte) --- */
+function setDarkMode(enabled){
+  document.documentElement.setAttribute('data-theme', enabled ? 'dark' : 'light');
+  localStorage.setItem('solci_dark_mode', enabled ? '1' : '0');
+  const toggle = document.getElementById('dark-mode-toggle');
+  if(toggle) toggle.checked = enabled;
+}
+function applyStoredDarkMode(){
+  const stored = localStorage.getItem('solci_dark_mode');
+  const enabled = stored !== null ? stored === '1' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  setDarkMode(enabled);
+}
+function applyThemeColor(){
+  const t = THEME_PRESETS[(GAM && GAM.themeColor) || 'green'] || THEME_PRESETS.green;
+  const root = document.documentElement.style;
+  root.setProperty('--green', t.a);
+  root.setProperty('--green-dark', t.dark);
+  root.setProperty('--green-light', t.light);
+  root.setProperty('--green-gradient', `linear-gradient(135deg, ${t.a}, ${t.dark})`);
+}
+function setThemeColor(name){
+  if(!GAM) loadGam();
+  GAM.themeColor = name;
+  persistGam();
+  applyThemeColor();
+  renderThemePicker();
+}
+function renderThemePicker(){
+  const el = document.getElementById('gam-theme-picker');
+  if(!el || !GAM) return;
+  const darkToggle = document.getElementById('dark-mode-toggle');
+  if(darkToggle) darkToggle.checked = document.documentElement.getAttribute('data-theme') === 'dark';
+  el.innerHTML = Object.keys(THEME_PRESETS).map(name=>`<button class="theme-swatch ${(GAM.themeColor||'green')===name?'active':''}" style="background:${THEME_PRESETS[name].a}" onclick="setThemeColor('${name}')" aria-label="Thème ${name}"></button>`).join('');
+}
+
 /* --- Personnalisation (avatars / titres) --- */
+const FREE_AVATAR_CATEGORIES = [
+  { label: 'Garçons', icons: ['👦','🧑‍🎓','👨‍🎓','🧔','👨','🕵️‍♂️','🦸‍♂️','🧑‍💻'] },
+  { label: 'Filles', icons: ['👧','👩‍🎓','👩','🧕','👱‍♀️','🕵️‍♀️','🦸‍♀️','🧑‍💻'] },
+  { label: 'Styles & fun', icons: ['🤖','👽','🥷','🦉','🦁','🦊','🐼','🦄'] },
+  { label: 'Illustrations modernes', icons: ['🌟','⚡','🎯','🎨','🚀','🧠','🔥','💎'] }
+];
 function renderRewardsPicker(){
   const el = document.getElementById('gam-rewards-picker');
   if(!el || !GAM) return;
   const avatarIds = LEVEL_REWARDS.filter(r=>r.type==='avatar' && GAM.unlockedRewards.includes(r.id)).map(r=>r.id.replace('avatar_',''));
-  const avatars = ['🎓', ...new Set(avatarIds)];
-  const avatarHtml = avatars.map(a=>`<button class="reward-pick-btn ${GAM.activeAvatar===a?'active':''}" onclick="setActiveAvatar('${a}')">${a}</button>`).join('');
+  const unlockedAvatars = [...new Set(avatarIds)];
+  const freeGridHtml = FREE_AVATAR_CATEGORIES.map(cat=>`
+    <div class="avatar-cat-label">${escapeHtml(cat.label)}</div>
+    <div class="reward-avatar-row">${cat.icons.map(a=>`<button class="reward-pick-btn ${(!GAM.customPhoto && GAM.activeAvatar===a)?'active':''}" onclick="setActiveAvatar('${a}')">${a}</button>`).join('')}</div>
+  `).join('');
+  const unlockedHtml = unlockedAvatars.length
+    ? `<div class="avatar-cat-label">Avatars débloqués (récompenses de niveau)</div>
+       <div class="reward-avatar-row">${unlockedAvatars.map(a=>`<button class="reward-pick-btn ${(!GAM.customPhoto && GAM.activeAvatar===a)?'active':''}" onclick="setActiveAvatar('${a}')">${a}</button>`).join('')}</div>`
+    : '';
   const titleDefs = LEVEL_REWARDS.filter(r=>r.type==='title' && GAM.unlockedRewards.includes(r.id));
   const titleHtml = titleDefs.length
     ? titleDefs.map(r=>{
@@ -4823,11 +5486,68 @@ function renderRewardsPicker(){
         return `<button class="reward-pick-btn ${GAM.activeTitle===r.id?'active':''}" onclick="setActiveTitle('${r.id}')">${escapeHtml(label)}</button>`;
       }).join('')
     : '<span class="empty-hint">Débloque des niveaux pour obtenir des titres.</span>';
-  el.innerHTML = `<label style="font-size:12px;font-weight:700;">Ton avatar</label><div class="reward-avatar-row">${avatarHtml}</div>
+  el.innerHTML = `
+    <label style="font-size:12px;font-weight:700;">Photo de profil</label>
+    <div class="avatar-photo-row">
+      <div class="avatar-photo-preview">${avatarDisplayHtml(currentAvatarValue())}</div>
+      <div class="avatar-photo-actions">
+        <button class="btn-mini" onclick="triggerPhotoUpload()"><i data-lucide="camera" class="lucide-icon"></i> ${GAM.customPhoto?'Changer la photo':'Importer une photo'}</button>
+        ${GAM.customPhoto ? `<button class="btn-mini" style="background:#fee2e2;color:#dc2626;" onclick="removeAvatarPhoto()"><i data-lucide="trash-2" class="lucide-icon"></i> Retirer</button>` : ''}
+      </div>
+      <input type="file" id="avatar-photo-input" accept="image/*" style="display:none;" onchange="onAvatarPhotoSelected(this)">
+    </div>
+    <label style="font-size:12px;font-weight:700;">Ou choisis un avatar</label>
+    ${freeGridHtml}
+    ${unlockedHtml}
     <label style="font-size:12px;font-weight:700;">Tes titres</label><div class="reward-title-row">${titleHtml}</div>`;
 }
-function setActiveAvatar(a){ GAM.activeAvatar = a; persistGam(); updateXPBarUI(); renderRewardsPicker(); }
+function setActiveAvatar(a){ GAM.activeAvatar = a; GAM.customPhoto=''; persistGam(); updateXPBarUI(); renderRewardsPicker(); }
 function setActiveTitle(id){ GAM.activeTitle = id; persistGam(); updateXPBarUI(); renderRewardsPicker(); }
+function triggerPhotoUpload(){
+  const input = document.getElementById('avatar-photo-input');
+  if(input) input.click();
+}
+function onAvatarPhotoSelected(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ showToast("⚠️ Choisis un fichier image"); input.value=''; return; }
+  if(file.size > 8*1024*1024){ showToast('⚠️ Image trop lourde (8 Mo max)'); input.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      // Recadrage automatique centré en carré, puis compression légère.
+      const size = 240;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const minSide = Math.min(img.width, img.height);
+      const sx = (img.width - minSide) / 2;
+      const sy = (img.height - minSide) / 2;
+      ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      if(!GAM) loadGam();
+      GAM.customPhoto = dataUrl;
+      persistGam();
+      updateXPBarUI();
+      renderRewardsPicker();
+      showToast('✅ Photo de profil mise à jour');
+    };
+    img.onerror = function(){ showToast('⚠️ Image illisible, réessaie avec une autre photo'); };
+    img.src = e.target.result;
+  };
+  reader.onerror = function(){ showToast('⚠️ Impossible de lire ce fichier'); };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+function removeAvatarPhoto(){
+  if(!GAM) loadGam();
+  GAM.customPhoto = '';
+  persistGam();
+  updateXPBarUI();
+  renderRewardsPicker();
+  showToast('🗑️ Photo retirée');
+}
 
 /* --- Établissement / ville / amis --- */
 function saveSchoolCity(){
@@ -4888,7 +5608,7 @@ async function renderLeaderboard(){
         name: data.name || 'Élève', email: (data.email||'').toLowerCase(),
         school: data.school || '', city: data.city || '',
         xp, level: levelFromTotalXP(xp).level,
-        avatar: (data.gamification && data.gamification.activeAvatar) || '🎓'
+        avatar: (data.gamification && (data.gamification.customPhoto || data.gamification.activeAvatar)) || '🎓'
       };
     });
     const me = getCurrentUser();
@@ -4902,7 +5622,7 @@ async function renderLeaderboard(){
     el.innerHTML = rows.map((r,i)=>`
       <div class="leaderboard-row ${me && r.email===(me.email||'').toLowerCase() ? 'me' : ''}">
         <span class="lb-rank">#${i+1}</span>
-        <span class="lb-avatar">${r.avatar}</span>
+        <span class="lb-avatar">${avatarDisplayHtml(r.avatar)}</span>
         <span class="lb-name">${escapeHtml(r.name)}</span>
         <span class="lb-level">Niv. ${r.level}</span>
         <span class="lb-xp">${r.xp} XP</span>
@@ -4916,6 +5636,7 @@ async function renderLeaderboard(){
 /* --- Initialisation --- */
 function initGamification(){
   loadGam();
+  applyThemeColor();
   handleDailyLogin();
   generateDailyChallenges();
   updateXPBarUI();
@@ -4930,10 +5651,17 @@ function renderGamificationPage(){
   if(!GAM) loadGam();
   updateXPBarUI();
   renderBadgesGrid();
+  renderBestScores();
   renderDailyChallenges();
   renderActivityCalendar();
   renderStudyStats();
   renderPerformanceInsights();
+  renderSubjectCards();
+  renderMyRank();
+  renderMotivationCard();
+  renderGlobalProgress();
+  renderActivityTimeline();
+  renderThemePicker();
   renderRewardsPicker();
   renderFriendsList();
   const schoolInput = document.getElementById('gam-school-input');
@@ -5026,6 +5754,7 @@ document.querySelectorAll('.bottom-nav-dock .dock-item[data-page]').forEach(btn=
 renderReco();
 updateSubjectCounts();
 initCoursesData();
+initExercicesData();
 initAssignmentsData();
 initRippleEffect();
 initLandingPage();
