@@ -463,7 +463,7 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 .item-info-titles p.meta-line { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 
 /* AUTH SCREENS */
-.auth-screen { min-height: 100vh; padding: 0; background: var(--white)fff; }
+.auth-screen { min-height: 100vh; padding: 0; background: var(--white); }
 .landing-hero { background: linear-gradient(160deg,#0f172a,#134e2b 55%,#1a9640); position: relative; overflow: hidden; border-radius: 0 0 32px 32px; padding-bottom: 46px; }
 .landing-hero::before { content:''; position:absolute; top:-80px; left:-60px; width:220px; height:220px; background:var(--orange); opacity:.25; filter:blur(60px); border-radius:50%; animation: floatBlob 8s ease-in-out infinite; z-index:0; }
 .landing-hero::after { content:''; position:absolute; bottom:-100px; right:-60px; width:260px; height:260px; background:#4ade80; opacity:.2; filter:blur(70px); border-radius:50%; animation: floatBlob 9s ease-in-out infinite reverse; z-index:0; }
@@ -2910,14 +2910,14 @@ function enterApp(){
     shellEl.classList.add('entering');
     renderProfil();
     initGamification();
-    if(displayNameForWelcome) showWelcomeBurst(`<i data-lucide="hand" class="lucide-icon"></i> Content de te revoir, ${displayNameForWelcome} !`);
+    if(displayNameForWelcome) showWelcomeBurst(`<i data-lucide="hand" class="lucide-icon"></i> Content de te revoir, ${escapeHtml(displayNameForWelcome)} !`);
     setTimeout(()=> shellEl.classList.remove('entering'), 500);
   }, 320);
 }
-function showWelcomeBurst(text){
+function showWelcomeBurst(html){
   const wrap = document.createElement('div');
   wrap.className = 'welcome-burst';
-  wrap.innerHTML = `<span>${escapeHtml(text)}</span>`;
+  wrap.innerHTML = `<span>${html}</span>`;
   document.body.appendChild(wrap);
   setTimeout(()=> wrap.remove(), 950);
 }
@@ -2928,6 +2928,7 @@ function showAuthScreen(){
 }
 async function logoutUser(){
   appAlreadyEntered = false;
+  realSessionActive = false;
   if(isFirebaseConfigured() && typeof firebase !== 'undefined' && firebase.auth){
     sessionStorage.removeItem('solci_guest_mode');
     userProfile = null;
@@ -3125,12 +3126,21 @@ function initFirebaseIfNeeded(){
   } catch(e){ console.error('Firebase init error', e); }
 }
 
+let realSessionActive = false;
 async function handleAuthStateChange(user){
   firebaseUser = user;
   if(user && !user.isAnonymous){
     // Vrai compte élève (ou admin) : profil chargé depuis Firestore, accessible sur tout appareil.
+    realSessionActive = true;
     await loadUserProfile(user);
     enterApp();
+  } else if(realSessionActive){
+    // Correctif : un événement d'authentification transitoire (rafraîchissement de
+    // jeton, re-vérification App Check, etc.) ne doit JAMAIS faire régresser une vraie
+    // session déjà ouverte vers l'écran invité/connexion. Seule une déconnexion
+    // explicite (logoutUser) peut repasser realSessionActive à false.
+    console.warn('Événement Firebase Auth transitoire ignoré (session réelle déjà active) :', user);
+    return;
   } else if(user && user.isAnonymous){
     if(sessionStorage.getItem('solci_guest_mode')==='1'){
       userProfile = null;
