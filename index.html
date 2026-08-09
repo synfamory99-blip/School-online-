@@ -10,8 +10,42 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check-compat.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Schoolonline.ci</title>
-<meta name="description" content="Schoolonline.ci — Cours, TD et exercices corrigés de Mathématiques et Physique-Chimie pour lycéens de Côte d'Ivoire.">
+
+<!-- =========================
+     SEO SCHOOL ONLINE
+========================= -->
+<title>School Online Côte d'Ivoire | Cours, Exercices, Quiz et Vidéos pour le Lycée</title>
+<meta name="description" content="School Online est une plateforme éducative ivoirienne qui propose des cours, exercices corrigés, quiz interactifs et vidéos de Mathématiques et Physique-Chimie pour les élèves du lycée en Côte d'Ivoire.">
+<meta name="keywords" content="School Online, Côte d'Ivoire, cours en ligne, mathématiques, physique chimie, terminale D, première D, seconde C, BAC, exercices corrigés, quiz, éducation">
+<meta name="author" content="School Online">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="language" content="fr">
+<meta name="theme-color" content="#1A9640">
+<link rel="canonical" href="https://school-online-five.vercel.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="School Online">
+<meta property="og:title" content="School Online Côte d'Ivoire">
+<meta property="og:description" content="Cours, quiz, exercices corrigés et vidéos pour réussir au lycée en Côte d'Ivoire.">
+<meta property="og:url" content="https://school-online-five.vercel.app/">
+<meta property="og:image" content="https://school-online-five.vercel.app/logo.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="School Online Côte d'Ivoire">
+<meta name="twitter:description" content="Cours, quiz et exercices corrigés pour réussir au lycée.">
+<meta name="twitter:image" content="https://school-online-five.vercel.app/logo.png">
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon.ico">
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="School Online">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -234,6 +268,12 @@ nav { background: var(--green-gradient); display: flex; align-items: center; jus
 /* ============ DEVOIRS & INTERROGATIONS ============ */
 .submission-meta { font-size: 12px; color: var(--text-muted); font-weight: 700; }
 .submission-answer-box { background:var(--surface-alt-2); border:1px solid var(--border-color); border-radius:12px; padding:14px; font-size:13px; white-space:pre-wrap; color:var(--text-main); margin-bottom:12px; }
+.submission-attachments, .submission-files-preview { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
+.attachment-thumb { width:76px; height:76px; border-radius:12px; overflow:hidden; border:1px solid var(--border-color); position:relative; display:block; flex-shrink:0; }
+.attachment-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.attachment-file { display:flex; align-items:center; gap:6px; background:var(--surface-alt); border:1px solid var(--border-color); border-radius:10px; padding:8px 12px; font-size:12px; font-weight:700; color:var(--text-main); text-decoration:none; position:relative; }
+.attachment-remove { position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; background:#dc2626; color:#fff; border:none; font-size:13px; line-height:20px; cursor:pointer; padding:0; }
+.attachment-file.pending { padding-right:26px; }
 .grading-row { border:1px solid var(--border-color); border-radius:14px; padding:14px; margin-bottom:12px; }
 .grading-row-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
 
@@ -1071,7 +1111,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
         <button type="button" class="auth-toggle-pw" onclick="togglePw('login-password')"><i data-lucide="eye" class="lucide-icon"></i></button>
       </div>
       <button type="submit" class="auth-submit">Se connecter</button>
-      <button type="button" class="auth-forgot" onclick="showToast('Fonctionnalité à venir — contacte l\'administrateur pour réinitialiser ton mot de passe')">Mot de passe oublié ?</button>
+      <button type="button" class="auth-forgot" onclick="requestPasswordReset()">Mot de passe oublié ?</button>
     </form>
 
     <form id="signup-form" onsubmit="return handleSignup(event)" style="display:none;">
@@ -1189,15 +1229,15 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
       </div>
       <div class="footer-col">
         <h4>Ressources</h4>
-        <button class="footer-link" onclick="showToast('📄 FAQ bientôt disponible')">FAQ</button>
-        <button class="footer-link" onclick="showToast('📄 Conditions d\'utilisation bientôt disponibles')">Conditions d'utilisation</button>
-        <button class="footer-link" onclick="showToast('📄 Politique de confidentialité bientôt disponible')">Politique de confidentialité</button>
-        <button class="footer-link" onclick="showToast('✉️ Contact : contact@schoolonline.ci')">Contact</button>
+        <button class="footer-link" onclick="switchPage('legal'); selectLegalTab('faq');">FAQ</button>
+        <button class="footer-link" onclick="switchPage('legal'); selectLegalTab('terms');">Conditions d'utilisation</button>
+        <button class="footer-link" onclick="switchPage('legal'); selectLegalTab('privacy');">Politique de confidentialité</button>
+        <a class="footer-link" href="mailto:contact@schoolonline.ci" style="text-decoration:none;">Contact</a>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
         <p><i data-lucide="mail" class="lucide-icon"></i> contact@schoolonline.ci</p>
-        <p><i data-lucide="phone" class="lucide-icon"></i> +225 07 00 00 00 00</p>
+        <p><i data-lucide="phone" class="lucide-icon"></i> +225 07 15 79 15 01</p>
         <p><i data-lucide="map-pin" class="lucide-icon"></i> Abidjan, Côte d'Ivoire</p>
       </div>
       <div class="footer-col">
@@ -1456,6 +1496,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
     <div class="subject-tabs">
       <button class="subject-tab tab-maths active" id="legal-tab-privacy" onclick="selectLegalTab('privacy')"><i data-lucide="lock" class="lucide-icon"></i> Confidentialité</button>
       <button class="subject-tab tab-physique" id="legal-tab-terms" onclick="selectLegalTab('terms')"><i data-lucide="scroll-text" class="lucide-icon"></i> CGU</button>
+      <button class="subject-tab tab-maths" id="legal-tab-faq" onclick="selectLegalTab('faq')"><i data-lucide="circle-help" class="lucide-icon"></i> FAQ</button>
     </div>
     <p class="legal-updated">Dernière mise à jour : juillet 2026</p>
 
@@ -1463,25 +1504,35 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
       <h4>Quelles données sont collectées ?</h4>
       <p>Quand tu crées un compte : ton <strong>nom</strong> et ton <strong>email</strong>. En utilisant le site : tes <strong>favoris</strong>, ton <strong>historique de téléchargements</strong>, tes <strong>résultats de quiz</strong>, et les <strong>messages</strong> que tu publies sur le forum (visibles par les autres élèves).</p>
       <h4>Pourquoi ces données ?</h4>
-      <p>Uniquement pour faire fonctionner le site : te reconnecter sur n'importe quel appareil, suivre ta progression, et faire vivre le forum entre élèves. Schoolonline.ci ne vend aucune donnée et n'affiche aucune publicité.</p>
+      <p>Pour faire fonctionner le site : te reconnecter sur n'importe quel appareil, suivre ta progression, et faire vivre le forum entre élèves. School Online ne vend aucune donnée personnelle.</p>
+      <h4>Cookies et publicité</h4>
+      <p>School Online peut afficher des publicités fournies par <strong>Google AdSense</strong>. Google et ses partenaires publicitaires utilisent des cookies (dont le cookie DoubleClick/DART) pour diffuser des annonces en fonction de tes visites sur ce site et d'autres sites internet. Ces cookies ne collectent pas d'informations permettant de t'identifier personnellement par leur contenu.</p>
+      <ul>
+        <li>Tu peux désactiver la publicité personnalisée en te rendant sur <a href="https://adssettings.google.com/" target="_blank" rel="noopener">les paramètres des annonces Google</a>.</li>
+        <li>Tu peux aussi consulter <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">la politique de Google sur les technologies publicitaires</a> pour en savoir plus sur ces cookies tiers.</li>
+        <li>Les navigateurs proposent également des outils pour bloquer ou supprimer les cookies dans leurs réglages.</li>
+      </ul>
       <h4>Qui d'autre a accès à ces données ?</h4>
       <ul>
         <li><strong>Google Firebase</strong> héberge la base de données (comptes, forum, cours). <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Politique de Google</a>.</li>
+        <li><strong>Google AdSense</strong> peut afficher des publicités et utiliser des cookies publicitaires comme décrit ci-dessus.</li>
         <li><strong>Puter.js</strong> fait fonctionner l'assistant IA et les quiz : les questions posées à l'IA transitent par leur service.</li>
         <li><strong>Google reCAPTCHA</strong> protège le site contre les robots (App Check).</li>
       </ul>
-      <p>Aucune de ces données n'est partagée à des fins commerciales ou publicitaires.</p>
+      <p>Aucune de ces données n'est vendue. Les partenaires ci-dessus opèrent selon leurs propres politiques de confidentialité, indépendantes de School Online.</p>
       <h4>Élèves mineurs</h4>
       <p>Ce site s'adresse à des lycéens, dont certains sont mineurs. Nous invitons les parents/tuteurs à rester informés de l'usage du site. Aucune donnée sensible (au-delà du nom/email) n'est demandée.</p>
       <h4>Stockage local (appareil)</h4>
       <p>En mode invité, certaines données (favoris, historique) restent uniquement sur ton appareil, dans la mémoire du navigateur, et ne sont pas envoyées ailleurs.</p>
       <h4>Tes droits</h4>
-      <p>Tu peux demander la suppression de ton compte et de tes données à tout moment en écrivant à l'administrateur du site.</p>
+      <p>Tu peux demander la consultation, la correction ou la suppression de ton compte et de tes données à tout moment en écrivant à <a href="mailto:contact@schoolonline.ci">contact@schoolonline.ci</a> ou au +225 07 15 79 15 01.</p>
     </div>
 
     <div id="legal-terms" class="legal-content" style="display:none;">
       <h4>Objet</h4>
-      <p>Schoolonline.ci est une plateforme gratuite de révision (Mathématiques, Physique-Chimie) destinée aux lycéens de Côte d'Ivoire, proposée à titre pédagogique.</p>
+      <p>School Online est une plateforme de révision (Mathématiques, Physique-Chimie) destinée aux lycéens de Côte d'Ivoire, proposée à titre pédagogique.</p>
+      <h4>Publicité</h4>
+      <p>School Online peut afficher des publicités fournies par des régies tierces telles que Google AdSense, afin de financer le fonctionnement gratuit du site. Ces publicités sont indépendantes du contenu pédagogique et ne constituent pas une recommandation de School Online.</p>
       <h4>Règles du forum</h4>
       <ul>
         <li>Reste respectueux : pas d'insultes, de harcèlement ni de propos discriminatoires.</li>
@@ -1495,7 +1546,22 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
       <h4>Compte</h4>
       <p>Tu es responsable de la confidentialité de ton mot de passe. Un compte peut être suspendu en cas de non-respect de ces règles.</p>
       <h4>Contact</h4>
-      <p>Pour toute question sur ces conditions ou tes données, contacte l'administrateur via l'espace admin du site.</p>
+      <p>Pour toute question sur ces conditions ou tes données : <a href="mailto:contact@schoolonline.ci">contact@schoolonline.ci</a> — +225 07 15 79 15 01.</p>
+    </div>
+
+    <div id="legal-faq" class="legal-content" style="display:none;">
+      <h4>School Online est-il gratuit ?</h4>
+      <p>Oui, l'accès aux cours, exercices et quiz est entièrement gratuit. Le site peut afficher des publicités pour financer son fonctionnement.</p>
+      <h4>Ai-je besoin d'un compte pour utiliser le site ?</h4>
+      <p>Non, tu peux naviguer en mode invité. Un compte gratuit te permet en plus de retrouver ta progression sur n'importe quel appareil et de participer au forum.</p>
+      <h4>Comment fonctionne l'assistant IA ?</h4>
+      <p>Il répond à tes questions de cours et génère des quiz personnalisés. C'est une aide à la révision : vérifie toujours les points importants avec ton professeur.</p>
+      <h4>Comment supprimer mon compte ou mes données ?</h4>
+      <p>Écris-nous à <a href="mailto:contact@schoolonline.ci">contact@schoolonline.ci</a> ou au +225 07 15 79 15 01, nous traiterons ta demande rapidement.</p>
+      <h4>Le site fonctionne-t-il sur téléphone ?</h4>
+      <p>Oui, School Online est pensé en priorité pour une utilisation sur smartphone, mais fonctionne aussi sur tablette et ordinateur.</p>
+      <h4>Comment signaler un problème ou une erreur dans un cours ?</h4>
+      <p>Contacte-nous par email ou téléphone (coordonnées ci-dessus) en précisant le cours ou l'exercice concerné.</p>
     </div>
   </div>
 
@@ -1532,7 +1598,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
           <div class="admin-stat-card"><div class="num" id="admin-stat-physique">0</div><div class="lbl">Cours Phys-Chim</div></div>
           <div class="admin-stat-card"><div class="num" id="admin-stat-exo">0</div><div class="lbl">Exercices</div></div>
           <div class="admin-stat-card"><div class="num" id="admin-stat-users">0</div><div class="lbl">Élèves inscrits</div></div>
-          <div class="admin-stat-card"><div class="num" id="admin-stat-xp">0</div><div class="lbl">XP moyen</div></div>
+          <div class="admin-stat-card"><div class="num" id="admin-stat-xp">0</div><div class="lbl">XP moyen</div><div id="admin-stat-xp-note" style="font-size:8.5px;color:var(--text-muted);margin-top:2px;"></div></div>
           <div class="admin-stat-card"><div class="num" id="admin-stat-quizpct">0%</div><div class="lbl">Réussite moyenne quiz</div></div>
         </div>
         <div class="section-headline"><h3><i data-lucide="activity" class="lucide-icon"></i> Connexions — 7 derniers jours</h3></div>
@@ -2790,6 +2856,37 @@ function friendlyAuthError(code){
   return map[code] || "Une erreur est survenue, réessaie.";
 }
 
+async function requestPasswordReset(){
+  hideAuthError();
+  const emailInput = document.getElementById('login-email');
+  const email = emailInput.value.trim().toLowerCase();
+  if(!email){
+    showAuthError("Écris ton email dans le champ ci-dessus, puis retouche « Mot de passe oublié ? ».");
+    emailInput.focus();
+    return;
+  }
+  if(!isFirebaseConfigured()){
+    showToast("⚠️ Réinitialisation indisponible en mode hors-ligne");
+    return;
+  }
+  initFirebaseIfNeeded();
+  try {
+    await firebase.auth().sendPasswordResetEmail(email);
+  } catch(err){
+    console.error(err);
+    // On ne confirme jamais si l'email existe ou pas (évite de révéler qui a un compte) :
+    // seule une erreur de format d'email ou de réseau est signalée différemment.
+    if(err.code === 'auth/invalid-email'){
+      showAuthError('Adresse email invalide.');
+      return;
+    }
+    if(err.code === 'auth/network-request-failed'){
+      showAuthError('Connexion impossible, vérifie ta connexion internet.');
+      return;
+    }
+  }
+  showToast('📄 Si un compte existe avec cet email, un lien de réinitialisation vient d\'être envoyé.');
+}
 async function handleLogin(evt){
   evt.preventDefault();
   hideAuthError();
@@ -3346,7 +3443,8 @@ async function openGradingModal(assignmentId){
       const dateStr = (s.submittedAt && s.submittedAt.toDate) ? s.submittedAt.toDate().toLocaleDateString('fr-FR') : '';
       return `<div class="grading-row">
         <div class="grading-row-head"><strong>${escapeHtml(s.studentName||'Élève')}</strong><span class="submission-meta">${dateStr}</span></div>
-        <div class="submission-answer-box">${escapeHtml(s.answerText||'')}</div>
+        ${s.answerText ? `<div class="submission-answer-box">${escapeHtml(s.answerText)}</div>` : ''}
+        ${renderAttachmentsHtml(s.attachments)}
         <div class="form-row-2">
           <div class="form-sheet-field"><label>Note /20</label>
             <input type="number" min="0" max="20" id="grade-score-${doc.id}" value="${s.score!=null?s.score:''}">
@@ -3485,46 +3583,133 @@ async function openSubmissionModal(assignmentId){
   if(sub && a.resultsPublished && sub.score!=null){
     body.innerHTML = `
       <p style="white-space:pre-wrap;font-size:13px;color:var(--text-muted);margin-bottom:14px;">${escapeHtml(a.instructions||'')}</p>
-      <div class="submission-answer-box">${escapeHtml(sub.answerText||'')}</div>
+      ${sub.answerText ? `<div class="submission-answer-box">${escapeHtml(sub.answerText)}</div>` : ''}
+      ${renderAttachmentsHtml(sub.attachments)}
       <div class="score-ring" style="margin:18px auto;background: conic-gradient(#1a9640 ${sub.score*5}%, #e2e8f0 ${sub.score*5}% 100%);"><div class="inner"><span class="big">${sub.score}/20</span></div></div>
       ${sub.feedback ? `<p style="font-size:13px;"><strong>Commentaire du professeur :</strong> ${escapeHtml(sub.feedback)}</p>` : ''}
       <button class="btn-cancel-form" onclick="closeSubmissionModal()">Fermer</button>`;
   } else if(sub){
     body.innerHTML = `
       <p style="white-space:pre-wrap;font-size:13px;color:var(--text-muted);margin-bottom:14px;">${escapeHtml(a.instructions||'')}</p>
-      <div class="submission-answer-box">${escapeHtml(sub.answerText||'')}</div>
+      ${sub.answerText ? `<div class="submission-answer-box">${escapeHtml(sub.answerText)}</div>` : ''}
+      ${renderAttachmentsHtml(sub.attachments)}
       <p class="empty-hint" style="margin-top:12px;"><i data-lucide="clock" class="lucide-icon"></i> En attente de correction par ton professeur.</p>
       <button class="btn-cancel-form" onclick="closeSubmissionModal()">Fermer</button>`;
   } else {
+    pendingSubmissionFiles = [];
     body.innerHTML = `
       <p style="white-space:pre-wrap;font-size:13px;color:var(--text-muted);margin-bottom:14px;">${escapeHtml(a.instructions||'Aucune consigne particulière.')}</p>
-      <div class="form-sheet-field"><label>Ta réponse</label>
-        <textarea id="submission-answer-input" rows="6" placeholder="Écris ta réponse ici..."></textarea>
+      <div class="form-sheet-field"><label>Ta réponse (facultatif si tu ajoutes une photo/PDF)</label>
+        <textarea id="submission-answer-input" rows="5" placeholder="Écris ta réponse ici..."></textarea>
       </div>
-      <button class="btn-save-form" onclick="submitAssignmentAnswer('${assignmentId}')"><i data-lucide="send" class="lucide-icon"></i> Envoyer ma réponse</button>
+      <label style="font-size:12px;font-weight:700;">Photos de ta copie (3 maximum)</label>
+      <div id="submission-files-preview" class="submission-files-preview"></div>
+      <input type="file" id="submission-files-input" accept="image/*" multiple capture="environment" style="display:none" onchange="onSubmissionFilesSelected(this)">
+      <button class="btn-mini" style="margin-top:6px;" onclick="document.getElementById('submission-files-input').click()"><i data-lucide="camera" class="lucide-icon"></i> Ajouter une photo</button>
+      <button class="btn-save-form" id="submission-send-btn" style="margin-top:14px;" onclick="submitAssignmentAnswer('${assignmentId}')"><i data-lucide="send" class="lucide-icon"></i> Envoyer ma réponse</button>
       <button class="btn-cancel-form" onclick="closeSubmissionModal()">Annuler</button>`;
+  }
+}
+/* --- Pièces jointes (photos de la copie) ---
+   Sans Firebase Storage (plan gratuit), les photos sont compressées fortement
+   côté téléphone puis stockées directement dans le document Firestore
+   (limite 1 Mo par document) — d'où la compression agressive et la limite à
+   3 photos. Pas de PDF : un PDF scanné dépasserait vite cette limite. */
+let pendingSubmissionFiles = [];
+function renderAttachmentsHtml(attachments){
+  if(!attachments || !attachments.length) return '';
+  return `<div class="submission-attachments">${attachments.map(f=>
+    `<a href="${f.url}" target="_blank" rel="noopener" class="attachment-thumb"><img src="${f.url}" alt="${escapeHtml(f.name||'photo')}"></a>`
+  ).join('')}</div>`;
+}
+function renderPendingFilesPreview(){
+  const el = document.getElementById('submission-files-preview');
+  if(!el) return;
+  el.innerHTML = pendingSubmissionFiles.map((f,i)=>
+    `<div class="attachment-thumb pending"><img src="${f.url}" alt=""><button class="attachment-remove" onclick="removePendingFile(${i})">×</button></div>`
+  ).join('');
+}
+function removePendingFile(i){
+  pendingSubmissionFiles.splice(i,1);
+  renderPendingFilesPreview();
+}
+function compressImageToDataUrl(file, maxDim, quality){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = ()=> reject(new Error('image illisible'));
+      img.src = e.target.result;
+    };
+    reader.onerror = ()=> reject(new Error('lecture impossible'));
+    reader.readAsDataURL(file);
+  });
+}
+async function onSubmissionFilesSelected(input){
+  const files = Array.from(input.files || []);
+  input.value = '';
+  if(pendingSubmissionFiles.length + files.length > 3){ showToast('⚠️ Maximum 3 photos par copie'); return; }
+  for(const file of files){
+    if(!file.type.startsWith('image/')){ showToast('⚠️ Photos uniquement (pas de PDF avec la formule gratuite actuelle)'); continue; }
+    try {
+      // Compression progressive : on vise une image nette mais légère (< 300 Ko)
+      // pour tenir dans la limite de 1 Mo par document Firestore.
+      let dataUrl = await compressImageToDataUrl(file, 1000, 0.55);
+      if(dataUrl.length > 300*1024){
+        dataUrl = await compressImageToDataUrl(file, 800, 0.4);
+      }
+      if(dataUrl.length > 350*1024){
+        showToast('⚠️ Photo encore trop lourde après compression — essaie une prise de vue plus simple/moins zoomée');
+        continue;
+      }
+      pendingSubmissionFiles.push({ url: dataUrl, name: file.name.replace(/\.[^.]+$/, '') + '.jpg', type: 'image/jpeg' });
+      renderPendingFilesPreview();
+    } catch(e){
+      console.error(e);
+      showToast('⚠️ Image illisible : ' + file.name);
+    }
   }
 }
 function closeSubmissionModal(){
   document.getElementById('submission-modal').classList.remove('open');
   document.body.style.overflow = '';
+  pendingSubmissionFiles = [];
 }
 async function submitAssignmentAnswer(assignmentId){
   const input = document.getElementById('submission-answer-input');
   const answerText = input.value.trim();
-  if(!answerText){ showToast('⚠️ Écris une réponse avant d\'envoyer'); return; }
+  if(!answerText && pendingSubmissionFiles.length===0){
+    showToast('⚠️ Écris une réponse ou ajoute une photo avant d\'envoyer');
+    return;
+  }
+  const btn = document.getElementById('submission-send-btn');
+  if(btn) btn.disabled = true;
   try {
     await forumDb.collection('assignments').doc(assignmentId).collection('submissions').doc(firebaseUser.uid).set({
       studentUid: firebaseUser.uid,
       studentName: (userProfile && userProfile.name) || 'Élève',
       answerText,
+      attachments: pendingSubmissionFiles.map(f=>({ url: f.url, name: f.name, type: f.type })),
       submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
       status: 'rendu', score: null, feedback: ''
     });
     showToast('✅ Réponse envoyée');
+    pendingSubmissionFiles = [];
     closeSubmissionModal();
     renderDevoirsPage();
-  } catch(e){ console.error(e); showToast("⚠️ Erreur lors de l'envoi — vérifie les règles Firestore (collection assignments)"); }
+  } catch(e){
+    console.error(e);
+    showToast("⚠️ Erreur lors de l'envoi — vérifie les règles Firestore, ou réduis le nombre/la taille des photos");
+    if(btn) btn.disabled = false;
+  }
 }
 async function seedFirestoreCoursesOnce(){
   try {
@@ -3762,11 +3947,12 @@ function animateStatNumber(el, target, suffix){
     if(p < 1) requestAnimationFrame(step);
   })(start);
 }
+const ADMIN_USERS_SAMPLE_SIZE = 300; // pour les moyennes (XP, quiz) — voir note dans renderOverviewTab
 async function fetchAdminUsersOnce(force){
   if(adminUsersCache && !force) return adminUsersCache;
   if(!isFirebaseConfigured() || !forumDb) { adminUsersCache = []; return adminUsersCache; }
   try {
-    const snap = await forumDb.collection('users').limit(500).get();
+    const snap = await forumDb.collection('users').limit(ADMIN_USERS_SAMPLE_SIZE).get();
     adminUsersCache = snap.docs.map(d=>({ id: d.id, ...d.data() }));
   } catch(e){
     console.error('Erreur chargement utilisateurs (admin):', e);
@@ -3779,7 +3965,17 @@ async function renderOverviewTab(){
   document.getElementById('admin-stat-physique').textContent = COURSES.filter(c=>c.matiere==='physique').length;
   document.getElementById('admin-stat-exo').textContent = EXERCICES.length;
   const users = await fetchAdminUsersOnce();
-  animateStatNumber(document.getElementById('admin-stat-users'), users.length);
+  // Nombre total réel via une requête d'agrégation (count) : ne transfère aucune donnée,
+  // reste donc bon marché même quand l'établissement grandit — contrairement à l'ancienne
+  // version qui comptait la taille de l'échantillon (faux au-delà de 500 élèves).
+  let totalUsers = users.length;
+  try {
+    const countSnap = await forumDb.collection('users').count().get();
+    totalUsers = countSnap.data().count;
+  } catch(e){ console.error('Comptage utilisateurs indisponible', e); }
+  animateStatNumber(document.getElementById('admin-stat-users'), totalUsers);
+  const sampleNote = document.getElementById('admin-stat-xp-note');
+  if(sampleNote) sampleNote.textContent = totalUsers > users.length ? `(estimation sur un échantillon de ${users.length} élèves)` : '';
   const xps = users.map(u=> (u.gamification && u.gamification.xp) || 0);
   const avgXp = xps.length ? Math.round(xps.reduce((a,b)=>a+b,0) / xps.length) : 0;
   animateStatNumber(document.getElementById('admin-stat-xp'), avgXp);
@@ -3827,21 +4023,47 @@ async function renderOverviewTab(){
   }
 }
 
-/* ============ ADMIN : UTILISATEURS ============ */
-async function renderAdminUsersList(){
+/* ============ ADMIN : UTILISATEURS ============
+   Avant : jusqu'à 500 profils entiers rechargés à chaque ouverture de l'onglet.
+   Maintenant : pagination par curseur (25 à la fois, "Charger plus" pour la
+   suite) — le coût ne dépend plus du nombre total d'élèves mais seulement de
+   ce que l'admin choisit réellement de consulter. */
+let adminUsersPage = [];
+let adminUsersLastDoc = null;
+let adminUsersListDone = false;
+async function renderAdminUsersList(reset){
   const list = document.getElementById('admin-users-list');
   if(!list) return;
-  list.innerHTML = `<div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>`;
-  const users = await fetchAdminUsersOnce();
   const q = (document.getElementById('admin-users-search').value||'').trim().toLowerCase();
-  let filtered = users;
-  if(q) filtered = users.filter(u=> (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q));
-  filtered.sort((a,b)=> ((b.gamification&&b.gamification.xp)||0) - ((a.gamification&&a.gamification.xp)||0));
-  if(filtered.length===0){
-    list.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="users" class="lucide-icon"></i></div><strong>Aucun élève trouvé</strong></div>`;
+  if(reset !== false || q){
+    adminUsersPage = [];
+    adminUsersLastDoc = null;
+    adminUsersListDone = false;
+  }
+  if(adminUsersPage.length===0) list.innerHTML = `<div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>`;
+
+  if(q){
+    // Recherche : filtre sur l'échantillon déjà en mémoire (voir note affichée
+    // à l'utilisateur) plutôt que de tout recharger à chaque frappe.
+    const sample = await fetchAdminUsersOnce();
+    adminUsersPage = sample.filter(u=> (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q));
+    adminUsersListDone = true;
+  } else if(!adminUsersListDone) {
+    try {
+      let query = forumDb.collection('users').orderBy('gamification.xp','desc').limit(25);
+      if(adminUsersLastDoc) query = query.startAfter(adminUsersLastDoc);
+      const snap = await query.get();
+      if(snap.docs.length < 25) adminUsersListDone = true;
+      if(snap.docs.length) adminUsersLastDoc = snap.docs[snap.docs.length-1];
+      snap.docs.forEach(d=> adminUsersPage.push({ id: d.id, ...d.data() }));
+    } catch(e){ console.error('Erreur chargement utilisateurs (admin):', e); }
+  }
+
+  if(adminUsersPage.length===0){
+    list.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="users" class="lucide-icon"></i></div><strong>Aucun élève trouvé</strong>${q? '<br><span style="font-size:11px;">La recherche ne couvre que les élèves déjà chargés.</span>' : ''}</div>`;
     return;
   }
-  list.innerHTML = filtered.map(u=>{
+  list.innerHTML = adminUsersPage.map(u=>{
     const xp = (u.gamification && u.gamification.xp) || 0;
     const level = levelFromTotalXP(xp).level;
     const lastActive = (u.gamification && u.gamification.lastActiveDate) || '—';
@@ -3851,7 +4073,7 @@ async function renderAdminUsersList(){
         <p class="meta-line">${escapeHtml(u.email||'')} • Niveau ${level} • ${xp} XP • Dernière connexion : ${escapeHtml(lastActive)}</p>
       </div>
     </div>`;
-  }).join('');
+  }).join('') + (!q && !adminUsersListDone ? `<button class="btn-mini" style="margin:12px 20px;" onclick="renderAdminUsersList(false)"><i data-lucide="refresh-cw" class="lucide-icon"></i> Charger 25 élèves de plus</button>` : '');
 }
 
 function forumAuthorName(){
@@ -4176,7 +4398,7 @@ async function submitForumReply(postId){
   try {
     const stamp = forumAuthorStamp();
     await forumDb.collection('forumPosts').doc(postId).update({
-      replies: firebase.firestore.FieldValue.arrayUnion({ author: forumAuthorName(), text, createdAt: new Date().toISOString(), authorLevel: stamp.authorLevel, authorAvatar: stamp.authorAvatar })
+      replies: firebase.firestore.FieldValue.arrayUnion({ author: forumAuthorName(), authorUid: firebaseUser ? firebaseUser.uid : null, text, createdAt: new Date().toISOString(), authorLevel: stamp.authorLevel, authorAvatar: stamp.authorAvatar })
     });
     markForumPosted();
     onForumGamification(forumSubject);
@@ -4205,6 +4427,7 @@ async function postForumMessage(){
       theme,
       classe,
       author: forumAuthorName(),
+      authorUid: firebaseUser ? firebaseUser.uid : null,
       authorLevel: stamp.authorLevel,
       authorXP: stamp.authorXP,
       authorAvatar: stamp.authorAvatar,
@@ -4345,9 +4568,11 @@ function checkForumSpecificBadges(){
 
 /* ============ QUIZ AUTO-CORRIGÉ (généré par IA, mis en cache) ============ */
 let quizCache = {}; // en mémoire pour la session en cours
-let currentQuiz = null;     // { courseId, titre, questions:[...] }
+let currentQuiz = null;     // { courseId, titre, questions:[...] } — jamais de réponse en clair ici
+let currentQuizExplanations = []; // tenues séparément, révélées uniquement après réponse
 let currentQIndex = 0;
 let currentAnswers = [];    // index choisi par question
+let currentAnswerCorrectness = []; // true/false une fois chaque question répondue
 let quizAnswered = false;
 
 function closeOnOverlayQuiz(e){ if(e.target===document.getElementById('quiz-overlay')) closeQuiz(); }
@@ -4367,11 +4592,14 @@ async function openQuiz(courseId){
   document.getElementById('quiz-body').innerHTML = `<div class="quiz-loading"><div class="spinner"></div><strong>Préparation de ton quiz...</strong><p style="margin-top:6px;font-size:12px;">Génération IA en cours, quelques secondes</p></div>`;
 
   try {
-    const questions = await getQuizQuestions(course);
+    const bundle = await getQuizQuestions(course);
+    const questions = bundle.questions;
     if(!questions || questions.length===0) throw new Error('empty');
     currentQuiz = { courseId, titre: course.titre, questions };
+    currentQuizExplanations = bundle.explanations || [];
     currentQIndex = 0;
     currentAnswers = new Array(questions.length).fill(null);
+    currentAnswerCorrectness = new Array(questions.length).fill(null);
     quizAnswered = false;
     renderQuizQuestion();
   } catch(e){
@@ -4390,32 +4618,56 @@ async function getQuizQuestions(course){
       const doc = await forumDb.collection('quizzes').doc(course.id).get();
       if(doc.exists){
         const data = doc.data();
-        if(Array.isArray(data.questions) && data.questions.length){
-          quizCache[course.id] = data.questions;
-          return data.questions;
+        const looksOldFormat = Array.isArray(data.questions) && data.questions.length && data.questions[0].correctHash === undefined;
+        if(Array.isArray(data.questions) && data.questions.length && !looksOldFormat){
+          const bundle = { questions: data.questions, explanations: data.explanations || [] };
+          quizCache[course.id] = bundle;
+          return bundle;
         }
+        // Ancien format détecté (réponse en clair) : on régénère proprement ci-dessous.
       }
     } catch(e){ console.error('Lecture quiz Firestore échouée', e); }
   }
 
-  // 3. génération IA (Puter.js)
-  const questions = await generateQuizWithAI(course);
-  quizCache[course.id] = questions;
+  // 3. génération IA (Puter.js) + protection des réponses (hash)
+  const raw = await generateQuizWithAI(course);
+  const bundle = await protectQuizQuestions(raw);
+  quizCache[course.id] = bundle;
 
   // 4. mise en cache partagée pour les prochains élèves
   if(isFirebaseConfigured() && forumDb){
     try {
       await forumDb.collection('quizzes').doc(course.id).set({
-        questions,
+        questions: bundle.questions,
+        explanations: bundle.explanations,
         matiere: course.matiere,
         titre: course.titre,
         generatedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     } catch(e){ console.error('Sauvegarde quiz Firestore échouée (pas grave, ça reste en cache local)', e); }
   }
-  return questions;
+  return bundle;
 }
 
+/* Protection anti-triche des quiz : l'index de la bonne réponse n'est jamais
+   envoyé en clair au navigateur. On le remplace par une empreinte (hash) que
+   seul le calcul salt+index permet de retrouver — un curieux qui ouvre la
+   console ne voit plus la réponse directement. */
+async function sha256Hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function protectQuizQuestions(rawQuestions){
+  const questions = [];
+  const explanations = [];
+  for(const q of rawQuestions){
+    const salt = Math.random().toString(36).slice(2,10);
+    const correctHash = await sha256Hex(salt + q.correct);
+    questions.push({ q: q.q, options: q.options, salt, correctHash });
+    explanations.push(q.explain || '');
+  }
+  return { questions, explanations };
+}
 async function generateQuizWithAI(course){
   if(typeof puter === 'undefined') throw new Error('Puter.js indisponible');
   const matiereLabel = course.matiere==='maths' ? 'Mathématiques' : 'Physique-Chimie';
@@ -4469,20 +4721,32 @@ function renderQuizQuestion(){
     </div>`;
 }
 
-function selectQuizOption(idx){
+async function selectQuizOption(idx){
   if(quizAnswered) return;
   quizAnswered = true;
   currentAnswers[currentQIndex] = idx;
   const q = currentQuiz.questions[currentQIndex];
+  document.querySelectorAll('.quiz-option').forEach(btn=> btn.disabled = true);
+
+  // Aucune réponse n'est stockée en clair : on recalcule quel index correspond
+  // à l'empreinte enregistrée (4 hachages max, aucune donnée sensible côté client).
+  let correctIdx = -1;
+  for(let i=0; i<q.options.length; i++){
+    const h = await sha256Hex(q.salt + i);
+    if(h === q.correctHash){ correctIdx = i; break; }
+  }
+  const isCorrect = idx === correctIdx;
+  currentAnswerCorrectness[currentQIndex] = isCorrect;
+
   document.querySelectorAll('.quiz-option').forEach(btn=>{
     const i = Number(btn.dataset.idx);
-    btn.disabled = true;
-    if(i === q.correct) btn.classList.add('correct');
+    if(i === correctIdx) btn.classList.add('correct');
     else if(i === idx) btn.classList.add('incorrect');
   });
-  if(idx !== q.correct && navigator.vibrate) { try{ navigator.vibrate(120); }catch(e){} }
-  if(q.explain){
-    document.getElementById('quiz-explain-slot').innerHTML = `<div class="quiz-explain"><i data-lucide="lightbulb" class="lucide-icon"></i> ${escapeHtml(q.explain)}</div>`;
+  if(!isCorrect && navigator.vibrate) { try{ navigator.vibrate(120); }catch(e){} }
+  const explain = currentQuizExplanations[currentQIndex];
+  if(explain){
+    document.getElementById('quiz-explain-slot').innerHTML = `<div class="quiz-explain"><i data-lucide="lightbulb" class="lucide-icon"></i> ${escapeHtml(explain)}</div>`;
   }
   document.getElementById('quiz-next-btn').disabled = false;
 }
@@ -4498,7 +4762,7 @@ function quizNext(){
 
 function renderQuizResult(){
   const { questions } = currentQuiz;
-  const score = currentAnswers.reduce((acc,ans,i)=> acc + (ans===questions[i].correct ? 1 : 0), 0);
+  const score = currentAnswerCorrectness.reduce((acc,ok)=> acc + (ok ? 1 : 0), 0);
   const pct = Math.round((score/questions.length)*100);
   document.getElementById('quiz-progress-fill').style.width = '100%';
   document.getElementById('quiz-footer').style.display = 'none';
@@ -4520,6 +4784,7 @@ function renderQuizResult(){
 function restartQuiz(){
   currentQIndex = 0;
   currentAnswers = new Array(currentQuiz.questions.length).fill(null);
+  currentAnswerCorrectness = new Array(currentQuiz.questions.length).fill(null);
   renderQuizQuestion();
 }
 function saveQuizResult(courseId, titre, pct){
@@ -4572,8 +4837,10 @@ window.addEventListener('unhandledrejection', (e)=>{
 function selectLegalTab(tab){
   document.getElementById('legal-tab-privacy').classList.toggle('active', tab==='privacy');
   document.getElementById('legal-tab-terms').classList.toggle('active', tab==='terms');
+  document.getElementById('legal-tab-faq').classList.toggle('active', tab==='faq');
   document.getElementById('legal-privacy').style.display = tab==='privacy' ? 'block' : 'none';
   document.getElementById('legal-terms').style.display = tab==='terms' ? 'block' : 'none';
+  document.getElementById('legal-faq').style.display = tab==='faq' ? 'block' : 'none';
 }
 function openLegalFromAuth(tab){
   document.getElementById('auth-screen').style.display = 'none';
@@ -5356,17 +5623,24 @@ function renderSubjectCards(){
   }).join('');
 }
 
-/* --- Rang dans l'établissement / classement --- */
+/* --- Rang dans l'établissement / classement ---
+   Avant : on lisait jusqu'à 200 documents complets juste pour savoir à quel
+   rang on se trouve — coût qui grandit avec chaque nouvel élève. Maintenant :
+   une requête d'agrégation (count) qui ne compte que les élèves avec plus
+   d'XP, sans jamais transférer leurs données. Le coût reste minime même avec
+   des milliers d'élèves. */
 async function renderMyRank(){
   const el = document.getElementById('gam-my-rank');
   if(!el) return;
   if(!isRealAccount() || !isFirebaseConfigured() || !forumDb){ el.textContent = '—'; return; }
   try {
-    const snap = await forumDb.collection('users').orderBy('gamification.xp','desc').limit(200).get();
-    const email = ((firebaseUser && firebaseUser.email) || '').toLowerCase();
-    const idx = snap.docs.findIndex(d=> (d.data().email||'').toLowerCase()===email);
-    el.textContent = idx>=0 ? ('#' + (idx+1)) : 'Top 200+';
-  } catch(e){ console.error('Rang indisponible', e); el.textContent = '—'; }
+    const myXp = (GAM && GAM.xp) || 0;
+    const countSnap = await forumDb.collection('users').where('gamification.xp', '>', myXp).count().get();
+    el.textContent = '#' + (countSnap.data().count + 1);
+  } catch(e){
+    console.error('Rang indisponible (peut-être une ancienne version du SDK Firestore sans agrégation)', e);
+    el.textContent = '—';
+  }
 }
 
 /* --- Message de motivation personnalisé --- */
