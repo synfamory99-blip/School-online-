@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://school-online-five.vercel.app/sitemap.xml

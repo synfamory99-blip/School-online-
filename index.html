@@ -29,16 +29,16 @@
 <meta property="og:title" content="School Online Côte d'Ivoire">
 <meta property="og:description" content="Cours, quiz, exercices corrigés et vidéos pour réussir au lycée en Côte d'Ivoire.">
 <meta property="og:url" content="https://school-online-five.vercel.app/">
-<meta property="og:image" content="https://school-online-five.vercel.app/logo.png">
+<meta property="og:image" content="https://school-online-five.vercel.app/assets/images/cours.png">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="School Online Côte d'Ivoire">
 <meta name="twitter:description" content="Cours, quiz et exercices corrigés pour réussir au lycée.">
-<meta name="twitter:image" content="https://school-online-five.vercel.app/logo.png">
+<meta name="twitter:image" content="https://school-online-five.vercel.app/assets/images/cours.png">
 
 <!-- Favicon -->
-<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/favicon.png">
 
 <!-- PWA -->
 <link rel="manifest" href="/manifest.json">
@@ -973,7 +973,34 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 .lucide-icon { width: 1.15em; height: 1.15em; stroke-width: 2.1; vertical-align: -0.22em; flex-shrink: 0; }
 .lucide-icon.filled { fill: currentColor; }
 button .lucide-icon, a .lucide-icon { pointer-events: none; }
+
+/* ============ ILLUSTRATIONS SCHOOL ONLINE ============ */
+.visual-info-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:0 20px 22px; }
+.visual-info-card { background:var(--white); border:1px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
+.visual-info-card img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; }
+.visual-info-content { padding:14px 16px 16px; }
+.visual-info-content h3 { font-size:15px; font-weight:900; color:var(--text-main); margin-bottom:6px; }
+.visual-info-content p { font-size:12px; line-height:1.6; color:var(--text-muted); }
+.visual-info-content .btn-action { margin-top:10px; }
+.course-visual-banner { margin:0 20px 18px; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-color); box-shadow:var(--shadow-sm); background:var(--white); }
+.course-visual-banner img { display:block; width:100%; aspect-ratio:16/7; object-fit:cover; }
+.quiz-visual { width:100%; max-height:130px; object-fit:cover; border-radius:14px; margin-bottom:12px; display:block; }
+@media (max-width:700px){ .visual-info-grid { grid-template-columns:1fr; } .course-visual-banner img { aspect-ratio:16/9; } }
+
 </style>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"EducationalOrganization",
+  "name":"School Online",
+  "url":"https://school-online-five.vercel.app/",
+  "description":"Plateforme éducative ivoirienne proposant des cours, exercices corrigés et quiz pour les lycéens.",
+  "areaServed":"CI",
+  "email":"contact@schoolonline.ci",
+  "telephone":"+2250715791501"
+}
+</script>
 </head>
 <body>
 <script>
@@ -1222,6 +1249,26 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
     </div>
     <div class="horizontal-cards-scroller" id="reco-scroller"></div>
 
+
+    <div class="section-headline"><h3><i data-lucide="sparkles" class="lucide-icon"></i> Découvrir School Online</h3></div>
+    <div class="visual-info-grid">
+      <article class="visual-info-card" id="about-school-online">
+        <img src="assets/images/a-propos.png" alt="À propos de School Online" loading="lazy">
+        <div class="visual-info-content">
+          <h3>À propos de School Online</h3>
+          <p>Une plateforme pensée pour accompagner les élèves ivoiriens dans leurs révisions grâce aux cours, exercices, quiz et outils de progression.</p>
+        </div>
+      </article>
+      <article class="visual-info-card" id="contact-school-online">
+        <img src="assets/images/contact.png" alt="Contacter School Online" loading="lazy">
+        <div class="visual-info-content">
+          <h3>Besoin d'aide ?</h3>
+          <p>Une question ou un problème ? Contacte l'équipe School Online par e-mail ou au <strong>+225 0715791501</strong>.</p>
+          <a class="btn-action" href="https://wa.me/2250715791501" target="_blank" rel="noopener">Contacter sur WhatsApp</a>
+        </div>
+      </article>
+    </div>
+
     <footer class="site-footer">
       <div class="footer-col">
         <h4 class="footer-brand"><i data-lucide="book" class="lucide-icon"></i> School Online</h4>
@@ -1255,6 +1302,9 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
   </div>
 
   <div id="page-cours" class="page">
+    <div class="course-visual-banner">
+      <img src="assets/images/cours.png" alt="Cours en ligne School Online" loading="lazy">
+    </div>
     <div class="section-headline"><h3>Tous les Cours & Fiches</h3></div>
     <div class="subject-tabs">
       <button class="subject-tab tab-maths active" id="cours-tab-maths" onclick="selectSubjectTab('cours','maths')"><i data-lucide="calculator" class="lucide-icon"></i> Mathématiques</button>
@@ -1912,6 +1962,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
         <h4 id="quiz-title">Quiz</h4>
         <button class="quiz-close" onclick="closeQuiz()" aria-label="Fermer"><i data-lucide="x" class="lucide-icon"></i></button>
       </div>
+      <img class="quiz-visual" src="assets/images/quiz.png" alt="Quiz interactifs School Online" loading="lazy">
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
     </div>
     <div class="quiz-body" id="quiz-body"></div>
