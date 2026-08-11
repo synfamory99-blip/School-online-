@@ -38,7 +38,7 @@
 <meta name="twitter:image" content="https://school-online-five.vercel.app/logo.png">
 
 <!-- Favicon -->
-<link rel="icon" href="favicon.png">
+<link rel="icon" href="/favicon.ico">
 
 <!-- PWA -->
 <link rel="manifest" href="/manifest.json">
@@ -973,34 +973,7 @@ button, input, select, textarea { font-family: inherit; max-width: 100%; }
 .lucide-icon { width: 1.15em; height: 1.15em; stroke-width: 2.1; vertical-align: -0.22em; flex-shrink: 0; }
 .lucide-icon.filled { fill: currentColor; }
 button .lucide-icon, a .lucide-icon { pointer-events: none; }
-
-/* ============ ILLUSTRATIONS SCHOOL ONLINE ============ */
-.visual-info-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:0 20px 22px; }
-.visual-info-card { background:var(--white); border:1px solid var(--border-color); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); }
-.visual-info-card img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; }
-.visual-info-content { padding:14px 16px 16px; }
-.visual-info-content h3 { font-size:15px; font-weight:900; color:var(--text-main); margin-bottom:6px; }
-.visual-info-content p { font-size:12px; line-height:1.6; color:var(--text-muted); }
-.visual-info-content .btn-action { margin-top:10px; }
-.course-visual-banner { margin:0 20px 18px; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-color); box-shadow:var(--shadow-sm); background:var(--white); }
-.course-visual-banner img { display:block; width:100%; aspect-ratio:16/7; object-fit:cover; }
-.quiz-visual { width:100%; max-height:130px; object-fit:cover; border-radius:14px; margin-bottom:12px; display:block; }
-@media (max-width:700px){ .visual-info-grid { grid-template-columns:1fr; } .course-visual-banner img { aspect-ratio:16/9; } }
-
 </style>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"EducationalOrganization",
-  "name":"School Online",
-  "url":"https://school-online-five.vercel.app/",
-  "description":"Plateforme éducative ivoirienne proposant des cours, exercices corrigés et quiz pour les lycéens.",
-  "areaServed":"CI",
-  "email":"contact@schoolonline.ci",
-  "telephone":"+2250715791501"
-}
-</script>
 </head>
 <body>
 <script>
@@ -1173,7 +1146,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
 <nav>
   <div class="nav-left">
     <div class="logo-container">
-      <img src="logo.png" alt="Logo Schoolonline.ci" class="logo-img" onerror="this.style.display='none'">
+      <img src="school online logo.png" alt="Logo Schoolonline.ci" class="logo-img" onerror="this.style.display='none'">
     </div>
     <span class="brand-title">Schoolonline.ci</span>
   </div>
@@ -1249,26 +1222,6 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
     </div>
     <div class="horizontal-cards-scroller" id="reco-scroller"></div>
 
-
-    <div class="section-headline"><h3><i data-lucide="sparkles" class="lucide-icon"></i> Découvrir School Online</h3></div>
-    <div class="visual-info-grid">
-      <article class="visual-info-card" id="about-school-online">
-        <img src="a-propos.png" alt="À propos de School Online" loading="lazy">
-        <div class="visual-info-content">
-          <h3>À propos de School Online</h3>
-          <p>Une plateforme pensée pour accompagner les élèves ivoiriens dans leurs révisions grâce aux cours, exercices, quiz et outils de progression.</p>
-        </div>
-      </article>
-      <article class="visual-info-card" id="contact-school-online">
-        <img src="contact.png" alt="Contacter School Online" loading="lazy">
-        <div class="visual-info-content">
-          <h3>Besoin d'aide ?</h3>
-          <p>Une question ou un problème ? Contacte l'équipe School Online par e-mail ou au <strong>+225 0715791501</strong>.</p>
-          <a class="btn-action" href="https://wa.me/2250715791501" target="_blank" rel="noopener">Contacter sur WhatsApp</a>
-        </div>
-      </article>
-    </div>
-
     <footer class="site-footer">
       <div class="footer-col">
         <h4 class="footer-brand"><i data-lucide="book" class="lucide-icon"></i> School Online</h4>
@@ -1302,9 +1255,6 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
   </div>
 
   <div id="page-cours" class="page">
-    <div class="course-visual-banner">
-      <img src="cours.png" alt="Cours en ligne School Online" loading="lazy">
-    </div>
     <div class="section-headline"><h3>Tous les Cours & Fiches</h3></div>
     <div class="subject-tabs">
       <button class="subject-tab tab-maths active" id="cours-tab-maths" onclick="selectSubjectTab('cours','maths')"><i data-lucide="calculator" class="lucide-icon"></i> Mathématiques</button>
@@ -1659,6 +1609,15 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
 
       <!-- Utilisateurs -->
       <div class="admin-tab-panel" id="admin-panel-users">
+        <div id="admin-teacher-management" style="display:none;">
+          <div class="section-headline" style="padding-top:0;"><h3><i data-lucide="presentation" class="lucide-icon"></i> Gérer les enseignants</h3></div>
+          <p style="padding:0 20px 10px;font-size:12px;color:var(--text-muted);">Donne les droits enseignant (gestion des cours, exercices, devoirs, modération du forum) à un compte élève déjà inscrit, en indiquant son email.</p>
+          <div class="gam-inline-form" style="padding:0 20px;">
+            <input type="email" id="grant-teacher-email" placeholder="email@exemple.com">
+            <button class="btn-mini" onclick="grantTeacherRole()">Donner les droits</button>
+          </div>
+          <div id="admin-teachers-list" style="margin-top:10px;"></div>
+        </div>
         <div class="search-mini-wrap"><div class="search-mini"><i data-lucide="search" class="lucide-icon"></i><input type="text" id="admin-users-search" placeholder="Rechercher un élève..." oninput="renderAdminUsersList()"></div></div>
         <div class="extended-list-wrapper" id="admin-users-list"></div>
       </div>
@@ -1962,7 +1921,6 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
         <h4 id="quiz-title">Quiz</h4>
         <button class="quiz-close" onclick="closeQuiz()" aria-label="Fermer"><i data-lucide="x" class="lucide-icon"></i></button>
       </div>
-      <img class="quiz-visual" src="quiz.png" alt="Quiz interactifs School Online" loading="lazy">
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
     </div>
     <div class="quiz-body" id="quiz-body"></div>
@@ -2499,8 +2457,8 @@ function renderProfil(){
   }
   const adminEntry = document.getElementById('admin-menu-entry');
   if(adminEntry){
-    const isAdminEmail = user && !user.guest && user.email === ADMIN_EMAIL;
-    adminEntry.style.display = isAdminEmail ? 'flex' : 'none';
+    const isStaff = user && !user.guest && firebaseUser && isStaffAccount(firebaseUser.email, firebaseUser.uid);
+    adminEntry.style.display = isStaff ? 'flex' : 'none';
   }
   const dls = loadDownloads();
   document.getElementById('dl-list').innerHTML = dls.length
@@ -2593,10 +2551,16 @@ async function tryAdminLogin(){
   const btn = document.getElementById('admin-login-btn');
   btn.disabled = true;
   try {
-    await firebase.auth().signInWithEmailAndPassword(email, password);
+    const cred = await firebase.auth().signInWithEmailAndPassword(email, password);
+    await loadCurrentUserRole(cred.user.uid);
+    if(!isStaffAccount(cred.user.email, cred.user.uid)){
+      showToast("❌ Ce compte n'a pas les droits enseignant/administrateur");
+      currentUserRole = null;
+      return;
+    }
     sessionStorage.setItem(AUTH_KEY, '1');
     renderAdminIfLogged();
-    showToast('✅ Connecté en tant qu\'administrateur');
+    showToast(cred.user.email === ADMIN_EMAIL ? '✅ Connecté en tant qu\'administrateur' : '✅ Connecté en tant qu\'enseignant');
   } catch(err){
     console.error(err);
     let msg = '❌ Connexion impossible';
@@ -2612,6 +2576,7 @@ async function tryAdminLogin(){
 }
 function adminLogout(){
   sessionStorage.removeItem(AUTH_KEY);
+  currentUserRole = null;
   if(isFirebaseConfigured() && forumDb){
     firebase.auth().signOut().then(()=> firebase.auth().signInAnonymously()).catch(()=>{});
   }
@@ -2620,10 +2585,17 @@ function adminLogout(){
   document.getElementById('admin-password').value='';
   document.getElementById('admin-email').value='';
 }
+function isStaffAccount(email, uid){
+  if(email === ADMIN_EMAIL) return true;
+  if(uid && uid === (firebase.auth().currentUser && firebase.auth().currentUser.uid)){
+    return currentUserRole === 'admin' || currentUserRole === 'teacher';
+  }
+  return false;
+}
 function isAdminAuthed(){
   if(isFirebaseConfigured() && forumDb){
     const u = firebase.auth().currentUser;
-    return !!(u && !u.isAnonymous && u.email === ADMIN_EMAIL) && sessionStorage.getItem(AUTH_KEY)==='1';
+    return !!(u && !u.isAnonymous && isStaffAccount(u.email, u.uid)) && sessionStorage.getItem(AUTH_KEY)==='1';
   }
   return sessionStorage.getItem(AUTH_KEY)==='1';
 }
@@ -2633,6 +2605,62 @@ function renderAdminIfLogged(){
   document.getElementById('admin-dashboard').style.display = logged ? 'block' : 'none';
   if(logged) renderAdminDashboard();
 }
+/* ============ GESTION DES ENSEIGNANTS ============
+   Le rôle est stocké dans une collection à part ("roles"), jamais dans le
+   document "users" que chacun peut modifier lui-même — sinon un élève
+   pourrait s'auto-promouvoir enseignant depuis son propre profil. Seul le
+   compte admin racine (ADMIN_EMAIL) peut écrire dans "roles" (vérifié côté
+   règles Firestore, pas seulement côté interface). */
+async function grantTeacherRole(){
+  const input = document.getElementById('grant-teacher-email');
+  const email = input.value.trim().toLowerCase();
+  if(!email){ showToast('⚠️ Indique un email'); return; }
+  try {
+    const snap = await forumDb.collection('users').where('email','==', email).limit(1).get();
+    if(snap.empty){
+      showToast("⚠️ Aucun compte élève trouvé avec cet email — la personne doit d'abord créer un compte normalement.");
+      return;
+    }
+    const doc = snap.docs[0];
+    await forumDb.collection('roles').doc(doc.id).set({
+      role: 'teacher',
+      email,
+      name: doc.data().name || '',
+      grantedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      grantedBy: ADMIN_EMAIL
+    });
+    showToast('✅ Droits enseignant accordés à ' + email);
+    input.value = '';
+    renderTeachersList();
+  } catch(e){
+    console.error(e);
+    showToast("⚠️ Erreur — vérifie les règles Firestore (collection roles)");
+  }
+}
+async function revokeTeacherRole(uid, email){
+  if(!confirm('Retirer les droits enseignant de ' + email + ' ?')) return;
+  try {
+    await forumDb.collection('roles').doc(uid).delete();
+    showToast('🗑️ Droits enseignant retirés');
+    renderTeachersList();
+  } catch(e){ console.error(e); showToast('⚠️ Erreur lors du retrait'); }
+}
+async function renderTeachersList(){
+  const el = document.getElementById('admin-teachers-list');
+  if(!el) return;
+  try {
+    const snap = await forumDb.collection('roles').where('role','==','teacher').get();
+    if(snap.empty){ el.innerHTML = '<p class="empty-hint">Aucun enseignant ajouté pour le moment.</p>'; return; }
+    el.innerHTML = snap.docs.map(d=>{
+      const t = d.data();
+      return `<div class="admin-list-item">
+        <div style="flex:1;min-width:0;"><strong>${escapeHtml(t.name||'Enseignant')}</strong><p class="meta-line">${escapeHtml(t.email)}</p></div>
+        <button class="admin-icon-btn danger" aria-label="Retirer" onclick="revokeTeacherRole('${d.id}','${escapeHtml(t.email)}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
+      </div>`;
+    }).join('');
+  } catch(e){ console.error(e); el.innerHTML = '<p class="empty-hint">⚠️ Liste indisponible (vérifie les règles Firestore).</p>'; }
+}
+
 function renderAdminDashboard(){
   const vTag = document.getElementById('build-version-tag');
   if(vTag) vTag.textContent = BUILD_VERSION;
@@ -3240,6 +3268,15 @@ const FIREBASE_CONFIG = {
 const RECAPTCHA_SITE_KEY = "6LelAU0tAAAAAOek4yBxmg9Dbuq7JfTiTw2C_QBB";
 // Sert uniquement à cacher le menu admin pour les autres élèves. La vraie sécurité est dans les règles Firestore.
 const ADMIN_EMAIL = "synfamory99@gmail.com";
+let currentUserRole = null; // 'admin' | 'teacher' | null — chargé une fois après connexion admin
+async function loadCurrentUserRole(uid){
+  currentUserRole = null;
+  if(!forumDb || !uid) return;
+  try {
+    const doc = await forumDb.collection('roles').doc(uid).get();
+    if(doc.exists) currentUserRole = doc.data().role || null;
+  } catch(e){ console.error('Lecture du rôle impossible', e); }
+}
 // Change cette date à chaque nouvelle version que Claude te donne — permet de vérifier que le site déployé est à jour.
 const BUILD_VERSION = "2026-07-15 09:15";
 
@@ -3278,9 +3315,10 @@ let realSessionActive = false;
 async function handleAuthStateChange(user){
   firebaseUser = user;
   if(user && !user.isAnonymous){
-    // Vrai compte élève (ou admin) : profil chargé depuis Firestore, accessible sur tout appareil.
+    // Vrai compte élève (ou admin/enseignant) : profil chargé depuis Firestore, accessible sur tout appareil.
     realSessionActive = true;
     await loadUserProfile(user);
+    await loadCurrentUserRole(user.uid);
     enterApp();
   } else if(realSessionActive){
     // Correctif : un événement d'authentification transitoire (rafraîchissement de
@@ -3978,7 +4016,15 @@ function renderAdminExoList(){
 function switchAdminTab(tab){
   document.querySelectorAll('.admin-tab').forEach(t=> t.classList.toggle('active', t.dataset.tab===tab));
   document.querySelectorAll('.admin-tab-panel').forEach(p=> p.classList.toggle('active', p.id==='admin-panel-'+tab));
-  if(tab==='users') renderAdminUsersList();
+  if(tab==='users'){
+    renderAdminUsersList();
+    const isRootAdmin = firebase.auth().currentUser && firebase.auth().currentUser.email === ADMIN_EMAIL;
+    const mgmt = document.getElementById('admin-teacher-management');
+    if(mgmt){
+      mgmt.style.display = isRootAdmin ? 'block' : 'none';
+      if(isRootAdmin) renderTeachersList();
+    }
+  }
   if(tab==='overview') renderOverviewTab();
 }
 
@@ -5326,8 +5372,8 @@ function onLevelUp(level){
   const rewardText = grantLevelRewards(level);
   logActivity('<i data-lucide="trending-up" class="lucide-icon"></i>', `Niveau ${level} atteint`);
   const numEl = document.getElementById('levelup-num'); if(numEl) numEl.textContent = level;
-  const emojiEl = document.getElementById('levelup-emoji'); if(emojiEl) emojiEl.textContent = levelEmoji(level);
-  const rewardEl = document.getElementById('levelup-reward-text'); if(rewardEl) rewardEl.textContent = rewardText;
+  const emojiEl = document.getElementById('levelup-emoji'); if(emojiEl) emojiEl.innerHTML = levelEmoji(level);
+  const rewardEl = document.getElementById('levelup-reward-text'); if(rewardEl) rewardEl.innerHTML = rewardText;
   const overlay = document.getElementById('levelup-overlay');
   if(overlay){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
 }
@@ -5926,6 +5972,15 @@ function selectLeaderboardTab(tab){
   document.querySelectorAll('.gam-tab').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   renderLeaderboard();
 }
+function userDocToLbRow(data){
+  const xp = (data.gamification && data.gamification.xp) || 0;
+  return {
+    name: data.name || 'Élève', email: (data.email||'').toLowerCase(),
+    school: data.school || '', city: data.city || '',
+    xp, level: levelFromTotalXP(xp).level,
+    avatar: (data.gamification && (data.gamification.customPhoto || data.gamification.activeAvatar)) || '🎓'
+  };
+}
 async function renderLeaderboard(){
   const el = document.getElementById('gam-leaderboard-list');
   if(!el) return;
@@ -5935,21 +5990,37 @@ async function renderLeaderboard(){
   }
   el.innerHTML = '<div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>';
   try {
-    const snap = await forumDb.collection('users').orderBy('gamification.xp','desc').limit(50).get();
-    let rows = snap.docs.map(d=>{
-      const data = d.data();
-      const xp = (data.gamification && data.gamification.xp) || 0;
-      return {
-        name: data.name || 'Élève', email: (data.email||'').toLowerCase(),
-        school: data.school || '', city: data.city || '',
-        xp, level: levelFromTotalXP(xp).level,
-        avatar: (data.gamification && (data.gamification.customPhoto || data.gamification.activeAvatar)) || '🎓'
-      };
-    });
     const me = getCurrentUser();
-    if(leaderboardTab==='school') rows = rows.filter(r=> GAM.school && r.school===GAM.school);
-    if(leaderboardTab==='city') rows = rows.filter(r=> GAM.city && r.city===GAM.city);
-    if(leaderboardTab==='friends') rows = rows.filter(r=> (GAM.friends||[]).includes(r.email) || (me && r.email===(me.email||'').toLowerCase()));
+    let rows = [];
+    if(leaderboardTab==='friends'){
+      const myEmail = ((me && me.email) || '').toLowerCase();
+      const emails = [...new Set([...(GAM.friends||[]), myEmail])].filter(Boolean).slice(0,30);
+      if(emails.length===0){
+        el.innerHTML = '<p class="empty-hint">Ajoute des amis (par email) dans "Réglages du classement" ci-dessous pour voir ce classement.</p>';
+        return;
+      }
+      const snap = await forumDb.collection('users').where('email','in', emails).get();
+      rows = snap.docs.map(d=> userDocToLbRow(d.data()));
+    } else {
+      let query = forumDb.collection('users');
+      // Correctif : "École"/"Ville" filtraient auparavant le top 50 national déjà
+      // limité — un élève d'un établissement hors de ce top 50 ne voyait jamais
+      // personne de son école. On interroge maintenant directement le bon
+      // sous-ensemble (nécessite un index composite Firestore la première fois,
+      // Firestore propose un lien pour le créer automatiquement dans la console).
+      if(leaderboardTab==='school'){
+        if(!GAM.school){ el.innerHTML = '<p class="empty-hint">Renseigne ton établissement dans "Réglages du classement" ci-dessous pour voir ce classement.</p>'; return; }
+        query = query.where('school','==', GAM.school).orderBy('gamification.xp','desc').limit(50);
+      } else if(leaderboardTab==='city'){
+        if(!GAM.city){ el.innerHTML = '<p class="empty-hint">Renseigne ta ville dans "Réglages du classement" ci-dessous pour voir ce classement.</p>'; return; }
+        query = query.where('city','==', GAM.city).orderBy('gamification.xp','desc').limit(50);
+      } else {
+        query = query.orderBy('gamification.xp','desc').limit(50);
+      }
+      const snap = await query.get();
+      rows = snap.docs.map(d=> userDocToLbRow(d.data()));
+    }
+    rows.sort((a,b)=> b.xp - a.xp);
     if(!rows.length){
       el.innerHTML = '<p class="empty-hint">Aucun résultat pour ce classement pour le moment.</p>';
       return;
@@ -5964,7 +6035,7 @@ async function renderLeaderboard(){
       </div>`).join('');
   } catch(e){
     console.error('Classement indisponible', e);
-    el.innerHTML = '<p class="empty-hint"><i data-lucide="triangle-alert" class="lucide-icon"></i> Classement indisponible pour le moment. (Vérifie que les règles Firestore autorisent la lecture de la collection "users".)</p>';
+    el.innerHTML = '<p class="empty-hint"><i data-lucide="triangle-alert" class="lucide-icon"></i> Classement indisponible pour le moment. (Vérifie que les règles Firestore autorisent la lecture de la collection "users", et regarde la console : Firestore demande parfois de créer un index — un lien apparaît dans l\'erreur.)</p>';
   }
 }
 
