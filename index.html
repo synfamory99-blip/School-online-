@@ -741,6 +741,15 @@ button { transition: transform .15s ease, box-shadow .25s ease; }
 .gam-friends-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .friend-chip { background: var(--green-light); color: var(--green-dark); font-size: 11px; padding: 5px 8px; border-radius: 14px; display: flex; align-items: center; gap: 5px; }
 .friend-chip button { background: none; border: none; color: var(--green-dark); cursor: pointer; font-size: 11px; }
+.friend-request-row { display:flex; align-items:center; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:12px; margin-top:8px; background:var(--white); }
+.friend-request-row .fr-info { flex:1; min-width:0; }
+.friend-request-row .fr-info strong { display:block; font-size:12.5px; }
+.friend-request-row .fr-info span { font-size:11px; color:var(--text-muted); }
+.friend-request-row .fr-actions { display:flex; gap:6px; flex-shrink:0; }
+.fr-btn { border:none; border-radius:10px; padding:7px 10px; font-size:11px; font-weight:700; cursor:pointer; }
+.fr-btn.accept { background:var(--green-gradient); color:#fff; }
+.fr-btn.reject { background:var(--surface-alt); color:var(--text-main); }
+.fr-btn.cancel { background:var(--surface-alt); color:#dc2626; }
 .gam-toggle-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-main); font-weight: 600; }
 .reward-avatar-row, .reward-title-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 14px; }
 .reward-pick-btn { border: 1.5px solid var(--border-color); background: var(--white); border-radius: 12px; padding: 8px 12px; font-size: 16px; cursor: pointer; }
@@ -1445,10 +1454,38 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
       <label style="font-size:12px;font-weight:700;"><i data-lucide="building-2" class="lucide-icon"></i> Ville</label>
       <input id="gam-city-input" type="text" maxlength="40" placeholder="Ex : Abidjan">
       <button class="btn-mini" style="align-self:flex-start;" onclick="saveSchoolCity()"><i data-lucide="save" class="lucide-icon"></i> Enregistrer</button>
-      <label style="font-size:12px;font-weight:700;margin-top:6px;"><i data-lucide="users" class="lucide-icon"></i> Ajouter un ami (par email)</label>
-      <div class="gam-inline-form"><input id="gam-friend-input" type="email" placeholder="email@exemple.com"><button class="btn-mini" onclick="addFriend()">Ajouter</button></div>
-      <div class="gam-friends-list" id="gam-friends-list"></div>
       <label class="gam-toggle-row" style="margin-top:10px;"><input type="checkbox" id="gam-sound-toggle" checked onchange="toggleSound(this.checked)"> <i data-lucide="volume-2" class="lucide-icon"></i> Sons de progression</label>
+    </div>
+
+    <div class="section-headline"><h3><i data-lucide="users" class="lucide-icon"></i> Mes amis</h3></div>
+    <div class="gam-settings-block">
+      <label style="font-size:12px;font-weight:700;">Ajouter un ami (par email)</label>
+      <div class="gam-inline-form"><input id="gam-friend-input" type="email" placeholder="email@exemple.com"><button class="btn-mini" onclick="sendFriendRequest()">Envoyer</button></div>
+
+      <div id="friend-requests-received-wrap" style="display:none;">
+        <label style="font-size:12px;font-weight:700;margin-top:14px;"><i data-lucide="bell" class="lucide-icon"></i> Demandes reçues</label>
+        <div id="friend-requests-received"></div>
+      </div>
+
+      <div id="friend-requests-sent-wrap" style="display:none;">
+        <label style="font-size:12px;font-weight:700;margin-top:14px;">Demandes envoyées</label>
+        <div id="friend-requests-sent"></div>
+      </div>
+
+      <label style="font-size:12px;font-weight:700;margin-top:14px;">Mes amis</label>
+      <div id="friends-accepted-list"><p class="empty-hint">Aucun ami pour le moment.</p></div>
+
+      <label style="font-size:12px;font-weight:700;margin-top:14px;">Qui peut voir mon profil détaillé ?</label>
+      <select id="gam-privacy-select" onchange="saveProfileVisibility(this.value)">
+        <option value="everyone">Tous les élèves connectés</option>
+        <option value="friends">Mes amis uniquement</option>
+        <option value="nobody">Personne</option>
+      </select>
+    </div>
+
+    <!-- Fiche profil d'un ami -->
+    <div class="modal-overlay" id="friend-profile-modal" onclick="if(event.target===this) closeFriendProfileModal()">
+      <div class="modal-sheet" id="friend-profile-modal-body"></div>
     </div>
 
     <div class="settings-group">
@@ -1613,6 +1650,15 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
 
       <!-- Utilisateurs -->
       <div class="admin-tab-panel" id="admin-panel-users">
+        <div id="admin-teacher-management" style="display:none;">
+          <div class="section-headline" style="padding-top:0;"><h3><i data-lucide="presentation" class="lucide-icon"></i> Gérer les enseignants</h3></div>
+          <p style="padding:0 20px 10px;font-size:12px;color:var(--text-muted);">Donne les droits enseignant (gestion des cours, exercices, devoirs, modération du forum) à un compte élève déjà inscrit, en indiquant son email.</p>
+          <div class="gam-inline-form" style="padding:0 20px;">
+            <input type="email" id="grant-teacher-email" placeholder="email@exemple.com">
+            <button class="btn-mini" onclick="grantTeacherRole()">Donner les droits</button>
+          </div>
+          <div id="admin-teachers-list" style="margin-top:10px;"></div>
+        </div>
         <div class="search-mini-wrap"><div class="search-mini"><i data-lucide="search" class="lucide-icon"></i><input type="text" id="admin-users-search" placeholder="Rechercher un élève..." oninput="renderAdminUsersList()"></div></div>
         <div class="extended-list-wrapper" id="admin-users-list"></div>
       </div>
@@ -1643,6 +1689,7 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
           <button class="link" onclick="loadAdminErrorLogs()">Actualiser</button>
         </div>
         <p style="padding:0 20px 10px;font-size:12px;color:var(--text-muted);">Erreurs rencontrées automatiquement par les élèves sur le site (silencieuses pour eux, visibles ici pour toi).</p>
+        <label class="gam-toggle-row" style="padding:0 20px 10px;"><input type="checkbox" id="admin-error-show-resolved" onchange="loadAdminErrorLogs()"> Afficher aussi les erreurs déjà résolues</label>
         <div class="extended-list-wrapper" id="admin-error-list"></div>
       </div>
 
@@ -1676,9 +1723,10 @@ button .lucide-icon, a .lucide-icon { pointer-events: none; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
     <span>Forum</span>
   </button>
-  <button class="dock-item" data-page="profil" onclick="switchPage('profil')">
+  <button class="dock-item" data-page="profil" onclick="switchPage('profil')" style="position:relative;">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span>Profil</span>
+    <span id="friend-request-badge" style="display:none;position:absolute;top:2px;right:14px;width:9px;height:9px;border-radius:50%;background:#dc2626;"></span>
   </button>
 </div>
 
@@ -2453,8 +2501,8 @@ function renderProfil(){
   }
   const adminEntry = document.getElementById('admin-menu-entry');
   if(adminEntry){
-    const isAdminEmail = user && !user.guest && user.email === ADMIN_EMAIL;
-    adminEntry.style.display = isAdminEmail ? 'flex' : 'none';
+    const isStaff = user && !user.guest && firebaseUser && isStaffAccount(firebaseUser.email, firebaseUser.uid);
+    adminEntry.style.display = isStaff ? 'flex' : 'none';
   }
   const dls = loadDownloads();
   document.getElementById('dl-list').innerHTML = dls.length
@@ -2547,10 +2595,16 @@ async function tryAdminLogin(){
   const btn = document.getElementById('admin-login-btn');
   btn.disabled = true;
   try {
-    await firebase.auth().signInWithEmailAndPassword(email, password);
+    const cred = await firebase.auth().signInWithEmailAndPassword(email, password);
+    await loadCurrentUserRole(cred.user.uid);
+    if(!isStaffAccount(cred.user.email, cred.user.uid)){
+      showToast("❌ Ce compte n'a pas les droits enseignant/administrateur");
+      currentUserRole = null;
+      return;
+    }
     sessionStorage.setItem(AUTH_KEY, '1');
     renderAdminIfLogged();
-    showToast('✅ Connecté en tant qu\'administrateur');
+    showToast(cred.user.email === ADMIN_EMAIL ? '✅ Connecté en tant qu\'administrateur' : '✅ Connecté en tant qu\'enseignant');
   } catch(err){
     console.error(err);
     let msg = '❌ Connexion impossible';
@@ -2566,6 +2620,7 @@ async function tryAdminLogin(){
 }
 function adminLogout(){
   sessionStorage.removeItem(AUTH_KEY);
+  currentUserRole = null;
   if(isFirebaseConfigured() && forumDb){
     firebase.auth().signOut().then(()=> firebase.auth().signInAnonymously()).catch(()=>{});
   }
@@ -2574,10 +2629,17 @@ function adminLogout(){
   document.getElementById('admin-password').value='';
   document.getElementById('admin-email').value='';
 }
+function isStaffAccount(email, uid){
+  if(email === ADMIN_EMAIL) return true;
+  if(uid && uid === (firebase.auth().currentUser && firebase.auth().currentUser.uid)){
+    return currentUserRole === 'admin' || currentUserRole === 'teacher';
+  }
+  return false;
+}
 function isAdminAuthed(){
   if(isFirebaseConfigured() && forumDb){
     const u = firebase.auth().currentUser;
-    return !!(u && !u.isAnonymous && u.email === ADMIN_EMAIL) && sessionStorage.getItem(AUTH_KEY)==='1';
+    return !!(u && !u.isAnonymous && isStaffAccount(u.email, u.uid)) && sessionStorage.getItem(AUTH_KEY)==='1';
   }
   return sessionStorage.getItem(AUTH_KEY)==='1';
 }
@@ -2586,6 +2648,61 @@ function renderAdminIfLogged(){
   document.getElementById('admin-gate').style.display = logged ? 'none' : 'block';
   document.getElementById('admin-dashboard').style.display = logged ? 'block' : 'none';
   if(logged) renderAdminDashboard();
+}
+/* ============ GESTION DES ENSEIGNANTS ============
+   Le rôle est stocké dans une collection à part ("roles"), jamais dans le
+   document "users" que chacun peut modifier lui-même — sinon un élève
+   pourrait s'auto-promouvoir enseignant depuis son propre profil. Seul le
+   compte admin racine (ADMIN_EMAIL) peut écrire dans "roles" (vérifié côté
+   règles Firestore, pas seulement côté interface). */
+async function grantTeacherRole(){
+  const input = document.getElementById('grant-teacher-email');
+  const email = input.value.trim().toLowerCase();
+  if(!email){ showToast('⚠️ Indique un email'); return; }
+  try {
+    const snap = await forumDb.collection('users').where('email','==', email).limit(1).get();
+    if(snap.empty){
+      showToast("⚠️ Aucun compte élève trouvé avec cet email — la personne doit d'abord créer un compte normalement.");
+      return;
+    }
+    const doc = snap.docs[0];
+    await forumDb.collection('roles').doc(doc.id).set({
+      role: 'teacher',
+      email,
+      name: doc.data().name || '',
+      grantedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      grantedBy: ADMIN_EMAIL
+    });
+    showToast('✅ Droits enseignant accordés à ' + email);
+    input.value = '';
+    renderTeachersList();
+  } catch(e){
+    console.error(e);
+    showToast("⚠️ Erreur — vérifie les règles Firestore (collection roles)");
+  }
+}
+async function revokeTeacherRole(uid, email){
+  if(!confirm('Retirer les droits enseignant de ' + email + ' ?')) return;
+  try {
+    await forumDb.collection('roles').doc(uid).delete();
+    showToast('🗑️ Droits enseignant retirés');
+    renderTeachersList();
+  } catch(e){ console.error(e); showToast('⚠️ Erreur lors du retrait'); }
+}
+async function renderTeachersList(){
+  const el = document.getElementById('admin-teachers-list');
+  if(!el) return;
+  try {
+    const snap = await forumDb.collection('roles').where('role','==','teacher').get();
+    if(snap.empty){ el.innerHTML = '<p class="empty-hint">Aucun enseignant ajouté pour le moment.</p>'; return; }
+    el.innerHTML = snap.docs.map(d=>{
+      const t = d.data();
+      return `<div class="admin-list-item">
+        <div style="flex:1;min-width:0;"><strong>${escapeHtml(t.name||'Enseignant')}</strong><p class="meta-line">${escapeHtml(t.email)}</p></div>
+        <button class="admin-icon-btn danger" aria-label="Retirer" onclick="revokeTeacherRole('${d.id}','${escapeHtml(t.email)}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
+      </div>`;
+    }).join('');
+  } catch(e){ console.error(e); el.innerHTML = '<p class="empty-hint">⚠️ Liste indisponible (vérifie les règles Firestore).</p>'; }
 }
 function renderAdminDashboard(){
   const vTag = document.getElementById('build-version-tag');
@@ -2658,6 +2775,23 @@ async function resetAndReseedCourses(){
     showToast("⚠️ Échec de la réinitialisation : " + (e && e.message ? e.message : 'vérifie les règles Firestore'));
   }
 }
+/* Traduction approximative des messages d'erreur JS les plus courants :
+   le message brut reste toujours affiché (utile pour du support technique),
+   mais une explication en français aide un non-développeur à comprendre
+   la nature du problème sans avoir à lire l'anglais technique. */
+function translateErrorMessage(msg){
+  const m = String(msg||'').toLowerCase();
+  if(m.includes('permission-denied') || m.includes('missing or insufficient permissions')) return "Accès refusé par les règles de sécurité Firestore — vérifie les règles de la collection concernée.";
+  if(m.includes('failed to fetch') || m.includes('network')) return "Problème de connexion internet au moment de l'action.";
+  if(m.includes('is not defined')) return "Une fonction ou une variable attendue par le code est introuvable (probable faute de frappe ou fonction supprimée par erreur).";
+  if(m.includes('cannot read propert') && m.includes('undefined')) return "Le code a essayé d'utiliser une information qui n'existait pas encore à ce moment (probable élément non chargé).";
+  if(m.includes('cannot read propert') && m.includes('null')) return "Le code a essayé d'utiliser un élément de la page qui n'existe pas (identifiant HTML manquant ou mal orthographié).";
+  if(m.includes('is not a function')) return "Le code a essayé d'utiliser quelque chose comme une fonction alors que ce n'en est pas une.";
+  if(m.includes('unexpected token') || m.includes('syntaxerror')) return "Erreur de syntaxe dans le code — probablement une faute de frappe (accolade, virgule, guillemet).";
+  if(m.includes('quota') || m.includes('resource-exhausted')) return "Limite d'utilisation Firebase atteinte (quota gratuit dépassé pour aujourd'hui).";
+  if(m.includes('index')) return "Une requête Firestore a besoin d'un index — un lien pour le créer apparaît généralement dans l'erreur complète (voir la trace ci-dessous).";
+  return "Cause précise à examiner au cas par cas — regarde le message technique et la page concernée ci-dessous.";
+}
 async function loadAdminErrorLogs(){
   const listEl = document.getElementById('admin-error-list');
   const countEl = document.getElementById('admin-error-count');
@@ -2665,33 +2799,49 @@ async function loadAdminErrorLogs(){
     listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="bug" class="lucide-icon"></i></div><strong>Suivi d'erreurs indisponible</strong>Connecte Firebase pour l'activer.</div>`;
     return;
   }
+  const showResolved = document.getElementById('admin-error-show-resolved')?.checked;
   listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="hourglass" class="lucide-icon"></i></div><strong>Chargement...</strong></div>`;
   try {
-    const snap = await forumDb.collection('errorLogs').orderBy('createdAt','desc').limit(20).get();
-    countEl.textContent = snap.size;
-    if(snap.empty){
-      listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="circle-check-big" class="lucide-icon"></i></div><strong>Aucune erreur récente</strong>Tout va bien !</div>`;
+    const snap = await forumDb.collection('errorLogs').orderBy('createdAt','desc').limit(50).get();
+    const all = snap.docs.map(d=>({ id: d.id, ...d.data() }));
+    const openCount = all.filter(e=> e.status !== 'resolved').length;
+    countEl.textContent = openCount;
+    const visible = showResolved ? all : all.filter(e=> e.status !== 'resolved');
+    if(visible.length===0){
+      listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="circle-check-big" class="lucide-icon"></i></div><strong>Aucune erreur ${showResolved?'':'non résolue '}récente</strong>Tout va bien !</div>`;
       return;
     }
-    listEl.innerHTML = snap.docs.map(doc=>{
-      const e = doc.data();
+    listEl.innerHTML = visible.map(e=>{
       const date = e.createdAt && e.createdAt.toDate ? e.createdAt.toDate().toLocaleString('fr-FR') : '';
-      return `<div class="admin-list-item" style="align-items:flex-start;">
+      const resolved = e.status === 'resolved';
+      return `<div class="admin-list-item" style="align-items:flex-start;${resolved?'opacity:.55;':''}">
         <div class="grow">
-          <h5 style="white-space:normal;">${escapeHtml(e.message||'Erreur inconnue')}</h5>
+          <h5 style="white-space:normal;">${resolved?'<i data-lucide="circle-check-big" class="lucide-icon"></i> ':''}${escapeHtml(e.message||'Erreur inconnue')}</h5>
+          <p style="font-size:11.5px;color:var(--text-muted);margin:4px 0;">${escapeHtml(translateErrorMessage(e.message))}</p>
           <div class="tags">
             <span><i data-lucide="file-text" class="lucide-icon"></i> ${escapeHtml(e.page||'?')}</span>
             <span><i data-lucide="user" class="lucide-icon"></i> ${escapeHtml(e.userEmail||'anonyme')}</span>
             <span><i data-lucide="clock" class="lucide-icon"></i> ${date}</span>
           </div>
         </div>
-        <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteErrorLog('${doc.id}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
+        <button class="admin-icon-btn" aria-label="${resolved?'Marquer comme non résolu':'Marquer comme résolu'}" onclick="${resolved?`reopenErrorLog('${e.id}')`:`resolveErrorLog('${e.id}')`}"><i data-lucide="${resolved?'rotate-ccw':'check'}" class="lucide-icon"></i></button>
+        <button class="admin-icon-btn danger" aria-label="Supprimer" onclick="deleteErrorLog('${e.id}')"><i data-lucide="trash-2" class="lucide-icon"></i></button>
       </div>`;
     }).join('');
   } catch(e){
     listEl.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="triangle-alert" class="lucide-icon"></i></div><strong>Impossible de charger le journal</strong>Vérifie les règles Firestore pour "errorLogs".</div>`;
     console.error(e);
   }
+}
+async function resolveErrorLog(id){
+  if(!forumDb) return;
+  try { await forumDb.collection('errorLogs').doc(id).update({ status: 'resolved', resolvedAt: firebase.firestore.FieldValue.serverTimestamp() }); loadAdminErrorLogs(); }
+  catch(e){ console.error(e); showToast('⚠️ Action refusée — vérifie les règles Firestore'); }
+}
+async function reopenErrorLog(id){
+  if(!forumDb) return;
+  try { await forumDb.collection('errorLogs').doc(id).update({ status: 'open' }); loadAdminErrorLogs(); }
+  catch(e){ console.error(e); showToast('⚠️ Action refusée'); }
 }
 async function deleteErrorLog(id){
   if(!forumDb) return;
@@ -3194,6 +3344,15 @@ const FIREBASE_CONFIG = {
 const RECAPTCHA_SITE_KEY = "6LelAU0tAAAAAOek4yBxmg9Dbuq7JfTiTw2C_QBB";
 // Sert uniquement à cacher le menu admin pour les autres élèves. La vraie sécurité est dans les règles Firestore.
 const ADMIN_EMAIL = "synfamory99@gmail.com";
+let currentUserRole = null; // 'admin' | 'teacher' | null — chargé une fois après connexion admin
+async function loadCurrentUserRole(uid){
+  currentUserRole = null;
+  if(!forumDb || !uid) return;
+  try {
+    const doc = await forumDb.collection('roles').doc(uid).get();
+    if(doc.exists) currentUserRole = doc.data().role || null;
+  } catch(e){ console.error('Lecture du rôle impossible', e); }
+}
 // Change cette date à chaque nouvelle version que Claude te donne — permet de vérifier que le site déployé est à jour.
 const BUILD_VERSION = "2026-07-15 09:15";
 
@@ -3232,9 +3391,10 @@ let realSessionActive = false;
 async function handleAuthStateChange(user){
   firebaseUser = user;
   if(user && !user.isAnonymous){
-    // Vrai compte élève (ou admin) : profil chargé depuis Firestore, accessible sur tout appareil.
+    // Vrai compte élève (ou admin/enseignant) : profil chargé depuis Firestore, accessible sur tout appareil.
     realSessionActive = true;
     await loadUserProfile(user);
+    await loadCurrentUserRole(user.uid);
     enterApp();
   } else if(realSessionActive){
     // Correctif : un événement d'authentification transitoire (rafraîchissement de
@@ -3932,7 +4092,15 @@ function renderAdminExoList(){
 function switchAdminTab(tab){
   document.querySelectorAll('.admin-tab').forEach(t=> t.classList.toggle('active', t.dataset.tab===tab));
   document.querySelectorAll('.admin-tab-panel').forEach(p=> p.classList.toggle('active', p.id==='admin-panel-'+tab));
-  if(tab==='users') renderAdminUsersList();
+  if(tab==='users'){
+    renderAdminUsersList();
+    const isRootAdmin = firebase.auth().currentUser && firebase.auth().currentUser.email === ADMIN_EMAIL;
+    const mgmt = document.getElementById('admin-teacher-management');
+    if(mgmt){
+      mgmt.style.display = isRootAdmin ? 'block' : 'none';
+      if(isRootAdmin) renderTeachersList();
+    }
+  }
   if(tab==='overview') renderOverviewTab();
 }
 
@@ -4824,6 +4992,7 @@ function logClientError(message, source, lineno, stack){
       lineno: lineno || null,
       stack: String(stack||'').slice(0,1000),
       page: activePage,
+      status: 'open',
       userEmail: (firebaseUser && !firebaseUser.isAnonymous) ? firebaseUser.email : 'anonyme/invité',
       userAgent: navigator.userAgent.slice(0,200),
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -4892,7 +5061,7 @@ function defaultGam(){
     openedCourses: [], watchedVideos: [],
     totalStudySeconds: 0, weekStudy: {},
     unlockedRewards: [], activeAvatar: '🎓', customPhoto: '', activeTitle: '', soundEnabled: true,
-    activityLog: [], themeColor: 'green', classe: ''
+    activityLog: [], themeColor: 'green', classe: '', profileVisibility: 'everyone'
   };
 }
 function logActivity(icon, text){
@@ -5280,8 +5449,8 @@ function onLevelUp(level){
   const rewardText = grantLevelRewards(level);
   logActivity('<i data-lucide="trending-up" class="lucide-icon"></i>', `Niveau ${level} atteint`);
   const numEl = document.getElementById('levelup-num'); if(numEl) numEl.textContent = level;
-  const emojiEl = document.getElementById('levelup-emoji'); if(emojiEl) emojiEl.textContent = levelEmoji(level);
-  const rewardEl = document.getElementById('levelup-reward-text'); if(rewardEl) rewardEl.textContent = rewardText;
+  const emojiEl = document.getElementById('levelup-emoji'); if(emojiEl) emojiEl.innerHTML = levelEmoji(level);
+  const rewardEl = document.getElementById('levelup-reward-text'); if(rewardEl) rewardEl.innerHTML = rewardText;
   const overlay = document.getElementById('levelup-overlay');
   if(overlay){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
 }
@@ -5848,28 +6017,168 @@ function saveSchoolCity(){
   if(isRealAccount()){ saveUserProfileField('school', GAM.school); saveUserProfileField('city', GAM.city); }
   showToast('✅ Informations enregistrées');
 }
-function addFriend(){
+/* ============ SYSTÈME D'AMIS (demandes, acceptation, refus) ============
+   Un seul document par paire d'élèves (id = uids triés) : évite les doublons
+   et les demandes croisées incohérentes. */
+function friendPairId(uidA, uidB){ return [uidA, uidB].sort().join('_'); }
+async function sendFriendRequest(){
   const input = document.getElementById('gam-friend-input');
   const email = input ? input.value.trim().toLowerCase() : '';
-  if(!email) return;
-  GAM.friends = GAM.friends || [];
-  if(!GAM.friends.includes(email)) GAM.friends.push(email);
-  if(input) input.value = '';
-  persistGam();
-  renderFriendsList();
-  showToast('👥 Ami ajouté au classement');
+  if(!email){ showToast('⚠️ Indique un email'); return; }
+  if(!isRealAccount() || !firebaseUser){ showToast('⚠️ Connecte-toi avec un compte réel pour ajouter des amis'); return; }
+  if(email === (firebaseUser.email||'').toLowerCase()){ showToast("⚠️ Tu ne peux pas t'ajouter toi-même"); return; }
+  try {
+    const snap = await forumDb.collection('users').where('email','==', email).limit(1).get();
+    if(snap.empty){ showToast('⚠️ Aucun élève trouvé avec cet email'); return; }
+    const targetDoc = snap.docs[0];
+    const targetUid = targetDoc.id;
+    const pairId = friendPairId(firebaseUser.uid, targetUid);
+    const existing = await forumDb.collection('friendships').doc(pairId).get();
+    if(existing.exists){
+      showToast(existing.data().status==='accepted' ? '✅ Vous êtes déjà amis' : '⏳ Une demande est déjà en cours avec cette personne');
+      return;
+    }
+    await forumDb.collection('friendships').doc(pairId).set({
+      users: [firebaseUser.uid, targetUid],
+      status: 'pending',
+      requestedBy: firebaseUser.uid,
+      requestedByName: (userProfile && userProfile.name) || 'Élève',
+      requestedByEmail: (firebaseUser.email||'').toLowerCase(),
+      targetUid, targetName: targetDoc.data().name || 'Élève', targetEmail: email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    input.value = '';
+    showToast('✅ Demande envoyée à ' + email);
+    renderFriendsSection();
+  } catch(e){ console.error(e); showToast("⚠️ Erreur lors de l'envoi (vérifie les règles Firestore)"); }
 }
-function removeFriend(email){
-  GAM.friends = (GAM.friends||[]).filter(f=>f!==email);
-  persistGam();
-  renderFriendsList();
+async function respondToFriendRequest(pairId, accept){
+  try {
+    if(accept){
+      await forumDb.collection('friendships').doc(pairId).update({ status:'accepted', respondedAt: firebase.firestore.FieldValue.serverTimestamp() });
+      showToast('✅ Demande acceptée');
+    } else {
+      await forumDb.collection('friendships').doc(pairId).delete();
+      showToast('Demande refusée');
+    }
+    renderFriendsSection();
+  } catch(e){ console.error(e); showToast('⚠️ Erreur'); }
 }
-function renderFriendsList(){
-  const el = document.getElementById('gam-friends-list');
-  if(!el || !GAM) return;
-  el.innerHTML = (GAM.friends||[]).length
-    ? GAM.friends.map(f=>`<span class="friend-chip">${escapeHtml(f)} <button onclick="removeFriend('${f}')"><i data-lucide="x" class="lucide-icon"></i></button></span>`).join('')
-    : '<span class="empty-hint">Aucun ami ajouté</span>';
+async function cancelOrRemoveFriendship(pairId){
+  try {
+    await forumDb.collection('friendships').doc(pairId).delete();
+    renderFriendsSection();
+  } catch(e){ console.error(e); showToast('⚠️ Erreur'); }
+}
+async function fetchFriendships(){
+  const result = { received: [], sent: [], accepted: [] };
+  if(!isRealAccount() || !forumDb || !firebaseUser) return result;
+  try {
+    const snap = await forumDb.collection('friendships').where('users','array-contains', firebaseUser.uid).get();
+    snap.docs.forEach(d=>{
+      const item = { id: d.id, ...d.data() };
+      if(item.status==='accepted') result.accepted.push(item);
+      else if(item.requestedBy === firebaseUser.uid) result.sent.push(item);
+      else result.received.push(item);
+    });
+  } catch(e){ console.error('Erreur chargement amis', e); }
+  return result;
+}
+function otherPartyName(item){ return item.requestedBy===firebaseUser.uid ? item.targetName : item.requestedByName; }
+function otherPartyEmail(item){ return item.requestedBy===firebaseUser.uid ? item.targetEmail : item.requestedByEmail; }
+function otherPartyUid(item){ return item.users.find(u=>u!==firebaseUser.uid); }
+async function renderFriendsSection(){
+  const recvWrap = document.getElementById('friend-requests-received-wrap');
+  const sentWrap = document.getElementById('friend-requests-sent-wrap');
+  const recvEl = document.getElementById('friend-requests-received');
+  const sentEl = document.getElementById('friend-requests-sent');
+  const listEl = document.getElementById('friends-accepted-list');
+  const badge = document.getElementById('friend-request-badge');
+  if(!recvEl) return;
+  const { received, sent, accepted } = await fetchFriendships();
+
+  if(recvWrap) recvWrap.style.display = received.length ? 'block' : 'none';
+  recvEl.innerHTML = received.map(r=>`
+    <div class="friend-request-row">
+      <div class="fr-info"><strong>${escapeHtml(r.requestedByName)}</strong><span>${escapeHtml(r.requestedByEmail)}</span></div>
+      <div class="fr-actions">
+        <button class="fr-btn accept" onclick="respondToFriendRequest('${r.id}', true)">Accepter</button>
+        <button class="fr-btn reject" onclick="respondToFriendRequest('${r.id}', false)">Refuser</button>
+      </div>
+    </div>`).join('');
+
+  if(sentWrap) sentWrap.style.display = sent.length ? 'block' : 'none';
+  sentEl.innerHTML = sent.map(r=>`
+    <div class="friend-request-row">
+      <div class="fr-info"><strong>${escapeHtml(r.targetName)}</strong><span>Demande envoyée</span></div>
+      <div class="fr-actions"><button class="fr-btn cancel" onclick="cancelOrRemoveFriendship('${r.id}')">Annuler</button></div>
+    </div>`).join('');
+
+  listEl.innerHTML = accepted.length ? accepted.map(r=>{
+    const name = otherPartyName(r); const uid = otherPartyUid(r);
+    return `<div class="friend-request-row">
+      <div class="fr-info"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(otherPartyEmail(r))}</span></div>
+      <div class="fr-actions">
+        <button class="fr-btn reject" onclick="viewFriendProfile('${uid}')">Voir le profil</button>
+        <button class="fr-btn cancel" onclick="cancelOrRemoveFriendship('${r.id}')">Supprimer</button>
+      </div>
+    </div>`;
+  }).join('') : '<p class="empty-hint">Aucun ami pour le moment.</p>';
+
+  if(badge) badge.style.display = received.length ? 'block' : 'none';
+  const privacySelect = document.getElementById('gam-privacy-select');
+  if(privacySelect && GAM) privacySelect.value = GAM.profileVisibility || 'everyone';
+}
+function saveProfileVisibility(value){
+  if(!GAM) return;
+  GAM.profileVisibility = value;
+  persistGam();
+  showToast('✅ Préférence enregistrée');
+}
+/* --- Fiche profil (respecte la préférence de confidentialité choisie par l'autre élève) ---
+   Note honnête : ce filtre s'applique côté interface. Le document Firestore
+   users/{uid} reste techniquement lisible par tout compte connecté (nécessaire
+   pour le classement) ; cette préférence évite d'afficher les détails dans
+   l'app, ce n'est pas un verrou de sécurité côté base de données. */
+async function viewFriendProfile(uid){
+  const modal = document.getElementById('friend-profile-modal');
+  const body = document.getElementById('friend-profile-modal-body');
+  if(!modal || !body) return;
+  body.innerHTML = '<div class="modal-drag-handle"></div><p class="empty-hint">Chargement...</p>';
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  try {
+    const doc = await forumDb.collection('users').doc(uid).get();
+    if(!doc.exists){ body.innerHTML = '<div class="modal-drag-handle"></div><p class="empty-hint">Profil introuvable.</p><button class="btn-cancel-form" onclick="closeFriendProfileModal()">Fermer</button>'; return; }
+    const data = doc.data();
+    const visibility = (data.gamification && data.gamification.profileVisibility) || 'everyone';
+    if(visibility === 'nobody'){
+      body.innerHTML = '<div class="modal-drag-handle"></div><p class="empty-hint">Cet élève a choisi de garder son profil privé.</p><button class="btn-cancel-form" onclick="closeFriendProfileModal()">Fermer</button>';
+      return;
+    }
+    const xp = (data.gamification && data.gamification.xp) || 0;
+    const level = levelFromTotalXP(xp).level;
+    const badgeCount = data.gamification && data.gamification.badges ? Object.keys(data.gamification.badges).length : 0;
+    const streak = (data.gamification && data.gamification.streak) || 0;
+    const avatar = (data.gamification && (data.gamification.customPhoto || data.gamification.activeAvatar)) || '🎓';
+    body.innerHTML = `
+      <div class="modal-drag-handle"></div>
+      <div style="text-align:center;">
+        <div class="avatar-photo-preview" style="margin:0 auto 10px;">${avatarDisplayHtml(avatar)}</div>
+        <h3>${escapeHtml(data.name||'Élève')}</h3>
+        <p class="submission-meta">Niveau ${level} • ${xp} XP</p>
+      </div>
+      <div class="gam-stat-row" style="margin-top:14px;">
+        <div class="gam-stat-box"><span class="num">${badgeCount}</span><span class="lbl">Badges</span></div>
+        <div class="gam-stat-box"><span class="num">${streak} <i data-lucide="flame" class="lucide-icon"></i></span><span class="lbl">Série</span></div>
+      </div>
+      <button class="btn-cancel-form" style="margin-top:16px;" onclick="closeFriendProfileModal()">Fermer</button>`;
+  } catch(e){ console.error(e); body.innerHTML = '<div class="modal-drag-handle"></div><p class="empty-hint">⚠️ Profil indisponible.</p><button class="btn-cancel-form" onclick="closeFriendProfileModal()">Fermer</button>'; }
+}
+function closeFriendProfileModal(){
+  const modal = document.getElementById('friend-profile-modal');
+  if(modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
 }
 function toggleSound(v){ if(GAM){ GAM.soundEnabled = v; persistGam(); } }
 
@@ -5880,6 +6189,15 @@ function selectLeaderboardTab(tab){
   document.querySelectorAll('.gam-tab').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
   renderLeaderboard();
 }
+function userDocToLbRow(data){
+  const xp = (data.gamification && data.gamification.xp) || 0;
+  return {
+    name: data.name || 'Élève', email: (data.email||'').toLowerCase(),
+    school: data.school || '', city: data.city || '',
+    xp, level: levelFromTotalXP(xp).level,
+    avatar: (data.gamification && (data.gamification.customPhoto || data.gamification.activeAvatar)) || '🎓'
+  };
+}
 async function renderLeaderboard(){
   const el = document.getElementById('gam-leaderboard-list');
   if(!el) return;
@@ -5889,21 +6207,38 @@ async function renderLeaderboard(){
   }
   el.innerHTML = '<div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div>';
   try {
-    const snap = await forumDb.collection('users').orderBy('gamification.xp','desc').limit(50).get();
-    let rows = snap.docs.map(d=>{
-      const data = d.data();
-      const xp = (data.gamification && data.gamification.xp) || 0;
-      return {
-        name: data.name || 'Élève', email: (data.email||'').toLowerCase(),
-        school: data.school || '', city: data.city || '',
-        xp, level: levelFromTotalXP(xp).level,
-        avatar: (data.gamification && (data.gamification.customPhoto || data.gamification.activeAvatar)) || '🎓'
-      };
-    });
     const me = getCurrentUser();
-    if(leaderboardTab==='school') rows = rows.filter(r=> GAM.school && r.school===GAM.school);
-    if(leaderboardTab==='city') rows = rows.filter(r=> GAM.city && r.city===GAM.city);
-    if(leaderboardTab==='friends') rows = rows.filter(r=> (GAM.friends||[]).includes(r.email) || (me && r.email===(me.email||'').toLowerCase()));
+    let rows = [];
+    if(leaderboardTab==='friends'){
+      const myEmail = ((me && me.email) || '').toLowerCase();
+      const { accepted } = await fetchFriendships();
+      const emails = [...new Set([...accepted.map(otherPartyEmail), myEmail])].filter(Boolean).slice(0,30);
+      if(emails.length===0){
+        el.innerHTML = '<p class="empty-hint">Ajoute des amis (par email) dans "Mes amis" ci-dessous pour voir ce classement.</p>';
+        return;
+      }
+      const snap = await forumDb.collection('users').where('email','in', emails).get();
+      rows = snap.docs.map(d=> userDocToLbRow(d.data()));
+    } else {
+      let query = forumDb.collection('users');
+      // Correctif : "École"/"Ville" filtraient auparavant le top 50 national déjà
+      // limité — un élève d'un établissement hors de ce top 50 ne voyait jamais
+      // personne de son école. On interroge maintenant directement le bon
+      // sous-ensemble (nécessite un index composite Firestore la première fois,
+      // Firestore propose un lien pour le créer automatiquement dans la console).
+      if(leaderboardTab==='school'){
+        if(!GAM.school){ el.innerHTML = '<p class="empty-hint">Renseigne ton établissement dans "Réglages du classement" ci-dessous pour voir ce classement.</p>'; return; }
+        query = query.where('school','==', GAM.school).orderBy('gamification.xp','desc').limit(50);
+      } else if(leaderboardTab==='city'){
+        if(!GAM.city){ el.innerHTML = '<p class="empty-hint">Renseigne ta ville dans "Réglages du classement" ci-dessous pour voir ce classement.</p>'; return; }
+        query = query.where('city','==', GAM.city).orderBy('gamification.xp','desc').limit(50);
+      } else {
+        query = query.orderBy('gamification.xp','desc').limit(50);
+      }
+      const snap = await query.get();
+      rows = snap.docs.map(d=> userDocToLbRow(d.data()));
+    }
+    rows.sort((a,b)=> b.xp - a.xp);
     if(!rows.length){
       el.innerHTML = '<p class="empty-hint">Aucun résultat pour ce classement pour le moment.</p>';
       return;
@@ -5918,7 +6253,7 @@ async function renderLeaderboard(){
       </div>`).join('');
   } catch(e){
     console.error('Classement indisponible', e);
-    el.innerHTML = '<p class="empty-hint"><i data-lucide="triangle-alert" class="lucide-icon"></i> Classement indisponible pour le moment. (Vérifie que les règles Firestore autorisent la lecture de la collection "users".)</p>';
+    el.innerHTML = '<p class="empty-hint"><i data-lucide="triangle-alert" class="lucide-icon"></i> Classement indisponible pour le moment. (Vérifie que les règles Firestore autorisent la lecture de la collection "users", et regarde la console : Firestore demande parfois de créer un index — un lien apparaît dans l\'erreur.)</p>';
   }
 }
 
@@ -5933,8 +6268,15 @@ function initGamification(){
   renderDailyChallenges();
   renderBadgesGrid();
   startStudyTimer();
+  checkFriendRequestBadge();
   const yearEl = document.getElementById('footer-year');
   if(yearEl) yearEl.textContent = new Date().getFullYear();
+}
+async function checkFriendRequestBadge(){
+  const badge = document.getElementById('friend-request-badge');
+  if(!badge) return;
+  const { received } = await fetchFriendships();
+  badge.style.display = received.length ? 'block' : 'none';
 }
 function renderGamificationPage(){
   if(!GAM) loadGam();
@@ -5952,7 +6294,7 @@ function renderGamificationPage(){
   renderActivityTimeline();
   renderThemePicker();
   renderRewardsPicker();
-  renderFriendsList();
+  renderFriendsSection();
   const schoolInput = document.getElementById('gam-school-input');
   const cityInput = document.getElementById('gam-city-input');
   if(schoolInput) schoolInput.value = GAM.school || '';
