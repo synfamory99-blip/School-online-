@@ -2854,11 +2854,16 @@ function renderAdminDashboard(){
   }
   const exoList = document.getElementById('admin-exo-list');
   if(exoList){
+    const fichesBtn = isFirebaseConfigured()
+      ? `<button class="admin-add-btn" style="margin:12px 20px;background:#0f6327;" onclick="importMathsFichesPdf()"><i data-lucide="sprout" class="lucide-icon"></i> Importer / mettre à jour les 12 fiches de maths (PDF)</button>`
+      : '';
     if(EXERCICES.length===0 && isFirebaseConfigured()){
       exoList.innerHTML = `<div class="empty-state"><div class="emoji"><i data-lucide="sprout" class="lucide-icon"></i></div><strong>Base d'exercices vide</strong>Importe les exercices de démarrage.</div>
-        <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreExercicesOnce()"><i data-lucide="sprout" class="lucide-icon"></i> Importer les exercices de démarrage</button>`;
+        <button class="admin-add-btn" style="margin:12px 20px;" onclick="seedFirestoreExercicesOnce()"><i data-lucide="sprout" class="lucide-icon"></i> Importer les exercices de démarrage</button>
+        ${fichesBtn}`;
     } else {
       renderAdminExoList();
+      if(fichesBtn) exoList.insertAdjacentHTML('beforeend', fichesBtn);
     }
   }
   renderOverviewTab();
@@ -4116,6 +4121,27 @@ async function seedFirestoreExercicesOnce(){
     showToast('🌱 ' + seed.length + ' exercices importés avec succès !');
   } catch(e){
     console.error('Erreur seed exercices:', e);
+    showToast("⚠️ Échec de l'import : " + (e && e.message ? e.message : 'vérifie les règles Firestore'));
+  }
+}
+// Import ciblé des 12 fiches maths (ef1, ef2, ef5..ef14) : à la différence de
+// seedFirestoreExercicesOnce(), celui-ci écrit/actualise ces 12 documents précis
+// quel que soit le contenu déjà présent dans Firestore — il ne touche donc jamais
+// aux exercices déjà ajoutés manuellement (autres identifiants).
+async function importMathsFichesPdf(){
+  if(!isAdminAuthed()){ showToast('Réservé à l\'équipe pédagogique'); return; }
+  try {
+    const seed = seedExercices().filter(e => e.matiere==='maths' && e.sous==='fiche' && e.lien && e.lien.startsWith('data:'));
+    if(seed.length===0){ showToast('Aucune fiche à importer'); return; }
+    const batch = forumDb.batch();
+    seed.forEach(e=>{
+      const { id, ...rest } = e;
+      batch.set(forumDb.collection('exercices').doc(id), rest);
+    });
+    await batch.commit();
+    showToast('🌱 ' + seed.length + ' fiches maths importées/mises à jour !');
+  } catch(e){
+    console.error('Erreur import fiches maths:', e);
     showToast("⚠️ Échec de l'import : " + (e && e.message ? e.message : 'vérifie les règles Firestore'));
   }
 }
